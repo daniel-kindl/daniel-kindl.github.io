@@ -1,1 +1,0 @@
-# daniel-kindl.github.io
