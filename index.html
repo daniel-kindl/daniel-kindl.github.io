@@ -4,27 +4,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- style.css -->
     <link rel="stylesheet" href="css/style.css">
 
     <!-- Bootstrap 5.3.3 -->
     <link href="node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.css">
+
 
     <title>Daniel Kindl</title>
 </head>
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Daniel Kindl</a>
-
-            <div>
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Experience</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Education</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Skills</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Interests</a></li>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">    
+            <!-- Navbar toggler -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                    <!-- Navigation links -->
+                    <li class="nav-item"><a class="nav-link" href="#aboutSection">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#experienceSection">Experience</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#educationSection">Education</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#skillsSection">Skills</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#projectsSection">Projects</a></li>
+                </ul>
+                <!-- Icons for socials -->
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="https://www.instagram.com/jmenuji_se_daniel" target="_blank"><i class="fab fa-instagram fa-lg"></i></a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://github.com/daniel-kindl" target="_blank"><i class="fab fa-github fa-lg"></i></a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://www.linkedin.com/in/daniel-kindl-363929228" target="_blank"><i class="fab fa-linkedin fa-lg"></i></a></li>
                 </ul>
             </div>
         </div>
@@ -33,15 +50,92 @@
     <main class="container mt-4">
         <!-- ABOUT section -->
         <section id="aboutSection" class="p-4">
-            <h2 class="mb-4">Daniel Kindl</h2>
-            <p class="lead">
-                A junior software engineer passionate about programming, problem-solving, and continuous learning.
-                Currently on a journey to grow as a software professional.
-            </p>
+            <h2 class="mb-4">About</h2>
+            <div class="item">
+                <p class="fs-5">
+                    A software engineer passionate about programming, problem-solving, and continuous learning.
+                    Currently on a journey to grow as a software professional.
+                </p>
+            </div>
+        </section>
+
+        <!-- EXPERIENCE section -->
+        <section id="experienceSection" class="p-4">
+            <h2 class="mb-4">Experience</h2>
+            <div class="item">
+                <h3>Software Engineer - SPS Software (2023 - Present)</h3>
+                <p class="text-muted">Location: Chomutov, CZ</p>
+                <ul>
+                    <li>Software development and maintenance of application using HTML, CSS, JS, and PHP.</li>
+                    <li>Software development for test equipment in the field of electrical safety.</li>
+                </ul>
+            </div>
+        </section>
+
+
+        <!-- EDUCATION section -->
+        <section id="educationSection" class="p-4">
+            <h2 class="mb-4">Education</h2>
+            <div class="item">
+                <h3>Computer Systems - SPŠ a VOŠ Chomutov (2019 - 2023)</h3>
+                <p class="text-muted">Location: Chomutov, CZ</p>
+                <ul>
+                    <li>Progamming - C#, C, web development (PHP, HTML, CSS, JS).</li>
+                    <li>Database systems - SQLite, MySQL, Access.</li>
+                    <li>Networking (CISCO).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SKILLS section -->
+        <section id="skillsSection" class="p-4">
+            <h2 class="mb-4">Skills</h2>
+            <div class="item">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Programming Languages</h3>
+                        <ul>
+                            <li>PHP</li>
+                            <li>Delphi</li>
+                            <li>C#</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Web Development</h3>
+                        <ul>
+                            <li>HTML5</li>
+                            <li>CSS3</li>
+                            <li>JavaScript</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Tools & Technologies</h3>
+                        <ul>
+                            <li>Git</li>
+                            <li>Visual Studio Code</li>
+                        </ul>
+                    </div>
+                </div> 
+            </div>
+        </section>
+
+        <!-- PROJECTS section -->
+        <section id="projectsSection" class="p-4">
+            <h2 class="mb-4">Projects</h2>
+            <div class="item">
+                <h3>Personal Website</h3>
+                <p>This website serves as my personal portfolio and also as an opportunity to improve my skills in developing websites and web applications.</p>
+                <a href="https://daniel-kindl.github.io" target="_blank">Link</a>
+            </div>
+            <div class="item">
+                <h3>Random Quote Generator</h3>
+                <p>Generating random picture and random quote with it. Both pictures and quotes are loaded from APIs.</p>
+                <a href="https://github.com/daniel-kindl/Random-Quote-Generator" target="_blank">Git repo</a>
+            </div>
         </section>
     </main>
 
-    <!-- Bootstrap 5.3.3 JS and Popper.js (Optional) -->
+    <!-- Bootstrap 5.3.3 -->
     <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
 </body>
 </html>
