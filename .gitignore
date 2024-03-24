@@ -1,1 +1,7 @@
-node_modules
+node_modules/@popperjs
+node_modules/.package-lock.json
+
+# dont ingrone these files - used in production
+!node_modules/@fortawesome/fontawesome-free/css/all.css
+!node_modules/bootstrap/dist/css/bootstrap.css
+!node_modules/bootstrap/dist/js/bootstrap.js
