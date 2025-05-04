@@ -4,80 +4,95 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Daniel Kindl | Portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="src/images/favicon.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
   <link rel="stylesheet" href="src/styles/global.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="headline">
-      <h1>Hi, I'm <span class="highlight">Daniel Kindl</span></h1>
-      <p class="subtitle">Crafting clean, modern software experiences.</p>
-    </div>
-    <nav class="nav-links">
-      <a href="#about">About</a>
-    <!--<a href="#projects">Projects</a>-->
+  <header>
+    <h1>Daniel Kindl</h1>
+    <p id="typing-text"></p>
+    <nav>
       <a href="#contact">Contact</a>
     </nav>
   </header>
 
-  <section id="about" class="about-section card">
-    <h2>My Tech Stack</h2>
-    <div class="tech-lists">
-      <div>
-        <h3>Programming Languages</h3>
-        <ul class="tech-icons">
-          <li><i class="fas fa-code" style="color:#512bd4;"></i> C#</li>
-          <li><i class="fas fa-terminal" style="color:#ff6600;"></i> Delphi</li>
-          <li><i class="fab fa-js" style="color:#f7df1e;"></i> JavaScript</li>
-          <li><i class="fab fa-php" style="color:#8892be;"></i> PHP</li>
-          <li><i class="fab fa-html5" style="color:#e34c26;"></i> HTML5</li>
-          <li><i class="fab fa-css3-alt" style="color:#1572b6;"></i> CSS3</li>
-        </ul>
-      </div>
-      <div>
-        <h3>Technologies & Tools</h3>
-        <ul class="tech-icons">
-          <li><i class="fas fa-database" style="color:#4db33d;"></i> SQL</li>
-          <li><i class="fab fa-git-alt" style="color:#f05032;"></i> Git</li>
-          <li><i class="fas fa-brain" style="color:#0ea5e9;"></i> AI</li>
-        </ul>
-      </div>
-    </div>
-  </section>
+  <main>
+    <section id="skills" data-aos="fade-up">
+      <h2>Techstack</h2>
+      <ul class="tech-icons">
+        <li><i class="fas fa-code"></i> C#</li>
+        <li><i class="fas fa-terminal"></i> Delphi</li>
+        <li><i class="fab fa-js"></i> JS</li>
+        <li><i class="fab fa-php"></i> PHP</li>
+        <li><i class="fab fa-html5"></i> HTML</li>
+        <li><i class="fab fa-css3-alt"></i> CSS</li>
+        <li><i class="fas fa-database"></i> SQL</li>
+        <li><i class="fab fa-git-alt"></i> Git</li>
+        <li><i class="fas fa-brain"></i> AI</li>
+      </ul>
+    </section>
 
-  <!--
-  <section id="projects">
-    <h2>Projects</h2>
-    <div class="projects">
-      <div class="project card">
-        <h3>Project One</h3>
-        <p>A brief description of the first project. What it does, what tech it uses, and your role.</p>
+    <section id="contact" data-aos="fade-up">
+      <h2>Contact</h2>
+      <p class="contact-message">Let's connect and build something awesome.</p>
+      <div class="social-links">
+        <a href="https://github.com/daniel-kindl" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/kindldaniel/" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a>
+        <a href="https://www.instagram.com/jmenuji_se_daniel/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
       </div>
-      <div class="project card">
-        <h3>Project Two</h3>
-        <p>A brief description of the second project. Highlight any interesting challenges or outcomes.</p>
-      </div>
-      <div class="project card">
-        <h3>Project Three</h3>
-        <p>A brief description of the third project. Link to repo or live demo if applicable.</p>
-      </div>
-    </div>
-  </section>
-  -->
+    </section>
+  </main>
 
-  <section id="contact">
-    <h2>Contact</h2>
-    <p>You can reach out to me via:</p>
-    <div class="social-links">
-      <a href="https://github.com/daniel-kindl" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-      <a href="https://www.linkedin.com/in/kindldaniel/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
-      <a href="https://www.instagram.com/jmenuji_se_daniel/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
-    </div>
-  </section>
-
-  <footer class="site-footer">
-    <p>&copy; 2025 Daniel Kindl. All rights reserved.</p>
+  <footer>
+    &copy; 2025 Daniel Kindl. All rights reserved.
   </footer>
+
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init();
+
+    const phrases = ["Full Stack Software Engineer", "AI Enthusiast", "UX/UI Creator", "Gamer", "Calisthenics"];
+    const el = document.getElementById("typing-text");
+    let phraseIndex = 0, charIndex = 0, isDeleting = false;
+
+    function typeEffect() 
+    {
+    const currentPhrase = phrases[phraseIndex];
+    const visibleText = currentPhrase.slice(0, charIndex);
+    el.textContent = visibleText;
+
+    if (!isDeleting && charIndex < currentPhrase.length) 
+    {
+      charIndex++;
+    } 
+    else if (isDeleting && charIndex > 0) 
+    {
+      charIndex--;
+    } 
+    else 
+    {
+      if (!isDeleting) 
+      {
+        // Pause after fully typing the phrase
+        setTimeout( () => { isDeleting = true; typeEffect(); }, 1500 );
+        return;
+      } 
+      else 
+      {
+        // Move to the next phrase after deleting
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+      }
+    }
+
+    const delay = isDeleting ? 40 : 100;
+    setTimeout(typeEffect, delay);
+  }
+
+    typeEffect();
+  </script>
 </body>
 </html>
