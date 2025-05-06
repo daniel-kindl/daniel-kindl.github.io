@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Daniel Kindl | Portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+
   <link rel="icon" type="image/png" href="src/images/favicon.png">
+  <link rel="stylesheet" href="src/styles/global.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
-  <link rel="stylesheet" href="src/styles/global.css">
 </head>
 <body>
   <header>
@@ -16,6 +18,7 @@
     <p id="typing-text"></p>
     <nav>
       <a href="#contact">Contact</a>
+      <a href="#skills">Techstack</a>
     </nav>
   </header>
 
@@ -25,10 +28,10 @@
       <ul class="tech-icons">
         <li><i class="fas fa-code"></i> C#</li>
         <li><i class="fas fa-terminal"></i> Delphi</li>
-        <li><i class="fab fa-js"></i> JS</li>
         <li><i class="fab fa-php"></i> PHP</li>
         <li><i class="fab fa-html5"></i> HTML</li>
         <li><i class="fab fa-css3-alt"></i> CSS</li>
+        <li><i class="fab fa-js"></i> JS</li>
         <li><i class="fas fa-database"></i> SQL</li>
         <li><i class="fab fa-git-alt"></i> Git</li>
         <li><i class="fas fa-brain"></i> AI</li>
@@ -46,53 +49,13 @@
     </section>
   </main>
 
-  <footer>
-    &copy; 2025 Daniel Kindl. All rights reserved.
+  <footer id="footer">
+    <p></p>Made with <span id="footer_heart">&#10084;&#65039;</span></p>
+    <p></p>&copy; <span id="footer_year"></span> Daniel Kindl. All rights reserved.</p>
   </footer>
 
   <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-  <script>
-    AOS.init();
-
-    const phrases = ["Full Stack Software Engineer", "AI Enthusiast", "UX/UI Creator", "Gamer", "Calisthenics"];
-    const el = document.getElementById("typing-text");
-    let phraseIndex = 0, charIndex = 0, isDeleting = false;
-
-    function typeEffect() 
-    {
-    const currentPhrase = phrases[phraseIndex];
-    const visibleText = currentPhrase.slice(0, charIndex);
-    el.textContent = visibleText;
-
-    if (!isDeleting && charIndex < currentPhrase.length) 
-    {
-      charIndex++;
-    } 
-    else if (isDeleting && charIndex > 0) 
-    {
-      charIndex--;
-    } 
-    else 
-    {
-      if (!isDeleting) 
-      {
-        // Pause after fully typing the phrase
-        setTimeout( () => { isDeleting = true; typeEffect(); }, 1500 );
-        return;
-      } 
-      else 
-      {
-        // Move to the next phrase after deleting
-        isDeleting = false;
-        phraseIndex = (phraseIndex + 1) % phrases.length;
-      }
-    }
-
-    const delay = isDeleting ? 40 : 100;
-    setTimeout(typeEffect, delay);
-  }
-
-    typeEffect();
-  </script>
+  <script src="src/scripts/typeEffect.js"></script>
+  <script src="src/scripts/footerScript.js"></script>
 </body>
 </html>
