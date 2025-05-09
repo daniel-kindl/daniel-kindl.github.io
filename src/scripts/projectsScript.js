@@ -62,7 +62,7 @@ async function loadProjects()
 
   // Add placeholder cards if there are fewer than the visible minimum
   const CARDS_MAX           = 3;
-  const PLACEHOLDERS_NEEDED = Math.max(GITHUB_REPOS.length, CARDS_MAX);
+  const PLACEHOLDERS_NEEDED = Math.max(0, CARDS_MAX - GITHUB_REPOS.length);
 
   for (let i = 0; i < PLACEHOLDERS_NEEDED; i++) 
   {
