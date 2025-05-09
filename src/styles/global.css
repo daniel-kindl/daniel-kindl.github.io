@@ -93,30 +93,116 @@ h2 {
   gap: 2rem;
 }
 
-/* Card Styles */
+/* Carousel Styles */
+.carousel {
+  position: relative;
+  width: 900px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.4s ease;
+  gap: 30px;
+}
+
 .card {
+  flex: 0 0 280px;
+  height: 400px;
   background: var(--card-bg);
+  color: var(--text);
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 0 20px rgba(0, 255, 195, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  transition: transform 0.2s ease, background 0.2s;
 }
 
 .card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 0 40px rgba(0, 255, 195, 0.1);
+  transform: scale(1.03);
 }
 
-.card h3 {
+/* Carousel Controls */
+.carousel-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.carousel-controls button {
+  background: transparent;
+  border: 2px solid var(--accent);
   color: var(--accent);
-  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
 }
 
-.card p {
+.carousel-controls button:hover {
+  background: rgba(0, 255, 200, 0.1);
+  transform: scale(1.05);
+}
+
+.carousel-controls button:active {
+  transform: scale(0.95);
+}
+
+/* Project Card Contents */
+.project-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--accent);
+}
+
+.project-desc {
+  font-size: 1rem;
+  line-height: 1.5;
+  flex-grow: 1;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+}
+
+.project-langs {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.project-link {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.project-link:hover {
+  border-color: var(--accent);
+}
+
+/* Placeholder Cards */
+.card.placeholder {
+  opacity: 0.5;
+  font-style: italic;
+  pointer-events: none;
+}
+
+.card.placeholder .project-title {
   color: var(--muted);
 }
 
-/* Icon Styles */
+/* Tech Icons / Socials */
 .tech-icons,
 .social-links {
   display: flex;
@@ -153,7 +239,7 @@ h2 {
   color: var(--accent);
 }
 
-/* Footer Styles */
+/* Footer */
 footer {
   text-align: center;
   padding: 2rem;

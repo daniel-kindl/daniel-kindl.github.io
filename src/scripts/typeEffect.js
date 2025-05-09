@@ -1,41 +1,60 @@
+// Animate a typewriter effect for rotating phrases
 function typeEffect() 
 {
-    const currentPhrase = phrases[phraseIndex];
-    const visibleText = currentPhrase.slice(0, charIndex);
-    el.textContent = visibleText;
+  const CURRENT_PHRASE       = PHRASES[phraseIndex];
+  const VISIBLE_TEXT         = CURRENT_PHRASE.slice(0, charIndex);
+  TYPING_ELEMENT.textContent = VISIBLE_TEXT;
 
-    if (!isDeleting && charIndex < currentPhrase.length) 
+  if (!isDeleting && charIndex < CURRENT_PHRASE.length) 
+  {
+    charIndex++; // Typing forward
+  } 
+  else if (isDeleting && charIndex > 0) 
+  {
+    charIndex--; // Deleting backward
+  } 
+  else 
+  {
+    if (!isDeleting) 
     {
-      charIndex++;
-    } 
-    else if (isDeleting && charIndex > 0) 
-    {
-      charIndex--;
+      // Pause after fully typing, then start deleting
+      setTimeout(() => 
+      {
+        isDeleting = true;
+        typeEffect();
+      }, 1500);
+      return;
     } 
     else 
     {
-      if (!isDeleting) 
-      {
-        // Pause after fully typing the phrase
-        setTimeout( () => { isDeleting = true; typeEffect(); }, 1500 );
-        return;
-      } 
-      else 
-      {
-        // Move to the next phrase after deleting
-        isDeleting = false;
-        phraseIndex = (phraseIndex + 1) % phrases.length;
-      }
+      // Move to next phrase
+      isDeleting = false;
+      phraseIndex = (phraseIndex + 1) % PHRASES.length;
     }
+  }
 
-    const delay = isDeleting ? 40 : 100;
-    setTimeout(typeEffect, delay);
+  const DELAY = isDeleting ? 40 : 100; // Speed of typing/deleting
+  setTimeout(typeEffect, DELAY);
 }
 
+// Animate on scroll (AOS library)
 AOS.init();
 
-const phrases = ["Full Stack Software Engineer", "AI Enthusiast", "UX/UI Creator", "Gamer", "Calisthenics", "Car Enthusiast"];
-const el = document.getElementById("typing-text");
-let phraseIndex = 0, charIndex = 0, isDeleting = false;
+// Constants for typing animation
+const PHRASES = [
+  "Full Stack Software Engineer",
+  "AI Enthusiast",
+  "UX/UI Creator",
+  "Gamer",
+  "Car Enthusiast"
+];
 
+const TYPING_ELEMENT = document.getElementById("typing-text");
+
+// State variables
+let phraseIndex = 0;
+let charIndex   = 0;
+let isDeleting  = false;
+
+// Start the typing animation
 typeEffect();

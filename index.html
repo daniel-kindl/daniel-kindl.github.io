@@ -3,26 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>Daniel Kindl | Portfolio</title>
 
+  <!-- Favicon -->
   <link rel="icon" type="image/png" href="src/images/favicon.png">
+
+  <!-- Global Styles -->
   <link rel="stylesheet" href="src/styles/global.css">
+
+  <!-- Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap">
+
+  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- AOS (Animate On Scroll) -->
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
 </head>
+
 <body>
+  <!-- ========== Header ========== -->
   <header>
     <h1>Daniel Kindl</h1>
     <p id="typing-text"></p>
+
+    <!-- Navigation -->
     <nav>
-      <a href="#contact">Contact</a>
       <a href="#skills">Techstack</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
     </nav>
   </header>
 
+  <!-- ========== Main Content ========== -->
   <main>
+
+    <!-- ========== Skills Section ========== -->
     <section id="skills" data-aos="fade-up">
       <h2>Techstack</h2>
       <ul class="tech-icons">
@@ -38,9 +54,36 @@
       </ul>
     </section>
 
+    <!-- ========== Projects Section ========== -->
+    <section id="projects" data-aos="fade-up">
+      <h2>Projects</h2>
+
+      <div class="carousel">
+        <!-- Carousel Track -->
+        <div class="carousel-track" id="carousel-track">
+          <!-- Hidden template card used for cloning via JavaScript -->
+          <div class="card project-template" style="display: none">
+            <h3 class="project-title">Title</h3>
+            <p class="project-desc">Description</p>
+            <p class="project-langs">Languages</p>
+            <a class="project-link" href="#" target="_blank">View on GitHub</a>
+          </div>
+        </div>
+
+        <!-- Carousel Navigation Arrows -->
+        <div class="carousel-controls">
+          <button class="prev"><i class="fas fa-arrow-left"></i></button>
+          <button class="next"><i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Contact Section ========== -->
     <section id="contact" data-aos="fade-up">
       <h2>Contact</h2>
       <p class="contact-message">Let's connect and build something awesome.</p>
+
+      <!-- Social Icons -->
       <div class="social-links">
         <a href="https://github.com/daniel-kindl" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a>
         <a href="https://www.linkedin.com/in/kindldaniel/" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a>
@@ -49,13 +92,16 @@
     </section>
   </main>
 
+  <!-- ========== Footer ========== -->
   <footer id="footer">
-    <p></p>Made with <span id="footer_heart">&#10084;&#65039;</span></p>
-    <p></p>&copy; <span id="footer_year"></span> Daniel Kindl. All rights reserved.</p>
+    <p>Made with <span id="footer_heart">&#10084;&#65039;</span></p>
+    <p>&copy; <span id="footer_year"></span> Daniel Kindl. All rights reserved.</p>
   </footer>
 
+  <!-- ========== Scripts ========== -->
   <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
   <script src="src/scripts/typeEffect.js"></script>
   <script src="src/scripts/footerScript.js"></script>
+  <script src="src/scripts/projectsScript.js"></script>
 </body>
 </html>
