@@ -43,10 +43,9 @@ AOS.init();
 // Constants for typing animation
 const PHRASES = [
   "Full Stack Software Engineer",
+  "Indie Game Developer",
   "AI Enthusiast",
-  "UX/UI Creator",
   "Gamer",
-  "Car Enthusiast"
 ];
 
 const TYPING_ELEMENT = document.getElementById("typing-text");
