@@ -3,32 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Daniel Kindl | Portfolio</title>
+  <meta name="description" content="Daniel Kindl - Software Engineer specializing in C#, .NET, and AI. View my projects and get in touch." />
+  <meta name="keywords" content="Daniel Kindl, Software Engineer, C#, .NET, ASP.NET, AI, Portfolio" />
+  <meta name="author" content="Daniel Kindl" />
+  <title>Daniel Kindl | Software Engineer Portfolio</title>
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="src/images/favicon.png">
+  <link rel="icon" type="image/png" href="src/images/favicon.png" />
+
+  <!-- Preconnect for Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
 
   <!-- Global Styles -->
-  <link rel="stylesheet" href="src/styles/global.css">
+  <link rel="stylesheet" href="src/styles/global.css" />
 
   <!-- Fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" />
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- AOS (Animate On Scroll) -->
-  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
 </head>
 
 <body>
   <!-- ========== Header ========== -->
   <header>
     <h1>Daniel Kindl</h1>
-    <p id="typing-text"></p>
+    <p id="typing-text" aria-live="polite"></p>
 
     <!-- Navigation -->
-    <nav>
+    <nav aria-label="Main navigation">
       <a href="#skills">Techstack</a>
       <a href="#projects">Projects</a>
       <a href="#contact">Contact</a>
@@ -41,24 +49,63 @@
     <!-- ========== Skills Section ========== -->
     <section id="skills" data-aos="fade-up">
       <h2>Techstack</h2>
-      <ul class="tech-icons">
-        <li><i class="fas fa-code"></i> C#</li>
-        <li><i class="fas fa-terminal"></i> Delphi</li>
-        <li><i class="fab fa-php"></i> PHP</li>
-        <li><i class="fab fa-html5"></i> HTML</li>
-        <li><i class="fab fa-css3-alt"></i> CSS</li>
-        <li><i class="fab fa-js"></i> JS</li>
-        <li><i class="fas fa-database"></i> SQL</li>
-        <li><i class="fab fa-git-alt"></i> Git</li>
-        <li><i class="fas fa-brain"></i> AI</li>
-      </ul>
+      <div class="tech-grid">
+        <div class="tech-item" data-aos="zoom-in" data-aos-delay="100">
+          <div class="tech-icon">
+            <i class="fas fa-hashtag"></i>
+          </div>
+          <span class="tech-name">C#</span>
+        </div>
+        <div class="tech-item" data-aos="zoom-in" data-aos-delay="200">
+          <div class="tech-icon">
+            <i class="fas fa-layer-group"></i>
+          </div>
+          <span class="tech-name">.NET</span>
+        </div>
+        <div class="tech-item" data-aos="zoom-in" data-aos-delay="300">
+          <div class="tech-icon">
+            <i class="fas fa-network-wired"></i>
+          </div>
+          <span class="tech-name">ASP.NET</span>
+        </div>
+        <div class="tech-item" data-aos="zoom-in" data-aos-delay="400">
+          <div class="tech-icon">
+            <i class="fas fa-exchange-alt"></i>
+          </div>
+          <span class="tech-name">REST APIs</span>
+        </div>
+        <div class="tech-item" data-aos="zoom-in" data-aos-delay="500">
+          <div class="tech-icon">
+            <i class="fas fa-window-maximize"></i>
+          </div>
+          <span class="tech-name">Avalonia UI</span>
+        </div>
+        <div class="tech-item" data-aos="zoom-in" data-aos-delay="600">
+          <div class="tech-icon">
+            <i class="fas fa-database"></i>
+          </div>
+          <span class="tech-name">SQL</span>
+        </div>
+        <div class="tech-item" data-aos="zoom-in" data-aos-delay="700">
+          <div class="tech-icon">
+            <i class="fab fa-git-alt"></i>
+          </div>
+          <span class="tech-name">Git</span>
+        </div>
+        <div class="tech-item" data-aos="zoom-in" data-aos-delay="800">
+          <div class="tech-icon">
+            <i class="fas fa-robot"></i>
+          </div>
+          <span class="tech-name">AI</span>
+        </div>
+      </div>
     </section>
 
     <!-- ========== Projects Section ========== -->
     <section id="projects" data-aos="fade-up">
       <h2>Projects</h2>
 
-      <div class="carousel">
+      <div class="carousel" role="region" aria-label="Projects carousel">
         <!-- Carousel Track -->
         <div class="carousel-track" id="carousel-track">
           <!-- Hidden template card used for cloning via JavaScript -->
@@ -66,14 +113,18 @@
             <h3 class="project-title">Title</h3>
             <p class="project-desc">Description</p>
             <p class="project-langs">Languages</p>
-            <a class="project-link" href="#" target="_blank">View on GitHub</a>
+            <a class="project-link" href="#" target="_blank" rel="noopener noreferrer">View on GitHub</a>
           </div>
         </div>
 
         <!-- Carousel Navigation Arrows -->
         <div class="carousel-controls">
-          <button class="prev"><i class="fas fa-arrow-left"></i></button>
-          <button class="next"><i class="fas fa-arrow-right"></i></button>
+          <button class="prev" aria-label="Previous project">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+          </button>
+          <button class="next" aria-label="Next project">
+            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+          </button>
         </div>
       </div>
     </section>
@@ -84,12 +135,17 @@
       <p class="contact-message">Let's connect and build something awesome.</p>
 
       <!-- Social Icons -->
-      <div class="social-links">
-        <a href="https://github.com/daniel-kindl" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a>
-        <a href="https://www.linkedin.com/in/kindldaniel/" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a>
-        <a href="https://www.instagram.com/jmenuji_se_daniel/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
-        <a href="https://x.com/jmenujisedaniel" target="_blank" rel="noopener noreferrer"><i class="fab fa-x-twitter"></i></a>
-      </div>
+      <nav class="social-links" aria-label="Social media links">
+        <a href="https://github.com/daniel-kindl" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+          <i class="fab fa-github" aria-hidden="true"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/kindldaniel/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+        <a href="https://www.instagram.com/jmenuji_se_daniel/" target="_blank" rel="noopener noreferrer" aria-label="Instagram profile">
+          <i class="fab fa-instagram" aria-hidden="true"></i>
+        </a>
+      </nav>
     </section>
   </main>
 

@@ -13,7 +13,7 @@
 ## 🚀 Features
 
 - ⚡ Typing effect intro with rotating titles
-- 🎨 Responsive layout with dark theme
+- 🎨 Responsive layout with a dark theme
 - 🖼️ Project carousel powered by GitHub API
 - 🔍 Smooth scroll animations (AOS)
 - 🔗 Social media links and contact section

@@ -1,33 +1,43 @@
+// Constants for typing animation
+const PHRASES = [
+  "Software Engineer",
+  "AI Enthusiast",
+  "Gamer",
+];
+
+const TYPING_ELEMENT = document.getElementById("typing-text");
+
+// State variables
+let phraseIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+
 // Animate a typewriter effect for rotating phrases
-function typeEffect() 
-{
-  const CURRENT_PHRASE       = PHRASES[phraseIndex];
-  const VISIBLE_TEXT         = CURRENT_PHRASE.slice(0, charIndex);
+function typeEffect() {
+  // Safety check: ensure element exists
+  if (!TYPING_ELEMENT) {
+    console.error("Typing element not found");
+    return;
+  }
+
+  const CURRENT_PHRASE = PHRASES[phraseIndex];
+  const VISIBLE_TEXT = CURRENT_PHRASE.slice(0, charIndex);
   TYPING_ELEMENT.textContent = VISIBLE_TEXT;
 
-  if (!isDeleting && charIndex < CURRENT_PHRASE.length) 
-  {
+  if (!isDeleting && charIndex < CURRENT_PHRASE.length) {
     charIndex++; // Typing forward
-  } 
-  else if (isDeleting && charIndex > 0) 
-  {
+  } else if (isDeleting && charIndex > 0) {
     charIndex--; // Deleting backward
-  } 
-  else 
-  {
-    if (!isDeleting) 
-    {
+  } else {
+    if (!isDeleting) {
       // Pause after fully typing, then start deleting
-      setTimeout(() => 
-      {
+      setTimeout(() => {
         isDeleting = true;
         typeEffect();
       }, 1500);
       return;
-    } 
-    else 
-    {
-      // Move to next phrase
+    } else {
+      // Move to the next phrase
       isDeleting = false;
       phraseIndex = (phraseIndex + 1) % PHRASES.length;
     }
@@ -37,23 +47,27 @@ function typeEffect()
   setTimeout(typeEffect, DELAY);
 }
 
-// Animate on scroll (AOS library)
-AOS.init();
+// Initialize AOS (Animate On Scroll)
+function initAOS() {
+  if (typeof AOS !== 'undefined') {
+    AOS.init({
+      duration: 800,
+      once: true,
+      offset: 100,
+    });
+  } else {
+    console.warn("AOS library not loaded");
+  }
+}
 
-// Constants for typing animation
-const PHRASES = [
-  "Full Stack Software Engineer",
-  "Indie Game Developer",
-  "AI Enthusiast",
-  "Gamer",
-];
-
-const TYPING_ELEMENT = document.getElementById("typing-text");
-
-// State variables
-let phraseIndex = 0;
-let charIndex   = 0;
-let isDeleting  = false;
-
-// Start the typing animation
-typeEffect();
+// Initialize on DOM ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    initAOS();
+    typeEffect();
+  });
+} else {
+  // DOM already loaded
+  initAOS();
+  typeEffect();
+}
