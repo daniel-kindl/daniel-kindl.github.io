@@ -3,7 +3,6 @@
  * Initializes all components and manages application lifecycle
  */
 
-import { cursorHalo } from './components/cursorHalo.js';
 import { carousel } from './components/carousel.js';
 import { navigation } from './components/navigation.js';
 import { footer } from './components/footer.js';
@@ -18,7 +17,6 @@ class App {
       footer,
       navigation,
       streamingText,
-      cursorHalo,
       carousel,
       magneticButtons,
       parallaxEffect,
@@ -51,9 +49,6 @@ class App {
    */
   destroy() {
     // Clean up components if needed
-    if (cursorHalo && typeof cursorHalo.destroy === 'function') {
-      cursorHalo.destroy();
-    }
     if (streamingText && typeof streamingText.destroy === 'function') {
       streamingText.destroy();
     }

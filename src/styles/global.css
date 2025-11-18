@@ -197,21 +197,6 @@ pre,
   mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
 }
 
-/* Cursor Halo Effect */
-.cursor-halo {
-  position: fixed;
-  width: 400px;
-  height: 400px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.3s;
-  z-index: 10;
-  mix-blend-mode: screen;
-  filter: blur(40px);
-}
-
 .hero-content {
   position: relative;
   z-index: 1;
@@ -867,10 +852,6 @@ pre,
   }
 
   /* Hide cursor halo on mobile */
-  .cursor-halo {
-    display: none;
-  }
-
   /* Disable complex interactions on mobile */
   .btn:hover,
   .social-link:hover,
