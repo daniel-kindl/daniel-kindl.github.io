@@ -1,0 +1,26 @@
+{
+  "name": "Daniel Kindl Portfolio",
+  "short_name": "DK Portfolio",
+  "description": "Software Engineer Portfolio - Daniel Kindl",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0f0a",
+  "theme_color": "#10b981",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/src/images/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/src/images/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["portfolio", "business"],
+  "screenshots": []
+}

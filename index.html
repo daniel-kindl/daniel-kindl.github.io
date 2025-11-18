@@ -2,163 +2,198 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Daniel Kindl - Software Engineer specializing in C#, .NET, and AI. View my projects and get in touch." />
-  <meta name="keywords" content="Daniel Kindl, Software Engineer, C#, .NET, ASP.NET, AI, Portfolio" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Daniel Kindl - Software Engineer specializing in C#, .NET, and modern web technologies. View my portfolio showcasing innovative projects and technical expertise." />
+  <meta name="keywords" content="Daniel Kindl, Software Engineer, C#, .NET, Portfolio, Web Developer, Full Stack, ASP.NET Core, JavaScript, AI Integration" />
   <meta name="author" content="Daniel Kindl" />
-  <title>Daniel Kindl | Software Engineer Portfolio</title>
+  <meta name="robots" content="index, follow" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://daniel-kindl.github.io/" />
+  <meta property="og:title" content="Daniel Kindl - Software Engineer Portfolio" />
+  <meta property="og:description" content="Passionate software engineer building scalable applications with C#, .NET, and modern technologies." />
+  <meta property="og:image" content="https://daniel-kindl.github.io/src/images/og-image.png" />
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://daniel-kindl.github.io/" />
+  <meta property="twitter:title" content="Daniel Kindl - Software Engineer Portfolio" />
+  <meta property="twitter:description" content="Passionate software engineer building scalable applications with C#, .NET, and modern technologies." />
+  <meta property="twitter:image" content="https://daniel-kindl.github.io/src/images/og-image.png" />
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#10b981" />
+  
+  <title>Daniel Kindl - Software Engineer Portfolio</title>
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="src/images/favicon.png" />
 
-  <!-- Preconnect for Performance -->
+  <!-- Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-
-  <!-- Global Styles -->
-  <link rel="stylesheet" href="src/styles/global.css" />
+  <link rel="preconnect" href="https://api.github.com" />
+  
+  <!-- Manifest -->
+  <link rel="manifest" href="/manifest.json" />
 
   <!-- Fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-  <!-- AOS (Animate On Scroll) -->
-  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+  <!-- Styles -->
+  <link rel="stylesheet" href="src/styles/global.css" />
+  
+  <!-- Preload critical resources -->
+  <link rel="preload" href="src/scripts/app.js" as="script" />
 </head>
 
 <body>
-  <!-- ========== Header ========== -->
-  <header>
-    <h1>Daniel Kindl</h1>
-    <p id="typing-text" aria-live="polite"></p>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-brand">
+      <i class="fas fa-code"></i>
+      <span>DK</span>
+    </div>
+    <div class="nav-links">
+      <a href="#about"><i class="fas fa-user"></i> About</a>
+      <a href="#skills"><i class="fas fa-laptop-code"></i> Skills</a>
+      <a href="#projects"><i class="fas fa-folder-open"></i> Work</a>
+      <a href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+    </div>
+    <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
 
-    <!-- Navigation -->
-    <nav aria-label="Main navigation">
-      <a href="#skills">Techstack</a>
-      <a href="#projects">Projects</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
+  <!-- Hero Section -->
+  <section class="hero" id="about">
+    <div class="hero-content">
+      <div class="hero-label">
+        <i class="fas fa-terminal"></i>
+        Software Engineer
+      </div>
+      <h1 class="hero-title">Daniel Kindl</h1>
+      <p class="hero-subtitle" id="streaming-text"></p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn btn-primary">
+          <i class="fas fa-rocket"></i>
+          View Work
+        </a>
+        <a href="#contact" class="btn btn-secondary">
+          <i class="fas fa-paper-plane"></i>
+          Get in Touch
+        </a>
+      </div>
+    </div>
+    <div class="hero-background">
+      <div class="grid-overlay"></div>
+      <div class="cursor-halo"></div>
+    </div>
+  </section>
 
-  <!-- ========== Main Content ========== -->
-  <main>
-
-    <!-- ========== Skills Section ========== -->
-    <section id="skills" data-aos="fade-up">
-      <h2>Techstack</h2>
-      <div class="tech-grid">
-        <div class="tech-item" data-aos="zoom-in" data-aos-delay="100">
-          <div class="tech-icon">
-            <i class="fas fa-hashtag"></i>
+  <!-- Skills Section -->
+  <section class="section" id="skills">
+    <div class="container">
+      <h2 class="section-title">
+        <i class="fas fa-tools"></i>
+        Skills & Technologies
+      </h2>
+      <div class="skills-grid">
+        <div class="skill-category">
+          <h3><i class="fas fa-code"></i> Languages & Frameworks</h3>
+          <div class="skill-tags">
+            <span class="tag"><i class="fab fa-microsoft"></i> C#</span>
+            <span class="tag"><i class="fas fa-layer-group"></i> .NET</span>
+            <span class="tag"><i class="fas fa-network-wired"></i> ASP.NET Core</span>
+            <span class="tag"><i class="fab fa-js"></i> JavaScript</span>
+            <span class="tag"><i class="fab fa-html5"></i> HTML/CSS</span>
           </div>
-          <span class="tech-name">C#</span>
         </div>
-        <div class="tech-item" data-aos="zoom-in" data-aos-delay="200">
-          <div class="tech-icon">
-            <i class="fas fa-layer-group"></i>
+        <div class="skill-category">
+          <h3><i class="fas fa-server"></i> Technologies</h3>
+          <div class="skill-tags">
+            <span class="tag"><i class="fas fa-exchange-alt"></i> REST APIs</span>
+            <span class="tag"><i class="fas fa-database"></i> SQL</span>
+            <span class="tag"><i class="fab fa-git-alt"></i> Git</span>
+            <span class="tag"><i class="fas fa-desktop"></i> Avalonia UI</span>
+            <span class="tag"><i class="fas fa-robot"></i> AI Integration</span>
           </div>
-          <span class="tech-name">.NET</span>
         </div>
-        <div class="tech-item" data-aos="zoom-in" data-aos-delay="300">
-          <div class="tech-icon">
-            <i class="fas fa-network-wired"></i>
+        <div class="skill-category">
+          <h3><i class="fas fa-trophy"></i> Expertise</h3>
+          <div class="skill-tags">
+            <span class="tag"><i class="fas fa-cogs"></i> Backend Development</span>
+            <span class="tag"><i class="fas fa-project-diagram"></i> API Design</span>
+            <span class="tag"><i class="fas fa-table"></i> Database Design</span>
+            <span class="tag"><i class="fas fa-lightbulb"></i> Problem Solving</span>
+            <span class="tag"><i class="fas fa-cubes"></i> Clean Architecture</span>
           </div>
-          <span class="tech-name">ASP.NET</span>
-        </div>
-        <div class="tech-item" data-aos="zoom-in" data-aos-delay="400">
-          <div class="tech-icon">
-            <i class="fas fa-exchange-alt"></i>
-          </div>
-          <span class="tech-name">REST APIs</span>
-        </div>
-        <div class="tech-item" data-aos="zoom-in" data-aos-delay="500">
-          <div class="tech-icon">
-            <i class="fas fa-window-maximize"></i>
-          </div>
-          <span class="tech-name">Avalonia UI</span>
-        </div>
-        <div class="tech-item" data-aos="zoom-in" data-aos-delay="600">
-          <div class="tech-icon">
-            <i class="fas fa-database"></i>
-          </div>
-          <span class="tech-name">SQL</span>
-        </div>
-        <div class="tech-item" data-aos="zoom-in" data-aos-delay="700">
-          <div class="tech-icon">
-            <i class="fab fa-git-alt"></i>
-          </div>
-          <span class="tech-name">Git</span>
-        </div>
-        <div class="tech-item" data-aos="zoom-in" data-aos-delay="800">
-          <div class="tech-icon">
-            <i class="fas fa-robot"></i>
-          </div>
-          <span class="tech-name">AI</span>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- ========== Projects Section ========== -->
-    <section id="projects" data-aos="fade-up">
-      <h2>Projects</h2>
-
-      <div class="carousel" role="region" aria-label="Projects carousel">
-        <!-- Carousel Track -->
-        <div class="carousel-track" id="carousel-track">
-          <!-- Hidden template card used for cloning via JavaScript -->
-          <div class="card project-template" style="display: none">
-            <h3 class="project-title">Title</h3>
-            <p class="project-desc">Description</p>
-            <p class="project-langs">Languages</p>
-            <a class="project-link" href="#" target="_blank" rel="noopener noreferrer">View on GitHub</a>
-          </div>
+  <!-- Projects Section -->
+  <section class="section section-dark" id="projects">
+    <div class="container">
+      <h2 class="section-title">
+        <i class="fas fa-briefcase"></i>
+        Featured Work
+      </h2>
+      <div class="carousel-wrapper">
+        <div class="carousel-3d" id="carousel-3d">
+          <!-- Projects loaded via JavaScript -->
         </div>
-
-        <!-- Carousel Navigation Arrows -->
         <div class="carousel-controls">
-          <button class="prev" aria-label="Previous project">
-            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+          <button class="carousel-btn prev-btn" aria-label="Previous project">
+            <i class="fas fa-chevron-left"></i>
           </button>
-          <button class="next" aria-label="Next project">
-            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+          <button class="carousel-btn next-btn" aria-label="Next project">
+            <i class="fas fa-chevron-right"></i>
           </button>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- ========== Contact Section ========== -->
-    <section id="contact" data-aos="fade-up">
-      <h2>Contact</h2>
-      <p class="contact-message">Let's connect and build something awesome.</p>
+  <!-- Contact Section -->
+  <section class="section" id="contact">
+    <div class="container">
+      <div class="contact-wrapper">
+        <h2 class="section-title">
+          <i class="fas fa-handshake"></i>
+          Let's Connect
+        </h2>
+        <p class="contact-text">Interested in working together or just want to say hi? Feel free to reach out.</p>
+        <div class="social-links">
+          <a href="https://github.com/daniel-kindl" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub">
+            <i class="fab fa-github"></i>
+          </a>
+          <a href="https://www.linkedin.com/in/kindldaniel/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+          <a href="https://www.instagram.com/jmenuji_se_daniel/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      <!-- Social Icons -->
-      <nav class="social-links" aria-label="Social media links">
-        <a href="https://github.com/daniel-kindl" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
-          <i class="fab fa-github" aria-hidden="true"></i>
-        </a>
-        <a href="https://www.linkedin.com/in/kindldaniel/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
-          <i class="fab fa-linkedin" aria-hidden="true"></i>
-        </a>
-        <a href="https://www.instagram.com/jmenuji_se_daniel/" target="_blank" rel="noopener noreferrer" aria-label="Instagram profile">
-          <i class="fab fa-instagram" aria-hidden="true"></i>
-        </a>
-      </nav>
-    </section>
-  </main>
-
-  <!-- ========== Footer ========== -->
-  <footer id="footer">
-    <p>Made with <span id="footer_heart">&#10084;&#65039;</span></p>
-    <p>&copy; <span id="footer_year"></span> Daniel Kindl. All rights reserved.</p>
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; <span id="footer-year"></span> Daniel Kindl. All rights reserved.</p>
   </footer>
 
-  <!-- ========== Scripts ========== -->
-  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-  <script src="src/scripts/typeEffect.js"></script>
-  <script src="src/scripts/footerScript.js"></script>
-  <script src="src/scripts/projectsScript.js"></script>
+  <!-- Scripts -->
+  <script type="module" src="src/scripts/app.js"></script>
 </body>
 </html>

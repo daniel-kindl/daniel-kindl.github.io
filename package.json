@@ -1,0 +1,32 @@
+{
+  "name": "daniel-kindl-portfolio",
+  "version": "2.0.0",
+  "description": "Personal portfolio website showcasing projects and skills",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx live-server --port=8080 --open=/",
+    "dev": "npx live-server --port=8080 --open=/",
+    "format": "npx prettier --write \"**/*.{js,css,html,md}\"",
+    "lint": "npx eslint src/scripts/**/*.js"
+  },
+  "keywords": [
+    "portfolio",
+    "personal-website",
+    "github-pages",
+    "javascript",
+    "html",
+    "css"
+  ],
+  "author": "Daniel Kindl",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daniel-kindl/daniel-kindl.github.io.git"
+  },
+  "bugs": {
+    "url": "https://github.com/daniel-kindl/daniel-kindl.github.io/issues"
+  },
+  "homepage": "https://daniel-kindl.github.io",
+  "devDependencies": {},
+  "type": "module"
+}
