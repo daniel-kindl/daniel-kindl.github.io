@@ -22,21 +22,42 @@ class Navigation {
     this.navLinks = querySelector('.nav-links');
     this.mobileToggle = querySelector('.mobile-menu-toggle');
     
-    this.attachSmoothScrolling();
     this.attachScrollListener();
     this.attachMobileMenuListener();
     this.attachLinkClickListeners();
+    this.initActiveSectionObserver();
   }
 
   /**
-   * Attach smooth scrolling to navigation links
+   * Initialize Intersection Observer for active section highlighting
    */
-  attachSmoothScrolling() {
-    const links = querySelectorAll('a[href^="#"]');
+  initActiveSectionObserver() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
 
-    links.forEach(link => {
-      link.addEventListener('click', (e) => this.handleLinkClick(e));
-    });
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -70% 0px', // Trigger when section is near top
+      threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Remove active class from all links
+          navLinks.forEach(link => link.classList.remove('active'));
+          
+          // Add active class to corresponding link
+          const id = entry.target.getAttribute('id');
+          const activeLink = document.querySelector(`.nav-links a[href="#${id}"]`);
+          if (activeLink) {
+            activeLink.classList.add('active');
+          }
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(section => observer.observe(section));
   }
 
   /**
@@ -44,20 +65,6 @@ class Navigation {
    * @param {Event} event - Click event
    */
   handleLinkClick(event) {
-    event.preventDefault();
-
-    const targetSelector = event.currentTarget.getAttribute('href');
-    const target = document.querySelector(targetSelector);
-
-    if (target) {
-      const offsetTop = target.offsetTop - config.animation.smoothScrollOffset;
-      
-      window.scrollTo({
-        top: offsetTop,
-        behavior: 'smooth'
-      });
-    }
-    
     // Close mobile menu if open
     if (window.innerWidth <= 768) {
       this.closeMobileMenu();

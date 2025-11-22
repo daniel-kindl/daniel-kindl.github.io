@@ -3,13 +3,21 @@
  * Initializes all components and manages application lifecycle
  */
 
-import { carousel } from './components/carousel.js';
+import { projectGallery } from './components/projectGallery.js';
 import { navigation } from './components/navigation.js';
 import { footer } from './components/footer.js';
 import { streamingText } from './components/streamingText.js';
-import { magneticButtons } from './components/magneticButtons.js';
-import { parallaxEffect } from './components/parallaxEffect.js';
-import { tiltEffect } from './components/tiltEffect.js';
+import { scrollTop } from './components/scrollTop.js';
+import { themeToggle } from './components/themeToggle.js';
+import { scrollReveal } from './components/scrollReveal.js';
+import { experienceTimeline } from './components/experienceTimeline.js';
+import { skills } from './components/skills.js';
+import { scrollProgress } from './components/scrollProgress.js';
+import { readmeModal } from './components/readmeModal.js';
+import { smoothScroll } from './components/smoothScroll.js';
+import { tooltips } from './components/tooltips.js';
+import { statusBar } from './components/statusBar.js';
+import { contact } from './components/contact.js';
 
 class App {
   constructor() {
@@ -17,10 +25,18 @@ class App {
       footer,
       navigation,
       streamingText,
-      carousel,
-      magneticButtons,
-      parallaxEffect,
-      tiltEffect,
+      projectGallery,
+      scrollTop,
+      themeToggle,
+      experienceTimeline,
+      skills,
+      scrollReveal,
+      scrollProgress,
+      readmeModal,
+      smoothScroll,
+      tooltips,
+      statusBar,
+      contact,
     ];
   }
 
@@ -62,6 +78,19 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => app.init());
 } else {
   app.init();
+}
+
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(registration => {
+        console.log('ServiceWorker registration successful');
+      })
+      .catch(err => {
+        console.log('ServiceWorker registration failed: ', err);
+      });
+  });
 }
 
 // Export for potential external use
