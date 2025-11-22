@@ -29,8 +29,12 @@
   
   <title>Daniel Kindl - Software Engineer Portfolio</title>
 
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://daniel-kindl.github.io/" />
+
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="src/images/favicon.png" />
+  <link rel="apple-touch-icon" href="src/images/favicon.png" />
 
   <!-- Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -41,16 +45,50 @@
   <link rel="manifest" href="/manifest.json" />
 
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+  <!-- Highlight.js (VS Code Theme) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer></script>
+
+  <!-- Lenis (Smooth Scrolling) -->
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js" defer></script>
+
+  <!-- Tippy.js (Tooltips) -->
+  <script src="https://unpkg.com/@popperjs/core@2" defer></script>
+  <script src="https://unpkg.com/tippy.js@6" defer></script>
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/scale.css" />
+
+  <!-- Markdown Parser -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+
   <!-- Styles -->
   <link rel="stylesheet" href="src/styles/global.css" />
-  
-  <!-- Preload critical resources -->
-  <link rel="preload" href="src/scripts/app.js" as="script" />
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "mainEntity": {
+        "@type": "Person",
+        "name": "Daniel Kindl",
+        "jobTitle": "Software Engineer",
+        "url": "https://daniel-kindl.github.io",
+        "sameAs": [
+          "https://github.com/daniel-kindl",
+          "https://www.linkedin.com/in/kindldaniel/",
+          "https://www.instagram.com/jmenuji_se_daniel/"
+        ],
+        "description": "Software Engineer specializing in C#, .NET, and modern web technologies.",
+        "image": "https://daniel-kindl.github.io/src/images/og-image.png",
+        "knowsAbout": ["C#", ".NET", "JavaScript", "Web Development", "Software Engineering"]
+      }
+    }
+  </script>
 </head>
 
 <body>
@@ -62,9 +100,13 @@
     </div>
     <div class="nav-links">
       <a href="#about"><i class="fas fa-user"></i> About</a>
+      <a href="#experience"><i class="fas fa-briefcase"></i> Experience</a>
       <a href="#skills"><i class="fas fa-laptop-code"></i> Skills</a>
       <a href="#projects"><i class="fas fa-folder-open"></i> Work</a>
       <a href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <i class="fas fa-moon"></i>
+      </button>
     </div>
     <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
       <span></span>
@@ -74,118 +116,104 @@
   </nav>
 
   <!-- Hero Section -->
-  <section class="hero" id="about">
-    <div class="hero-content">
-      <div class="hero-label">
-        <i class="fas fa-terminal"></i>
-        Software Engineer
+  <main>
+    <section class="hero" id="about">
+      <div class="hero-content">
+        <div class="hero-label">
+          <i class="fas fa-terminal"></i>
+          Software Engineer
+        </div>
+        <h1 class="hero-title">Daniel Kindl</h1>
+        <p class="hero-subtitle" id="streaming-text"></p>
+        <div class="hero-cta">
+          <a href="#projects" class="btn btn-primary">
+            <i class="fas fa-rocket"></i>
+            View Work
+          </a>
+          <a href="#contact" class="btn btn-secondary">
+            <i class="fas fa-paper-plane"></i>
+            Get in Touch
+          </a>
+          <a href="resume.html" target="_blank" class="btn btn-secondary" aria-label="View Resume">
+            <i class="fas fa-file-alt"></i>
+            Resume
+          </a>
+        </div>
       </div>
-      <h1 class="hero-title">Daniel Kindl</h1>
-      <p class="hero-subtitle" id="streaming-text"></p>
-      <div class="hero-cta">
-        <a href="#projects" class="btn btn-primary">
-          <i class="fas fa-rocket"></i>
-          View Work
-        </a>
-        <a href="#contact" class="btn btn-secondary">
-          <i class="fas fa-paper-plane"></i>
-          Get in Touch
-        </a>
+      <div class="hero-background">
+        <div class="grid-overlay"></div>
       </div>
-    </div>
-    <div class="hero-background">
-      <div class="grid-overlay"></div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Skills Section -->
-  <section class="section" id="skills">
-    <div class="container">
-      <h2 class="section-title">
-        <i class="fas fa-tools"></i>
-        Skills & Technologies
-      </h2>
-      <div class="skills-grid">
-        <div class="skill-category">
-          <h3><i class="fas fa-code"></i> Languages & Frameworks</h3>
-          <div class="skill-tags">
-            <span class="tag"><i class="fab fa-microsoft"></i> C#</span>
-            <span class="tag"><i class="fas fa-layer-group"></i> .NET</span>
-            <span class="tag"><i class="fas fa-network-wired"></i> ASP.NET Core</span>
-            <span class="tag"><i class="fab fa-js"></i> JavaScript</span>
-            <span class="tag"><i class="fab fa-html5"></i> HTML/CSS</span>
-          </div>
-        </div>
-        <div class="skill-category">
-          <h3><i class="fas fa-server"></i> Technologies</h3>
-          <div class="skill-tags">
-            <span class="tag"><i class="fas fa-exchange-alt"></i> REST APIs</span>
-            <span class="tag"><i class="fas fa-database"></i> SQL</span>
-            <span class="tag"><i class="fab fa-git-alt"></i> Git</span>
-            <span class="tag"><i class="fas fa-desktop"></i> Avalonia UI</span>
-            <span class="tag"><i class="fas fa-robot"></i> AI Integration</span>
-          </div>
-        </div>
-        <div class="skill-category">
-          <h3><i class="fas fa-trophy"></i> Expertise</h3>
-          <div class="skill-tags">
-            <span class="tag"><i class="fas fa-cogs"></i> Backend Development</span>
-            <span class="tag"><i class="fas fa-project-diagram"></i> API Design</span>
-            <span class="tag"><i class="fas fa-table"></i> Database Design</span>
-            <span class="tag"><i class="fas fa-lightbulb"></i> Problem Solving</span>
-            <span class="tag"><i class="fas fa-cubes"></i> Clean Architecture</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Projects Section -->
-  <section class="section section-dark" id="projects">
-    <div class="container">
-      <h2 class="section-title">
-        <i class="fas fa-briefcase"></i>
-        Featured Work
-      </h2>
-      <div class="carousel-wrapper">
-        <div class="carousel-3d" id="carousel-3d">
-          <!-- Projects loaded via JavaScript -->
-        </div>
-        <div class="carousel-controls">
-          <button class="carousel-btn prev-btn" aria-label="Previous project">
-            <i class="fas fa-chevron-left"></i>
-          </button>
-          <button class="carousel-btn next-btn" aria-label="Next project">
-            <i class="fas fa-chevron-right"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contact Section -->
-  <section class="section" id="contact">
-    <div class="container">
-      <div class="contact-wrapper">
-        <h2 class="section-title">
-          <i class="fas fa-handshake"></i>
-          Let's Connect
+    <!-- Experience Section -->
+    <section class="section" id="experience">
+      <div class="container">
+        <h2 class="section-title reveal">
+          <i class="fas fa-history"></i>
+          Experience
         </h2>
-        <p class="contact-text">Interested in working together or just want to say hi? Feel free to reach out.</p>
-        <div class="social-links">
-          <a href="https://github.com/daniel-kindl" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub">
-            <i class="fab fa-github"></i>
-          </a>
-          <a href="https://www.linkedin.com/in/kindldaniel/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
-            <i class="fab fa-linkedin-in"></i>
-          </a>
-          <a href="https://www.instagram.com/jmenuji_se_daniel/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
-            <i class="fab fa-instagram"></i>
-          </a>
+        <div id="experience-container">
+          <!-- Timeline loaded via JavaScript -->
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="section" id="skills">
+      <div class="container">
+        <h2 class="section-title reveal">
+          <i class="fas fa-tools"></i>
+          Skills & Technologies
+        </h2>
+        <div class="skills-grid">
+          <!-- Skills loaded via JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="section section-dark" id="projects">
+      <div class="container">
+        <h2 class="section-title reveal">
+          <i class="fas fa-briefcase"></i>
+          Featured Work
+        </h2>
+        <div id="projects-container" class="reveal">
+          <!-- Filters and Grid loaded via JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="contact-wrapper reveal">
+          <h2 class="section-title">
+            <i class="fas fa-handshake"></i>
+            Let's Connect
+          </h2>
+          <p class="contact-text">Interested in working together or just want to say hi? Feel free to reach out.</p>
+          <div class="social-links">
+            <a href="mailto:daniel.kindl@proton.me" class="social-link" aria-label="Email" id="email-link">
+              <i class="fas fa-envelope"></i>
+            </a>
+            <button class="social-link" id="copy-email-btn" aria-label="Copy Email Address">
+              <i class="far fa-copy"></i>
+            </button>
+            <a href="https://github.com/daniel-kindl" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub">
+              <i class="fab fa-github"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/kindldaniel/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="https://www.instagram.com/jmenuji_se_daniel/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
+              <i class="fab fa-instagram"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <!-- Footer -->
   <footer class="footer">

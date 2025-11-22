@@ -4,7 +4,7 @@
   "description": "Software Engineer Portfolio - Daniel Kindl",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0f0a",
+  "background_color": "#1e1e1e",
   "theme_color": "#10b981",
   "orientation": "portrait-primary",
   "icons": [
