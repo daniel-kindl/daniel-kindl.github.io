@@ -3,10 +3,10 @@
  * Fetches and displays GitHub READMEs in a modal
  */
 
-/* global marked, hljs */
-
 import { createElement } from '../utils/domHelpers.js';
 import { smoothScroll } from './smoothScroll.js';
+
+/* global marked, hljs */
 
 /**
  * Parse a GitHub repository URL to extract owner and repo name
@@ -23,8 +23,8 @@ function parseGithubRepo(repoUrl) {
       return null;
     }
     
-    // Get pathname and strip leading/trailing slashes
-    let pathname = url.pathname.replace(/^\/+|\/+$/g, '');
+    // Get pathname and remove leading/trailing slashes
+    const pathname = url.pathname.slice(1).replace(/\/+$/, '');
     
     // Split into segments
     const segments = pathname.split('/');

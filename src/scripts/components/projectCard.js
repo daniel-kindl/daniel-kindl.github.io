@@ -27,7 +27,7 @@ function normalizeUrl(url) {
   }
   
   // If URL doesn't start with http:// or https://, try to add https://
-  if (!url.match(/^https?:\/\//i)) {
+  if (!/^https?:\/\//i.test(url)) {
     // Check if it looks like a domain (contains a dot and no spaces)
     if (url.includes('.') && !url.includes(' ')) {
       url = 'https://' + url;
