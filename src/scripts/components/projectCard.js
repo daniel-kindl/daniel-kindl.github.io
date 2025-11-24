@@ -8,6 +8,43 @@ import { truncateText, getLanguageIcon } from '../utils/stringHelpers.js';
 import { config } from '../config.js';
 import { readmeModal } from './readmeModal.js';
 
+/**
+ * Normalize and validate a URL
+ * Handles missing protocols and validates the URL format
+ * @param {string} url - URL to normalize
+ * @returns {string|null} Normalized URL or null if invalid
+ */
+function normalizeUrl(url) {
+  if (!url || typeof url !== 'string') {
+    return null;
+  }
+  
+  // Trim whitespace
+  url = url.trim();
+  
+  if (!url) {
+    return null;
+  }
+  
+  // If URL doesn't start with http:// or https://, try to add https://
+  if (!/^https?:\/\//i.test(url)) {
+    // Check if it looks like a domain (contains a dot and no spaces)
+    if (url.includes('.') && !url.includes(' ')) {
+      url = 'https://' + url;
+    } else {
+      return null;
+    }
+  }
+  
+  // Validate URL using URL constructor
+  try {
+    const validUrl = new URL(url);
+    return validUrl.href;
+  } catch (error) {
+    return null;
+  }
+}
+
 class ProjectCard {
   /**
    * Create a project card element
@@ -29,12 +66,20 @@ class ProjectCard {
     const stars = repo.stargazers_count || 0;
     const forks = repo.forks_count || 0;
 
-    // Check for homepage or extract URL from description
-    let homepageUrl = repo.homepage;
+    // Determine external link URL
+    // Priority: 1. repo.homepage (GitHub API field), 2. URL from description
+    let homepageUrl = null;
+    
+    // First, try to use and normalize the homepage field from GitHub
+    if (repo.homepage) {
+      homepageUrl = normalizeUrl(repo.homepage);
+    }
+    
+    // If homepage is not available or invalid, try to extract URL from description
     if (!homepageUrl && repo.description) {
       const urlMatch = repo.description.match(/(https?:\/\/[^\s]+)/);
       if (urlMatch) {
-        homepageUrl = urlMatch[0];
+        homepageUrl = normalizeUrl(urlMatch[0]);
       }
     }
 

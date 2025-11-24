@@ -3,8 +3,47 @@
  * Fetches and displays GitHub READMEs in a modal
  */
 
-import { createElement, querySelector } from '../utils/domHelpers.js';
+import { createElement } from '../utils/domHelpers.js';
 import { smoothScroll } from './smoothScroll.js';
+
+/* global marked, hljs */
+
+/**
+ * Parse a GitHub repository URL to extract owner and repo name
+ * Handles various URL formats including trailing slashes and subpaths
+ * @param {string} repoUrl - GitHub repository URL
+ * @returns {Object|null} Object with {owner, repo} or null if parsing fails
+ */
+function parseGithubRepo(repoUrl) {
+  try {
+    const url = new URL(repoUrl);
+    
+    // Validate hostname is github.com
+    if (url.hostname !== 'github.com') {
+      return null;
+    }
+    
+    // Get pathname and remove leading/trailing slashes
+    const pathname = url.pathname.slice(1).replace(/\/+$/, '');
+    
+    // Split into segments
+    const segments = pathname.split('/');
+    
+    // GitHub repo URLs always start with owner/repo
+    // Can be followed by /tree/<branch>, /blob/<sha>/file, etc.
+    if (segments.length < 2) {
+      return null;
+    }
+    
+    return {
+      owner: segments[0],
+      repo: segments[1]
+    };
+  } catch (error) {
+    console.error('Failed to parse GitHub URL:', error);
+    return null;
+  }
+}
 
 class ReadmeModal {
   constructor() {
@@ -60,12 +99,14 @@ class ReadmeModal {
     if (smoothScroll) smoothScroll.stop();
 
     try {
-      // Extract owner and repo from URL
-      // Format: https://github.com/owner/repo
-      const parts = repoUrl.split('/');
-      const owner = parts[parts.length - 2];
-      const repo = parts[parts.length - 1];
-
+      // Parse GitHub URL to extract owner and repo
+      const parsed = parseGithubRepo(repoUrl);
+      
+      if (!parsed) {
+        throw new Error('Invalid GitHub URL');
+      }
+      
+      const { owner, repo } = parsed;
       const apiUrl = `https://api.github.com/repos/${owner}/${repo}/readme`;
       const response = await fetch(apiUrl);
       
@@ -129,11 +170,14 @@ class ReadmeModal {
       }
       
     } catch (error) {
+      console.error('Error loading README:', error);
       this.content.innerHTML = `
         <div class="readme-error">
           <i class="fas fa-exclamation-circle"></i>
           <p>Could not load README. It might not exist or the API limit was reached.</p>
-          <a href="${repoUrl}" target="_blank" class="btn btn-primary">View on GitHub</a>
+          <a href="${repoUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            <i class="fab fa-github"></i> View on GitHub
+          </a>
         </div>
       `;
     }
