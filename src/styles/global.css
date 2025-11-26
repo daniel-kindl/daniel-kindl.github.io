@@ -1324,7 +1324,7 @@ pre,
 .featured-project-card {
   background: var(--bg-secondary);
   border: 2px solid var(--border);
-  padding: 2rem;
+  padding: 0;
   display: flex;
   flex-direction: column;
   transition: all 0.2s;
@@ -1368,31 +1368,44 @@ pre,
 .featured-project-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+  align-items: flex-start;
+  padding: 2rem 2rem 1rem 2rem;
+  background: var(--bg-primary);
+  border-bottom: 2px solid var(--border);
 }
 
 .featured-project-icon {
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: var(--accent-secondary);
 }
 
-.featured-project-link-icon {
-  font-size: 1rem;
-  color: var(--text-muted);
-  opacity: 0;
-  transition: all 0.2s;
+.featured-project-links {
+  display: flex;
+  gap: 1rem;
 }
 
-.featured-project-card:hover .featured-project-link-icon {
-  opacity: 1;
+.featured-project-links a,
+.featured-project-links button {
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+  padding: 0.25rem;
+  background: transparent;
+  cursor: pointer;
+}
+
+.featured-project-links a:hover,
+.featured-project-links button:hover {
   color: var(--accent);
+  transform: scale(1.2);
 }
 
 .featured-project-title {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 800;
-  margin-bottom: 0.75rem;
+  margin: 0;
+  padding: 1.5rem 2rem 0 2rem;
   color: var(--text-primary);
   font-family: 'Space Grotesk', sans-serif;
   text-transform: uppercase;
@@ -1403,8 +1416,18 @@ pre,
   color: var(--text-secondary);
   font-size: 0.95rem;
   line-height: 1.6;
-  margin-bottom: 1.5rem;
+  padding: 0.75rem 2rem 1.5rem 2rem;
   flex-grow: 1;
+  margin: 0;
+}
+
+.featured-project-footer {
+  padding: 1.5rem 2rem;
+  background: var(--bg-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-top: 1px solid var(--bg-tertiary);
 }
 
 .featured-project-meta {
@@ -1414,8 +1437,6 @@ pre,
   font-size: 0.85rem;
   font-family: 'Fira Code', monospace;
   color: var(--text-muted);
-  border-top: 1px solid var(--bg-tertiary);
-  padding-top: 1rem;
 }
 
 .featured-project-meta span {
@@ -1436,7 +1457,6 @@ pre,
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 1rem;
 }
 
 .featured-project-topic {
@@ -1459,6 +1479,7 @@ pre,
 /* Featured Projects Skeleton Styles */
 .featured-project-card.skeleton-card {
   pointer-events: none;
+  padding: 2rem;
 }
 
 .featured-project-card .skeleton-icon {

@@ -33,6 +33,7 @@ jobs:
                         name
                         description
                         url
+                        homepageUrl
                         primaryLanguage {
                           name
                         }
@@ -63,6 +64,7 @@ jobs:
                 name: repo.name,
                 description: repo.description || '',
                 html_url: repo.url,
+                homepage: repo.homepageUrl || null,
                 language: repo.primaryLanguage?.name || null,
                 stargazers_count: repo.stargazerCount,
                 updated_at: repo.updatedAt,
