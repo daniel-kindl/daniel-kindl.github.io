@@ -8,7 +8,7 @@ import { config } from '../config.js';
 
 class PinnedReposService {
   constructor() {
-    this.dataUrl = 'data/pinned-repos.json';
+    this.dataUrl = '/data/pinned-repos.json';
   }
 
   /**

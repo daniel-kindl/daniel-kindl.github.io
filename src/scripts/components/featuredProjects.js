@@ -6,6 +6,49 @@
 import { querySelector, createElement } from '../utils/domHelpers.js';
 import { truncateText, getLanguageIcon } from '../utils/stringHelpers.js';
 import { pinnedReposService } from '../services/pinnedReposService.js';
+import { readmeModal } from './readmeModal.js';
+
+/**
+ * Normalize and validate a URL
+ * Handles missing protocols and validates the URL format
+ * Only allows http/https protocols to prevent XSS
+ * @param {string} url - URL to normalize
+ * @returns {string|null} Normalized URL or null if invalid
+ */
+function normalizeUrl(url) {
+  if (!url || typeof url !== 'string') {
+    return null;
+  }
+  
+  // Trim whitespace
+  url = url.trim();
+  
+  if (!url) {
+    return null;
+  }
+  
+  // If URL doesn't start with http:// or https://, try to add https://
+  if (!/^https?:\/\//i.test(url)) {
+    // Check if it looks like a domain (contains a dot and no spaces)
+    if (url.includes('.') && !url.includes(' ')) {
+      url = 'https://' + url;
+    } else {
+      return null;
+    }
+  }
+  
+  // Validate URL using URL constructor
+  try {
+    const validUrl = new URL(url);
+    // Only allow http and https protocols (prevent javascript:, data:, etc.)
+    if (validUrl.protocol !== 'http:' && validUrl.protocol !== 'https:') {
+      return null;
+    }
+    return validUrl.href;
+  } catch (error) {
+    return null;
+  }
+}
 
 class FeaturedProjects {
   constructor() {
@@ -66,11 +109,8 @@ class FeaturedProjects {
    * @returns {Element} Card element
    */
   createCard(repo) {
-    const card = createElement('a', {
-      className: 'featured-project-card',
-      href: repo.html_url,
-      target: '_blank',
-      rel: 'noopener noreferrer'
+    const card = createElement('div', {
+      className: 'featured-project-card'
     });
 
     const description = truncateText(repo.description, 100);
@@ -78,32 +118,58 @@ class FeaturedProjects {
     const stars = repo.stargazers_count || 0;
     const updatedDate = this.formatDate(repo.updated_at);
 
+    // Determine external link URL (homepage from API)
+    // normalizeUrl validates URLs using URL constructor which prevents XSS via javascript: protocol
+    const homepageUrl = repo.homepage ? normalizeUrl(repo.homepage) : null;
+
     card.innerHTML = `
       <div class="featured-project-header">
         <i class="fas fa-folder-open featured-project-icon"></i>
-        <i class="fas fa-external-link-alt featured-project-link-icon"></i>
+        <div class="featured-project-links">
+          <button class="btn-icon quick-look" title="Quick Look" aria-label="Quick Look">
+            <i class="fas fa-eye"></i>
+          </button>
+          ${homepageUrl ? `
+            <a href="${homepageUrl}" target="_blank" rel="noopener noreferrer" aria-label="Live Demo" title="Live Demo">
+              <i class="fas fa-external-link-alt"></i>
+            </a>
+          ` : ''}
+          <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repo" title="GitHub Repo">
+            <i class="fab fa-github"></i>
+          </a>
+        </div>
       </div>
       <h3 class="featured-project-title">${repo.name}</h3>
       <p class="featured-project-description">${description}</p>
-      <div class="featured-project-meta">
-        ${repo.language ? `
-          <span class="featured-project-language">
-            <i class="${languageIcon}"></i> ${repo.language}
+      <div class="featured-project-footer">
+        <div class="featured-project-meta">
+          ${repo.language ? `
+            <span class="featured-project-language">
+              <i class="${languageIcon}"></i> ${repo.language}
+            </span>
+          ` : ''}
+          <span class="featured-project-stars">
+            <i class="fas fa-star"></i> ${stars}
           </span>
-        ` : ''}
-        <span class="featured-project-stars">
-          <i class="fas fa-star"></i> ${stars}
-        </span>
-        <span class="featured-project-updated">
-          <i class="fas fa-clock"></i> ${updatedDate}
-        </span>
-      </div>
-      ${repo.topics && repo.topics.length > 0 ? `
-        <div class="featured-project-topics">
-          ${repo.topics.slice(0, 3).map(topic => `<span class="featured-project-topic">${topic}</span>`).join('')}
+          <span class="featured-project-updated">
+            <i class="fas fa-clock"></i> ${updatedDate}
+          </span>
         </div>
-      ` : ''}
+        ${repo.topics && repo.topics.length > 0 ? `
+          <div class="featured-project-topics">
+            ${repo.topics.slice(0, 3).map(topic => `<span class="featured-project-topic">${topic}</span>`).join('')}
+          </div>
+        ` : ''}
+      </div>
     `;
+
+    // Attach Quick Look listener
+    const quickLookBtn = card.querySelector('.quick-look');
+    if (quickLookBtn) {
+      quickLookBtn.addEventListener('click', () => {
+        readmeModal.open(repo.html_url);
+      });
+    }
 
     return card;
   }
