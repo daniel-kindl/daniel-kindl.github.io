@@ -1314,3 +1314,169 @@ pre,
   bottom: 3rem; /* Move up to avoid status bar */
 }
 
+/* Featured Projects Section */
+.featured-projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.featured-project-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 4px 4px 0px var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.featured-project-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transform: skewX(-25deg);
+  transition: 0.5s;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.featured-project-card:hover::after {
+  left: 150%;
+  transition: 0.7s ease-in-out;
+}
+
+.featured-project-card:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 8px 8px 0px var(--accent);
+  border-color: var(--accent);
+}
+
+.featured-project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.featured-project-icon {
+  font-size: 2rem;
+  color: var(--accent-secondary);
+}
+
+.featured-project-link-icon {
+  font-size: 1rem;
+  color: var(--text-muted);
+  opacity: 0;
+  transition: all 0.2s;
+}
+
+.featured-project-card:hover .featured-project-link-icon {
+  opacity: 1;
+  color: var(--accent);
+}
+
+.featured-project-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+  font-family: 'Space Grotesk', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+}
+
+.featured-project-description {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.featured-project-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.85rem;
+  font-family: 'Fira Code', monospace;
+  color: var(--text-muted);
+  border-top: 1px solid var(--bg-tertiary);
+  padding-top: 1rem;
+}
+
+.featured-project-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.featured-project-meta i {
+  color: var(--accent);
+}
+
+.featured-project-language i {
+  color: var(--accent-secondary);
+}
+
+.featured-project-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.featured-project-topic {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-family: 'Fira Code', monospace;
+}
+
+.featured-projects-empty,
+.featured-projects-error {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1rem;
+  padding: 2rem;
+}
+
+/* Featured Projects Skeleton Styles */
+.featured-project-card.skeleton-card {
+  pointer-events: none;
+}
+
+.featured-project-card .skeleton-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.featured-project-card .skeleton-meta {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--bg-tertiary);
+}
+
+@media (max-width: 768px) {
+  .featured-projects-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
