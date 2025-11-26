@@ -11,6 +11,7 @@ import { readmeModal } from './readmeModal.js';
 /**
  * Normalize and validate a URL
  * Handles missing protocols and validates the URL format
+ * Only allows http/https protocols to prevent XSS
  * @param {string} url - URL to normalize
  * @returns {string|null} Normalized URL or null if invalid
  */
@@ -39,6 +40,10 @@ function normalizeUrl(url) {
   // Validate URL using URL constructor
   try {
     const validUrl = new URL(url);
+    // Only allow http and https protocols (prevent javascript:, data:, etc.)
+    if (validUrl.protocol !== 'http:' && validUrl.protocol !== 'https:') {
+      return null;
+    }
     return validUrl.href;
   } catch (error) {
     return null;
@@ -114,10 +119,8 @@ class FeaturedProjects {
     const updatedDate = this.formatDate(repo.updated_at);
 
     // Determine external link URL (homepage from API)
-    let homepageUrl = null;
-    if (repo.homepage) {
-      homepageUrl = normalizeUrl(repo.homepage);
-    }
+    // normalizeUrl validates URLs using URL constructor which prevents XSS via javascript: protocol
+    const homepageUrl = repo.homepage ? normalizeUrl(repo.homepage) : null;
 
     card.innerHTML = `
       <div class="featured-project-header">
