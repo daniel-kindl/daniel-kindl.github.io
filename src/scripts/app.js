@@ -18,6 +18,7 @@ import { smoothScroll } from './components/smoothScroll.js';
 import { tooltips } from './components/tooltips.js';
 import { statusBar } from './components/statusBar.js';
 import { contact } from './components/contact.js';
+import { featuredProjects } from './components/featuredProjects.js';
 
 class App {
   constructor() {
@@ -25,6 +26,7 @@ class App {
       footer,
       navigation,
       streamingText,
+      featuredProjects,
       projectGallery,
       scrollTop,
       themeToggle,

@@ -1,0 +1,91 @@
+name: Update Pinned Repos
+
+on:
+  schedule:
+    # Run daily at midnight UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-pinned-repos:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch pinned repositories
+        uses: actions/github-script@v7
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          script: |
+            const fs = require('fs');
+            
+            const query = `
+              query {
+                user(login: "daniel-kindl") {
+                  pinnedItems(first: 6, types: REPOSITORY) {
+                    nodes {
+                      ... on Repository {
+                        name
+                        description
+                        url
+                        primaryLanguage {
+                          name
+                        }
+                        stargazerCount
+                        updatedAt
+                        repositoryTopics(first: 10) {
+                          nodes {
+                            topic {
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `;
+            
+            try {
+              const response = await github.graphql(query, {
+                headers: {
+                  authorization: `token ${process.env.GH_TOKEN}`
+                }
+              });
+              
+              const pinnedRepos = response.user.pinnedItems.nodes.map(repo => ({
+                name: repo.name,
+                description: repo.description || '',
+                html_url: repo.url,
+                language: repo.primaryLanguage?.name || null,
+                stargazers_count: repo.stargazerCount,
+                updated_at: repo.updatedAt,
+                topics: repo.repositoryTopics.nodes.map(t => t.topic.name)
+              }));
+              
+              const data = {
+                lastUpdated: new Date().toISOString(),
+                repos: pinnedRepos
+              };
+              
+              fs.writeFileSync('data/pinned-repos.json', JSON.stringify(data, null, 2));
+              console.log('Successfully updated pinned-repos.json');
+              console.log(`Found ${pinnedRepos.length} pinned repositories`);
+            } catch (error) {
+              console.error('Error fetching pinned repos:', error);
+              core.setFailed(error.message);
+            }
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/pinned-repos.json
+          git diff --staged --quiet || git commit -m "chore: update pinned repos data [skip ci]"
+          git push
