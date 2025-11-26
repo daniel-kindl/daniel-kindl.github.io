@@ -364,48 +364,34 @@
     });
 
     // Render Projects (Featured) - using pinned repos service
+    function renderProjectItem(container, project) {
+      const div = document.createElement('div');
+      div.className = 'project-item';
+      div.innerHTML = `
+        <div class="project-header">
+          <div class="project-name">${project.name}</div>
+          <a href="${project.html_url}" class="project-link" target="_blank">View Code <i class="fas fa-external-link-alt"></i></a>
+        </div>
+        <p class="project-desc">${project.description || 'No description available'}</p>
+        <div class="job-tech">
+          ${project.language ? `<span class="tech-tag">${project.language}</span>` : ''}
+          ${project.topics ? project.topics.map(t => `<span class="tech-tag">${t}</span>`).join('') : ''}
+        </div>
+      `;
+      container.appendChild(div);
+    }
+
     async function renderProjects() {
       const projContainer = document.getElementById('projects-list');
       
       try {
         const projects = await pinnedReposService.getPinnedRepos();
-        
-        projects.forEach(p => {
-          const div = document.createElement('div');
-          div.className = 'project-item';
-          div.innerHTML = `
-            <div class="project-header">
-              <div class="project-name">${p.name}</div>
-              <a href="${p.html_url}" class="project-link" target="_blank">View Code <i class="fas fa-external-link-alt"></i></a>
-            </div>
-            <p class="project-desc">${p.description || 'No description available'}</p>
-            <div class="job-tech">
-              ${p.language ? `<span class="tech-tag">${p.language}</span>` : ''}
-              ${p.topics ? p.topics.map(t => `<span class="tech-tag">${t}</span>`).join('') : ''}
-            </div>
-          `;
-          projContainer.appendChild(div);
-        });
+        projects.forEach(p => renderProjectItem(projContainer, p));
       } catch (error) {
         console.error('Error rendering projects:', error);
         // Fall back to config if service fails
         const fallbackProjects = config.featuredProjects || [];
-        fallbackProjects.forEach(p => {
-          const div = document.createElement('div');
-          div.className = 'project-item';
-          div.innerHTML = `
-            <div class="project-header">
-              <div class="project-name">${p.name}</div>
-              <a href="${p.html_url}" class="project-link" target="_blank">View Code <i class="fas fa-external-link-alt"></i></a>
-            </div>
-            <p class="project-desc">${p.description || 'No description available'}</p>
-            <div class="job-tech">
-              ${p.language ? `<span class="tech-tag">${p.language}</span>` : ''}
-              ${p.topics ? p.topics.map(t => `<span class="tech-tag">${t}</span>`).join('') : ''}
-            </div>
-          `;
-          projContainer.appendChild(div);
-        });
+        fallbackProjects.forEach(p => renderProjectItem(projContainer, p));
       }
     }
 

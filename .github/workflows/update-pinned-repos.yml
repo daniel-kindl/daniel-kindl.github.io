@@ -79,7 +79,7 @@ jobs:
               console.log(`Found ${pinnedRepos.length} pinned repositories`);
             } catch (error) {
               console.error('Error fetching pinned repos:', error);
-              core.setFailed(error.message);
+              throw error;
             }
 
       - name: Commit and push changes
