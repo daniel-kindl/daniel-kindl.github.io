@@ -1,19 +1,21 @@
 {
-  "lastUpdated": "2025-11-26T17:22:02.818Z",
+  "lastUpdated": "2025-11-26T17:43:53.740Z",
   "repos": [
     {
       "name": "daniel-kindl.github.io",
       "description": "Personal portfolio website.",
       "html_url": "https://github.com/daniel-kindl/daniel-kindl.github.io",
+      "homepage": "https://daniel-kindl.github.io/",
       "language": "JavaScript",
       "stargazers_count": 0,
-      "updated_at": "2025-11-26T17:15:03Z",
+      "updated_at": "2025-11-26T17:43:37Z",
       "topics": []
     },
     {
       "name": "data-and-algorithms-visualization",
       "description": "An interactive web application for visualizing algorithms and data structures with step-by-step animations.",
       "html_url": "https://github.com/daniel-kindl/data-and-algorithms-visualization",
+      "homepage": "https://daniel-kindl.github.io/data-and-algorithms-visualization/",
       "language": "HTML",
       "stargazers_count": 0,
       "updated_at": "2025-11-22T19:30:26Z",
@@ -23,6 +25,7 @@
       "name": "cryptolab",
       "description": "An interactive, client-side educational web app that explains and visualizes Encoding, Hashing, and Encryption.",
       "html_url": "https://github.com/daniel-kindl/cryptolab",
+      "homepage": "https://daniel-kindl.github.io/cryptolab/",
       "language": "TypeScript",
       "stargazers_count": 0,
       "updated_at": "2025-11-24T10:06:35Z",
