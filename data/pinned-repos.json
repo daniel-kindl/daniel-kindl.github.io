@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-06T01:13:10.442Z",
+  "lastUpdated": "2025-12-07T01:23:42.510Z",
   "repos": [
     {
       "name": "daniel-kindl.github.io",
@@ -8,7 +8,7 @@
       "homepage": "https://daniel-kindl.github.io/",
       "language": "JavaScript",
       "stargazers_count": 0,
-      "updated_at": "2025-12-05T01:17:02Z",
+      "updated_at": "2025-12-06T01:13:14Z",
       "topics": []
     },
     {
@@ -29,16 +29,6 @@
       "language": "TypeScript",
       "stargazers_count": 0,
       "updated_at": "2025-11-27T09:20:04Z",
-      "topics": []
-    },
-    {
-      "name": "BugEspy",
-      "description": "A production-quality bug & issue tracking system used for deep full-stack and software architecture learning with C#/.NET and React.",
-      "html_url": "https://github.com/daniel-kindl/BugEspy",
-      "homepage": null,
-      "language": null,
-      "stargazers_count": 0,
-      "updated_at": "2025-12-02T09:30:52Z",
       "topics": []
     }
   ]
