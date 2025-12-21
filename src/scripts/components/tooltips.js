@@ -3,8 +3,15 @@
  * Initializes Tippy.js tooltips for elements
  */
 
+import { logger } from '../utils/logger.js';
+
 class Tooltips {
   init() {
+    if (typeof tippy === 'undefined') {
+      logger.warn('Tippy.js library not loaded');
+      return;
+    }
+
     // Initialize tooltips for elements with aria-label
     tippy('[aria-label]', {
       content(reference) {
