@@ -26,10 +26,10 @@ export const config = {
       'Creating AI-powered applications that make a difference.',
       'Solving complex problems with simple, efficient code.',
     ],
-    typingSpeed: 50,        // Milliseconds per character
-    deletingSpeed: 30,      // Milliseconds per character when deleting
-    pauseBeforeDelete: 2000, // Pause after typing complete text
-    pauseBeforeType: 500,    // Pause before typing next text
+    typingSpeed: 50,               // Milliseconds per character
+    deletingSpeed: 30,             // Milliseconds per character when deleting
+    pauseBeforeDelete: 2 * 1000,   // Pause after typing complete text (2 seconds)
+    pauseBeforeType: 500,          // Pause before typing next text
   },
 
   // Animation Configuration
@@ -85,13 +85,8 @@ export const config = {
       icon: 'fas fa-server',
       items: [
         { name: 'C#', icon: 'fab fa-microsoft' },
-        { name: '.NET 8/9/10', icon: 'fas fa-layer-group' },
+        { name: '.NET 9/10', icon: 'fas fa-layer-group' },
         { name: 'ASP.NET Core', icon: 'fas fa-network-wired' },
-        { name: 'Entity Framework', icon: 'fas fa-database' },
-        { name: 'Microservices', icon: 'fas fa-cubes' },
-        { name: 'Clean Architecture', icon: 'fas fa-project-diagram' },
-        { name: 'REST API', icon: 'fas fa-exchange-alt' },
-        { name: 'SOLID', icon: 'fas fa-check-double' },
         { name: 'Delphi', icon: 'fas fa-history' }
       ]
     },
@@ -101,7 +96,6 @@ export const config = {
       items: [
         { name: 'TypeScript / JS', icon: 'fab fa-js' },
         { name: 'React', icon: 'fab fa-react' },
-        { name: 'Tailwind CSS', icon: 'fas fa-wind' },
         { name: 'Avalonia UI', icon: 'fas fa-desktop' }
       ]
     },
@@ -125,8 +119,6 @@ export const config = {
         { name: 'Visual Studio', icon: 'fab fa-microsoft' },
         { name: 'Git / GitHub', icon: 'fab fa-git-alt' },
         { name: 'GitHub Copilot', icon: 'fas fa-robot' },
-        { name: 'GPT-Codex', icon: 'fas fa-brain' },
-        { name: 'Claude', icon: 'fas fa-magic' }
       ]
     }
   ],
