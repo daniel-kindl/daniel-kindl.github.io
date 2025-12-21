@@ -3,6 +3,7 @@
  * Manages the project grid, filtering, and interactions
  */
 
+import { logger } from '../utils/logger.js';
 import { querySelector, createElement } from '../utils/domHelpers.js';
 import { projectCard } from './projectCard.js';
 import { githubService } from '../services/githubService.js';
@@ -74,7 +75,7 @@ class ProjectGallery {
       this.renderProjects();
       
     } catch (error) {
-      console.error('Error loading projects:', error);
+      logger.error('Error loading projects:', error);
       // Fallback to featured projects from config on error
       if (config.featuredProjects && config.featuredProjects.length > 0) {
         this.projects = config.featuredProjects;
