@@ -3,6 +3,7 @@
  * Handles contact section interactions
  */
 
+import { logger } from '../utils/logger.js';
 import { querySelector } from '../utils/domHelpers.js';
 
 class Contact {
@@ -43,7 +44,7 @@ class Contact {
       }, 2000);
       
     } catch (err) {
-      console.error('Failed to copy email:', err);
+      logger.error('Failed to copy email:', err);
     }
   }
 }
