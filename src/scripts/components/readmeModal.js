@@ -3,6 +3,7 @@
  * Fetches and displays GitHub READMEs in a modal
  */
 
+import { logger } from '../utils/logger.js';
 import { createElement } from '../utils/domHelpers.js';
 import { smoothScroll } from './smoothScroll.js';
 
@@ -40,7 +41,7 @@ function parseGithubRepo(repoUrl) {
       repo: segments[1]
     };
   } catch (error) {
-    console.error('Failed to parse GitHub URL:', error);
+    logger.error('Failed to parse GitHub URL:', error);
     return null;
   }
 }
@@ -50,6 +51,7 @@ class ReadmeModal {
     this.overlay = null;
     this.content = null;
     this.isOpen = false;
+    this.keydownHandler = null;
   }
 
   init() {
@@ -82,23 +84,26 @@ class ReadmeModal {
     this.overlay.addEventListener('click', (e) => {
       if (e.target === this.overlay) this.close();
     });
-    document.addEventListener('keydown', (e) => {
+    this.keydownHandler = (e) => {
       if (e.key === 'Escape' && this.isOpen) this.close();
-    });
+    };
+    document.addEventListener('keydown', this.keydownHandler);
   }
 
   async open(repoUrl) {
-    this.isOpen = true;
-    this.overlay.classList.add('active');
-    this.content.innerHTML = `
-      <div class="readme-loading">
-        <i class="fas fa-spinner fa-spin"></i> Loading README...
-      </div>
-    `;
-    document.body.style.overflow = 'hidden';
-    if (smoothScroll) smoothScroll.stop();
+    if (this.loading) return;
+    this.loading = true;
 
     try {
+      this.isOpen = true;
+      this.overlay.classList.add('active');
+      this.content.innerHTML = `
+        <div class="readme-loading">
+          <i class="fas fa-spinner fa-spin"></i> Loading README...
+        </div>
+      `;
+      document.body.style.overflow = 'hidden';
+      if (smoothScroll) smoothScroll.stop();
       // Parse GitHub URL to extract owner and repo
       const parsed = parseGithubRepo(repoUrl);
       
@@ -128,6 +133,12 @@ class ReadmeModal {
       }
       const decodedContent = new TextDecoder('utf-8').decode(bytes);
       
+      if (typeof marked === 'undefined') {
+        logger.warn('Marked.js library not loaded');
+        this.content.innerHTML = '<div class="readme-error"><p>Markdown parser not available.</p></div>';
+        return;
+      }
+      
       // Configure custom renderer for relative links
       const renderer = new marked.Renderer();
       
@@ -138,7 +149,7 @@ class ReadmeModal {
           try {
             link = new URL(cleanHref, blobBase).href;
           } catch (e) {
-            console.warn('Invalid URL:', cleanHref);
+            logger.warn('Invalid URL:', cleanHref);
           }
         }
         const target = link && link.startsWith('#') ? '' : 'target="_blank" rel="noopener noreferrer"';
@@ -152,7 +163,7 @@ class ReadmeModal {
           try {
             src = new URL(cleanHref, rawBase).href;
           } catch (e) {
-            console.warn('Invalid Image URL:', cleanHref);
+            logger.warn('Invalid Image URL:', cleanHref);
           }
         }
         return `<img src="${src}" alt="${text}" title="${title || ''}">`;
@@ -170,7 +181,7 @@ class ReadmeModal {
       }
       
     } catch (error) {
-      console.error('Error loading README:', error);
+      logger.error('Error loading README:', error);
       this.content.innerHTML = `
         <div class="readme-error">
           <i class="fas fa-exclamation-circle"></i>
@@ -180,6 +191,8 @@ class ReadmeModal {
           </a>
         </div>
       `;
+    } finally {
+      this.loading = false;
     }
   }
 
@@ -201,7 +214,7 @@ class ReadmeModal {
           button.classList.remove('copied');
         }, 2000);
       } catch (err) {
-        console.error('Failed to copy:', err);
+        logger.error('Failed to copy:', err);
       }
     });
     
@@ -214,6 +227,12 @@ class ReadmeModal {
     this.overlay.classList.remove('active');
     document.body.style.overflow = '';
     if (smoothScroll) smoothScroll.start();
+  }
+
+  destroy() {
+    if (this.keydownHandler) {
+      document.removeEventListener('keydown', this.keydownHandler);
+    }
   }
 }
 
