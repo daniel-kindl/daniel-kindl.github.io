@@ -4,12 +4,13 @@
  */
 
 import { querySelector } from '../utils/domHelpers.js';
+import { safeLocalStorage } from '../utils/storage.js';
 
 class ThemeToggle {
   constructor() {
     this.toggleBtn = null;
     this.icon = null;
-    this.theme = localStorage.getItem('theme') || 'dark';
+    this.theme = safeLocalStorage.getItem('theme') || 'dark';
   }
 
   /**
@@ -42,7 +43,7 @@ class ThemeToggle {
    */
   setTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
+    safeLocalStorage.setItem('theme', theme);
     
     // Update icon
     if (this.icon) {
