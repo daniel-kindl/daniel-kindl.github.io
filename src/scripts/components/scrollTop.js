@@ -9,6 +9,7 @@ class ScrollTop {
   constructor() {
     this.button = null;
     this.scrollThreshold = 500;
+    this.scrollHandler = null;
   }
 
   /**
@@ -43,13 +44,14 @@ class ScrollTop {
    * Attach scroll listener to toggle visibility
    */
   attachScrollListener() {
-    window.addEventListener('scroll', () => {
+    this.scrollHandler = () => {
       if (window.scrollY > this.scrollThreshold) {
         this.button.classList.add('visible');
       } else {
         this.button.classList.remove('visible');
       }
-    });
+    };
+    window.addEventListener('scroll', this.scrollHandler, { passive: true });
   }
 
   /**
@@ -62,6 +64,12 @@ class ScrollTop {
         behavior: 'smooth'
       });
     });
+  }
+
+  destroy() {
+    if (this.scrollHandler) {
+      window.removeEventListener('scroll', this.scrollHandler);
+    }
   }
 }
 
