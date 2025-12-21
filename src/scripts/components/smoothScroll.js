@@ -3,12 +3,21 @@
  * Implements momentum scrolling using Lenis
  */
 
+import { logger } from '../utils/logger.js';
+
 class SmoothScroll {
   constructor() {
     this.lenis = null;
+    this.rafCallback = this.raf.bind(this);
+    this.anchorClickHandler = null;
   }
 
   init() {
+    if (typeof Lenis === 'undefined') {
+      logger.warn('Lenis library not loaded');
+      return;
+    }
+
     // Initialize Lenis
     this.lenis = new Lenis({
       duration: 1.2,
@@ -22,26 +31,28 @@ class SmoothScroll {
     });
 
     // Connect Lenis to requestAnimationFrame
-    requestAnimationFrame(this.raf.bind(this));
+    requestAnimationFrame(this.rafCallback);
 
-    // Connect to anchor links for smooth scrolling
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', (e) => {
-        e.preventDefault();
-        const targetId = anchor.getAttribute('href');
-        if (targetId === '#') return;
-        
-        const target = document.querySelector(targetId);
-        if (target) {
-          this.lenis.scrollTo(target);
-        }
-      });
-    });
+    // Use event delegation for anchor links
+    this.anchorClickHandler = (e) => {
+      const anchor = e.target.closest('a[href^="#"]');
+      if (!anchor) return;
+
+      e.preventDefault();
+      const targetId = anchor.getAttribute('href');
+      if (targetId === '#') return;
+      
+      const target = document.querySelector(targetId);
+      if (target) {
+        this.lenis.scrollTo(target);
+      }
+    };
+    document.addEventListener('click', this.anchorClickHandler);
   }
 
   raf(time) {
     this.lenis.raf(time);
-    requestAnimationFrame(this.raf.bind(this));
+    requestAnimationFrame(this.rafCallback); // Reuse bound function
   }
 
   /**
@@ -56,6 +67,12 @@ class SmoothScroll {
    */
   start() {
     this.lenis.start();
+  }
+
+  destroy() {
+    if (this.anchorClickHandler) {
+      document.removeEventListener('click', this.anchorClickHandler);
+    }
   }
 }
 
