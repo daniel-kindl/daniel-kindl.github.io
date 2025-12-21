@@ -3,52 +3,31 @@
  * Displays pinned GitHub repositories in a card layout
  */
 
+import { logger } from '../utils/logger.js';
 import { querySelector, createElement } from '../utils/domHelpers.js';
-import { truncateText, getLanguageIcon } from '../utils/stringHelpers.js';
+import { truncateText, getLanguageIcon, normalizeUrl } from '../utils/stringHelpers.js';
 import { pinnedReposService } from '../services/pinnedReposService.js';
 import { readmeModal } from './readmeModal.js';
 
 /**
- * Normalize and validate a URL
- * Handles missing protocols and validates the URL format
- * Only allows http/https protocols to prevent XSS
- * @param {string} url - URL to normalize
- * @returns {string|null} Normalized URL or null if invalid
+ * @typedef {Object} PinnedRepository
+ * @property {string} name - Repository name
+ * @property {string} description - Repository description
+ * @property {string} html_url - GitHub URL
+ * @property {string} language - Primary language
+ * @property {string[]} topics - Repository topics
+ * @property {number} stargazers_count - Star count
+ * @property {number} forks_count - Fork count
+ * @property {string} [homepage] - Homepage URL
  */
-function normalizeUrl(url) {
-  if (!url || typeof url !== 'string') {
-    return null;
-  }
-  
-  // Trim whitespace
-  url = url.trim();
-  
-  if (!url) {
-    return null;
-  }
-  
-  // If URL doesn't start with http:// or https://, try to add https://
-  if (!/^https?:\/\//i.test(url)) {
-    // Check if it looks like a domain (contains a dot and no spaces)
-    if (url.includes('.') && !url.includes(' ')) {
-      url = 'https://' + url;
-    } else {
-      return null;
-    }
-  }
-  
-  // Validate URL using URL constructor
-  try {
-    const validUrl = new URL(url);
-    // Only allow http and https protocols (prevent javascript:, data:, etc.)
-    if (validUrl.protocol !== 'http:' && validUrl.protocol !== 'https:') {
-      return null;
-    }
-    return validUrl.href;
-  } catch (error) {
-    return null;
-  }
-}
+
+const CSS_CLASSES = {
+  CARD: 'featured-project-card',
+  HEADER: 'project-header',
+  ICON: 'project-icon',
+  STATS: 'project-stats',
+  TECH_BADGES: 'tech-badges'
+};
 
 class FeaturedProjects {
   constructor() {
@@ -80,7 +59,7 @@ class FeaturedProjects {
 
       this.renderProjects(repos);
     } catch (error) {
-      console.error('Error loading featured projects:', error);
+      logger.error('Error loading featured projects:', error);
       this.showErrorState();
     }
   }
@@ -105,22 +84,24 @@ class FeaturedProjects {
 
   /**
    * Create a featured project card
-   * @param {Object} repo - Repository object
+   * @param {PinnedRepository} repo - Repository object
    * @returns {Element} Card element
    */
   createCard(repo) {
-    const card = createElement('div', {
-      className: 'featured-project-card'
-    });
+    const card = createElement('div', { className: CSS_CLASSES.CARD });
 
-    const description = truncateText(repo.description, 100);
-    const languageIcon = repo.language ? getLanguageIcon(repo.language) : 'fas fa-code';
-    const stars = repo.stargazers_count || 0;
-    const updatedDate = this.formatDate(repo.updated_at);
+    const {
+      description: rawDescription,
+      language,
+      stargazers_count: stars = 0,
+      updated_at: updatedAt,
+      homepage
+    } = repo;
 
-    // Determine external link URL (homepage from API)
-    // normalizeUrl validates URLs using URL constructor which prevents XSS via javascript: protocol
-    const homepageUrl = repo.homepage ? normalizeUrl(repo.homepage) : null;
+    const description = truncateText(rawDescription, 100);
+    const languageIcon = language ? getLanguageIcon(language) : 'fas fa-code';
+    const updatedDate = this.formatDate(updatedAt);
+    const homepageUrl = normalizeUrl(homepage);
 
     card.innerHTML = `
       <div class="featured-project-header">
