@@ -3,6 +3,7 @@
  * Initializes all components and manages application lifecycle
  */
 
+import { logger } from './utils/logger.js';
 import { projectGallery } from './components/projectGallery.js';
 import { navigation } from './components/navigation.js';
 import { footer } from './components/footer.js';
@@ -47,18 +48,22 @@ class App {
    */
   async init() {
     try {
-      console.log('Initializing application...');
+      logger.log('Initializing application...');
 
       // Initialize all components
       for (const component of this.components) {
-        if (component && typeof component.init === 'function') {
-          await component.init();
+        try {
+          if (component && typeof component.init === 'function') {
+            await component.init();
+          }
+        } catch (error) {
+          logger.error(`Failed to initialize ${component.constructor.name}:`, error);
         }
       }
 
-      console.log('Application initialized successfully');
+      logger.log('Application initialized successfully');
     } catch (error) {
-      console.error('Error initializing application:', error);
+      logger.error('Error initializing application:', error);
     }
   }
 
@@ -86,11 +91,11 @@ if (document.readyState === 'loading') {
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
-      .then(registration => {
-        console.log('ServiceWorker registration successful');
+      .then(() => {
+        logger.log('ServiceWorker registration successful');
       })
       .catch(err => {
-        console.log('ServiceWorker registration failed: ', err);
+        logger.log('ServiceWorker registration failed: ', err);
       });
   });
 }
