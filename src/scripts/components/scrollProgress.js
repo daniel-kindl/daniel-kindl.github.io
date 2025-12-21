@@ -8,6 +8,7 @@ import { createElement } from '../utils/domHelpers.js';
 class ScrollProgress {
   constructor() {
     this.progressBar = null;
+    this.scrollHandler = null;
   }
 
   /**
@@ -30,7 +31,7 @@ class ScrollProgress {
    * Attach scroll listener to update progress
    */
   attachScrollListener() {
-    window.addEventListener('scroll', () => {
+    this.scrollHandler = () => {
       const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const scrolled = (winScroll / height) * 100;
@@ -38,7 +39,14 @@ class ScrollProgress {
       if (this.progressBar) {
         this.progressBar.style.width = `${scrolled}%`;
       }
-    });
+    };
+    window.addEventListener('scroll', this.scrollHandler, { passive: true });
+  }
+
+  destroy() {
+    if (this.scrollHandler) {
+      window.removeEventListener('scroll', this.scrollHandler);
+    }
   }
 }
 
