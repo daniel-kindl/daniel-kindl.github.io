@@ -3,11 +3,15 @@
  * Caches assets for offline access and faster load times
  */
 
-const CACHE_NAME = 'dk-portfolio-v1';
+const VERSION = '2.0.0';
+const CACHE_NAME = `dk-portfolio-v${VERSION}`;
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
+  '/resume.html',
   '/404.html',
+  '/manifest.json',
+  '/data/pinned-repos.json',
   '/src/styles/global.css',
   '/src/scripts/app.js',
   '/src/scripts/config.js',
