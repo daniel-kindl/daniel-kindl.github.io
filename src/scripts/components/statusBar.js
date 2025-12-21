@@ -8,6 +8,8 @@ import { createElement } from '../utils/domHelpers.js';
 class StatusBar {
   constructor() {
     this.element = null;
+    this.mouseMoveHandler = null;
+    this.posEl = null;
   }
 
   init() {
@@ -54,19 +56,33 @@ class StatusBar {
     `;
 
     document.body.appendChild(this.element);
+    this.posEl = this.element.querySelector('.position span'); // Cache selector
   }
 
   attachListeners() {
-    // Track mouse position to update Ln/Col
-    document.addEventListener('mousemove', (e) => {
+    // Track mouse position to update Ln/Col with throttling
+    let lastUpdate = 0;
+    const throttleMs = 100;
+    
+    this.mouseMoveHandler = (e) => {
+      const now = Date.now();
+      if (now - lastUpdate < throttleMs) return;
+      lastUpdate = now;
+      
       const x = Math.floor(e.clientX / 10) + 1;
       const y = Math.floor(e.clientY / 20) + 1;
       
-      const posEl = this.element.querySelector('.position span');
-      if (posEl) {
-        posEl.textContent = `Ln ${y}, Col ${x}`;
+      if (this.posEl) {
+        this.posEl.textContent = `Ln ${y}, Col ${x}`;
       }
-    });
+    };
+    document.addEventListener('mousemove', this.mouseMoveHandler, { passive: true });
+  }
+
+  destroy() {
+    if (this.mouseMoveHandler) {
+      document.removeEventListener('mousemove', this.mouseMoveHandler);
+    }
   }
 }
 
