@@ -251,7 +251,7 @@
 </head>
 <body>
 
-  <button class="print-btn no-print" onclick="window.print()">
+  <button class="print-btn no-print" onclick="window.print()" aria-label="Print or save as PDF">
     <i class="fas fa-print"></i> Print / Save as PDF
   </button>
 
@@ -330,22 +330,52 @@
     config.experience.forEach(job => {
       const div = document.createElement('div');
       div.className = 'job-item';
-      div.innerHTML = `
-        <div class="job-header">
-          <div>
-            <div class="job-role">${job.role}</div>
-            <div class="job-company">${job.company}</div>
-          </div>
-          <div style="text-align: right;">
-            <div class="job-date">${job.period}</div>
-            ${job.location ? `<div class="job-location">${job.location}</div>` : ''}
-          </div>
-        </div>
-        <p class="job-description">${job.description}</p>
-        <div class="job-tech">
-          ${job.technologies.map(t => `<span class="tech-tag">${t}</span>`).join('')}
-        </div>
-      `;
+      
+      const jobHeader = document.createElement('div');
+      jobHeader.className = 'job-header';
+      
+      const leftDiv = document.createElement('div');
+      const roleDiv = document.createElement('div');
+      roleDiv.className = 'job-role';
+      roleDiv.textContent = job.role;
+      const companyDiv = document.createElement('div');
+      companyDiv.className = 'job-company';
+      companyDiv.textContent = job.company;
+      leftDiv.appendChild(roleDiv);
+      leftDiv.appendChild(companyDiv);
+      
+      const rightDiv = document.createElement('div');
+      rightDiv.style.textAlign = 'right';
+      const dateDiv = document.createElement('div');
+      dateDiv.className = 'job-date';
+      dateDiv.textContent = job.period;
+      rightDiv.appendChild(dateDiv);
+      if (job.location) {
+        const locationDiv = document.createElement('div');
+        locationDiv.className = 'job-location';
+        locationDiv.textContent = job.location;
+        rightDiv.appendChild(locationDiv);
+      }
+      
+      jobHeader.appendChild(leftDiv);
+      jobHeader.appendChild(rightDiv);
+      
+      const descP = document.createElement('p');
+      descP.className = 'job-description';
+      descP.textContent = job.description;
+      
+      const techDiv = document.createElement('div');
+      techDiv.className = 'job-tech';
+      job.technologies.forEach(tech => {
+        const span = document.createElement('span');
+        span.className = 'tech-tag';
+        span.textContent = tech;
+        techDiv.appendChild(span);
+      });
+      
+      div.appendChild(jobHeader);
+      div.appendChild(descP);
+      div.appendChild(techDiv);
       expContainer.appendChild(div);
     });
 
@@ -354,12 +384,21 @@
     config.skills.forEach(cat => {
       const div = document.createElement('div');
       div.className = 'skill-category';
-      div.innerHTML = `
-        <h4>${cat.category}</h4>
-        <div class="skill-list">
-          ${cat.items.map(s => `<span class="tech-tag">${s.name}</span>`).join('')}
-        </div>
-      `;
+      
+      const h4 = document.createElement('h4');
+      h4.textContent = cat.category;
+      
+      const skillList = document.createElement('div');
+      skillList.className = 'skill-list';
+      cat.items.forEach(skill => {
+        const span = document.createElement('span');
+        span.className = 'tech-tag';
+        span.textContent = skill.name;
+        skillList.appendChild(span);
+      });
+      
+      div.appendChild(h4);
+      div.appendChild(skillList);
       skillsContainer.appendChild(div);
     });
 
@@ -367,17 +406,48 @@
     function renderProjectItem(container, project) {
       const div = document.createElement('div');
       div.className = 'project-item';
-      div.innerHTML = `
-        <div class="project-header">
-          <div class="project-name">${project.name}</div>
-          <a href="${project.html_url}" class="project-link" target="_blank">View Code <i class="fas fa-external-link-alt"></i></a>
-        </div>
-        <p class="project-desc">${project.description || 'No description available'}</p>
-        <div class="job-tech">
-          ${project.language ? `<span class="tech-tag">${project.language}</span>` : ''}
-          ${project.topics ? project.topics.map(t => `<span class="tech-tag">${t}</span>`).join('') : ''}
-        </div>
-      `;
+      
+      const header = document.createElement('div');
+      header.className = 'project-header';
+      
+      const nameDiv = document.createElement('div');
+      nameDiv.className = 'project-name';
+      nameDiv.textContent = project.name;
+      
+      const link = document.createElement('a');
+      link.href = project.html_url;
+      link.className = 'project-link';
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.innerHTML = 'View Code <i class="fas fa-external-link-alt"></i>';
+      
+      header.appendChild(nameDiv);
+      header.appendChild(link);
+      
+      const desc = document.createElement('p');
+      desc.className = 'project-desc';
+      desc.textContent = project.description || 'No description available';
+      
+      const techDiv = document.createElement('div');
+      techDiv.className = 'job-tech';
+      if (project.language) {
+        const langSpan = document.createElement('span');
+        langSpan.className = 'tech-tag';
+        langSpan.textContent = project.language;
+        techDiv.appendChild(langSpan);
+      }
+      if (project.topics) {
+        project.topics.forEach(topic => {
+          const topicSpan = document.createElement('span');
+          topicSpan.className = 'tech-tag';
+          topicSpan.textContent = topic;
+          techDiv.appendChild(topicSpan);
+        });
+      }
+      
+      div.appendChild(header);
+      div.appendChild(desc);
+      div.appendChild(techDiv);
       container.appendChild(div);
     }
 
