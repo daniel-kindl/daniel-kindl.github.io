@@ -3,6 +3,8 @@
  * Handles all GitHub API interactions
  */
 
+import { logger } from '../utils/logger.js';
+import { safeLocalStorage } from '../utils/storage.js';
 import { config } from '../config.js';
 
 class GitHubService {
@@ -18,7 +20,7 @@ class GitHubService {
    * @returns {Array|null} Cached data or null
    */
   getFromCache() {
-    const cached = localStorage.getItem(this.cacheKey);
+    const cached = safeLocalStorage.getItem(this.cacheKey);
     if (!cached) return null;
 
     try {
@@ -26,8 +28,8 @@ class GitHubService {
       if (Date.now() - timestamp < this.cacheDuration) {
         return data;
       }
-    } catch (e) {
-      console.error('Error parsing cache:', e);
+    } catch (error) {
+      logger.error('Error parsing cache:', error);
     }
     return null;
   }
@@ -42,9 +44,9 @@ class GitHubService {
         timestamp: Date.now(),
         data
       };
-      localStorage.setItem(this.cacheKey, JSON.stringify(cacheData));
-    } catch (e) {
-      console.error('Error saving to cache:', e);
+      safeLocalStorage.setItem(this.cacheKey, JSON.stringify(cacheData));
+    } catch (error) {
+      logger.error('Error saving to cache:', error);
     }
   }
 
@@ -56,7 +58,7 @@ class GitHubService {
     // Check cache first
     const cachedData = this.getFromCache();
     if (cachedData) {
-      console.log('Using cached GitHub data');
+      logger.log('Using cached GitHub data');
       return cachedData;
     }
 
@@ -79,7 +81,7 @@ class GitHubService {
 
       return filteredRepos;
     } catch (error) {
-      console.error('Error fetching repositories:', error);
+      logger.error('Error fetching repositories:', error);
       return [];
     }
   }
