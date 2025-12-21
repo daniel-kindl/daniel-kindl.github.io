@@ -4,6 +4,7 @@
  * Falls back to config.featuredProjects if fetch fails
  */
 
+import { logger } from '../utils/logger.js';
 import { config } from '../config.js';
 
 class PinnedReposService {
@@ -33,7 +34,7 @@ class PinnedReposService {
       // Fall back to config if repos array is empty
       return this.getFallbackProjects();
     } catch (error) {
-      console.error('Error fetching pinned repos:', error);
+      logger.error('Error fetching pinned repos:', error);
       return this.getFallbackProjects();
     }
   }
