@@ -4,91 +4,78 @@
  */
 
 import { createElement } from '../utils/domHelpers.js';
-import { truncateText, getLanguageIcon } from '../utils/stringHelpers.js';
+import { truncateText, getLanguageIcon, normalizeUrl } from '../utils/stringHelpers.js';
 import { config } from '../config.js';
 import { readmeModal } from './readmeModal.js';
 
 /**
- * Normalize and validate a URL
- * Handles missing protocols and validates the URL format
- * @param {string} url - URL to normalize
- * @returns {string|null} Normalized URL or null if invalid
+ * @typedef {Object} Repository
+ * @property {string} name - Repository name
+ * @property {string} description - Repository description
+ * @property {string} html_url - GitHub URL
+ * @property {string} language - Primary language
+ * @property {string[]} topics - Repository topics/tags
+ * @property {number} stargazers_count - Number of stars
+ * @property {number} forks_count - Number of forks
+ * @property {string} [homepage] - Project homepage URL
  */
-function normalizeUrl(url) {
-  if (!url || typeof url !== 'string') {
-    return null;
-  }
-  
-  // Trim whitespace
-  url = url.trim();
-  
-  if (!url) {
-    return null;
-  }
-  
-  // If URL doesn't start with http:// or https://, try to add https://
-  if (!/^https?:\/\//i.test(url)) {
-    // Check if it looks like a domain (contains a dot and no spaces)
-    if (url.includes('.') && !url.includes(' ')) {
-      url = 'https://' + url;
-    } else {
-      return null;
-    }
-  }
-  
-  // Validate URL using URL constructor
-  try {
-    const validUrl = new URL(url);
-    return validUrl.href;
-  } catch (error) {
-    return null;
-  }
-}
+
+const CSS_CLASSES = {
+  CARD: 'project-card',
+  HEADER: 'project-header',
+  TOP: 'project-top',
+  ICON: 'project-icon',
+  LINKS: 'project-links',
+  BTN_ICON: 'btn-icon',
+  QUICK_LOOK: 'quick-look'
+};
 
 class ProjectCard {
   /**
    * Create a project card element
-   * @param {Object} repo - Repository object
+   * @param {Repository} repo - Repository object
    * @returns {Element} Project card element
    */
   create(repo) {
-    const card = createElement('div', { className: 'project-card' });
+    const card = createElement('div', { className: CSS_CLASSES.CARD });
+
+    const {
+      description: rawDescription,
+      language,
+      topics = [],
+      stargazers_count: stars = 0,
+      forks_count: forks = 0,
+      homepage
+    } = repo;
 
-    const description = truncateText(repo.description);
+    const description = truncateText(rawDescription);
     
     // Combine primary language and topics
-    const languages = [repo.language, ...(repo.topics || [])]
-      .filter(Boolean) // Remove null/undefined
-      .filter((item, index, self) => self.indexOf(item) === index); // Remove duplicates
+    const languages = [language, ...topics]
+      .filter(Boolean)
+      .filter((item, index, self) => self.indexOf(item) === index);
 
     const techBadges = this.createTechBadges(languages);
-    const projectIcon = config.defaultIcons.project;
-    const stars = repo.stargazers_count || 0;
-    const forks = repo.forks_count || 0;
+    const { project: projectIcon } = config.defaultIcons;
 
     // Determine external link URL
     // Priority: 1. repo.homepage (GitHub API field), 2. URL from description
-    let homepageUrl = null;
-    
-    // First, try to use and normalize the homepage field from GitHub
-    if (repo.homepage) {
-      homepageUrl = normalizeUrl(repo.homepage);
-    }
+    let homepageUrl = normalizeUrl(homepage);
     
     // If homepage is not available or invalid, try to extract URL from description
-    if (!homepageUrl && repo.description) {
-      const urlMatch = repo.description.match(/(https?:\/\/[^\s]+)/);
+    if (!homepageUrl && rawDescription) {
+      const urlMatch = rawDescription.match(/(https?:\/\/[^\s]+)/);
       if (urlMatch) {
         homepageUrl = normalizeUrl(urlMatch[0]);
       }
     }
 
     card.innerHTML = `
-        <div class="project-header">
-          <div class="project-top">
-            <i class="${projectIcon} project-icon"></i>
-            <div class="project-links">
-              <button class="btn-icon quick-look" title="Quick Look" aria-label="Quick Look">
+        <div class="${CSS_CLASSES.HEADER}">
+          <div class="${CSS_CLASSES.TOP}">
+            <i class="${projectIcon} ${CSS_CLASSES.ICON}"></i>
+            <div class="${CSS_CLASSES.LINKS}">
+              <button class="${CSS_CLASSES.BTN_ICON} ${CSS_CLASSES.QUICK_LOOK}" title="Quick Look" aria-label="Quick Look">
                 <i class="fas fa-eye"></i>
               </button>
               ${homepageUrl ? `
