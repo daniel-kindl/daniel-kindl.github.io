@@ -11,7 +11,7 @@
   --border: #d4d4d4;
   --shadow-hard: 4px 4px 0px #d4d4d4;
   --shadow-hover: 6px 6px 0px #3c9963;
-  
+
   /* Layout */
   --nav-width: 280px;
   --container-width: 1000px;
@@ -193,7 +193,7 @@ pre,
   background: var(--accent);
   color: #ffffff;
   border: 2px solid var(--border);
-  box-shadow: 4px 4px 0px var(--border);
+  box-shadow: 4px 4px 0 var(--border);
   transform: translate(-2px, -2px);
 }
 
@@ -215,14 +215,14 @@ pre,
   cursor: pointer;
   transition: all 0.2s;
   margin-left: 0;
-  box-shadow: 4px 4px 0px var(--border);
+  box-shadow: 4px 4px 0 var(--border);
 }
 
 .theme-toggle:hover {
   background: var(--accent-secondary);
   color: #000;
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px var(--border);
+  box-shadow: 6px 6px 0 var(--border);
 }
 
 /* Scroll to Top Button */
@@ -246,7 +246,7 @@ pre,
   transform: translateY(20px);
   transition: all 0.2s ease;
   z-index: 990;
-  box-shadow: 4px 4px 0px var(--border);
+  box-shadow: 4px 4px 0 var(--border);
 }
 
 .scroll-top-btn.visible {
@@ -258,7 +258,7 @@ pre,
 .scroll-top-btn:hover {
   background: var(--accent-secondary);
   color: #000;
-  box-shadow: 6px 6px 0px var(--border);
+  box-shadow: 6px 6px 0 var(--border);
   transform: translate(-2px, -2px);
 }
 
@@ -325,7 +325,7 @@ pre,
     margin-left: auto;
     margin-right: 1rem;
   }
-  
+
   .mobile-menu-toggle {
     display: flex;
   }
@@ -352,7 +352,7 @@ pre,
 .grid-overlay {
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     linear-gradient(var(--bg-tertiary) 1px, transparent 1px),
     linear-gradient(90deg, var(--bg-tertiary) 1px, transparent 1px);
   background-size: 40px 40px;
@@ -377,7 +377,7 @@ pre,
   text-transform: uppercase;
   margin-bottom: 2rem;
   border: 2px solid var(--border);
-  box-shadow: 4px 4px 0px var(--border);
+  box-shadow: 4px 4px 0 var(--border);
   font-family: 'Space Grotesk', monospace;
   animation: slideInLeft 0.8s ease 0.1s both;
 }
@@ -396,12 +396,12 @@ pre,
   text-transform: uppercase;
   letter-spacing: -2px;
   animation: slideInLeft 0.8s ease 0.2s both;
-  text-shadow: 4px 4px 0px var(--bg-tertiary);
+  text-shadow: 4px 4px 0 var(--bg-tertiary);
   transition: text-shadow 0.3s;
 }
 
 .hero-title:hover {
-  text-shadow: 4px 4px 0px var(--accent);
+  text-shadow: 4px 4px 0 var(--accent);
 }
 
 .hero-subtitle {
@@ -462,12 +462,12 @@ pre,
 .btn-primary {
   background: var(--accent);
   color: #ffffff;
-  box-shadow: 4px 4px 0px var(--border);
+  box-shadow: 4px 4px 0 var(--border);
 }
 
 .btn-primary:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px var(--border);
+  box-shadow: 6px 6px 0 var(--border);
   background: var(--accent-secondary);
   color: #000;
 }
@@ -475,12 +475,12 @@ pre,
 .btn-secondary {
   background: transparent;
   color: var(--text-primary);
-  box-shadow: 4px 4px 0px var(--border);
+  box-shadow: 4px 4px 0 var(--border);
 }
 
 .btn-secondary:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px var(--border);
+  box-shadow: 6px 6px 0 var(--border);
   background: var(--bg-tertiary);
 }
 
@@ -501,7 +501,7 @@ pre,
 
 .btn:active {
   transform: translate(0, 0);
-  box-shadow: 2px 2px 0px var(--border);
+  box-shadow: 2px 2px 0 var(--border);
 }
 
 /* Sections */
@@ -547,12 +547,12 @@ pre,
   border-radius: 0;
   padding: 2rem;
   transition: all 0.2s;
-  box-shadow: 4px 4px 0px var(--border);
+  box-shadow: 4px 4px 0 var(--border);
 }
 
 .skill-category:hover {
   transform: translate(-4px, -4px);
-  box-shadow: 8px 8px 0px var(--accent);
+  box-shadow: 8px 8px 0 var(--accent);
   border-color: var(--accent);
 }
 
@@ -598,7 +598,7 @@ pre,
   background: var(--accent);
   color: #ffffff;
   transform: translate(-2px, -2px);
-  box-shadow: 4px 4px 0px var(--border);
+  box-shadow: 4px 4px 0 var(--border);
 }
 
 /* Projects Section */
@@ -634,7 +634,7 @@ pre,
   background: var(--accent);
   color: #ffffff;
   transform: translate(-2px, -2px);
-  box-shadow: 4px 4px 0px var(--border);
+  box-shadow: 4px 4px 0 var(--border);
 }
 
 /* Projects Grid */
@@ -654,7 +654,7 @@ pre,
   transition: all 0.2s;
   height: 100%;
   position: relative;
-  box-shadow: 4px 4px 0px var(--border);
+  box-shadow: 4px 4px 0 var(--border);
   overflow: hidden; /* Added for scan effect */
 }
 
@@ -684,7 +684,7 @@ pre,
 
 .project-card:hover {
   transform: translate(-4px, -4px);
-  box-shadow: 8px 8px 0px var(--accent);
+  box-shadow: 8px 8px 0 var(--accent);
   border-color: var(--accent);
 }
 
@@ -790,7 +790,7 @@ pre,
   border: 2px solid var(--border);
   padding: 4rem;
   background: var(--bg-secondary);
-  box-shadow: 8px 8px 0px var(--accent);
+  box-shadow: 8px 8px 0 var(--accent);
 }
 
 .contact-text {
@@ -821,7 +821,7 @@ pre,
   font-weight: 700;
   font-size: 1rem;
   transition: all 0.2s;
-  box-shadow: 4px 4px 0px var(--border);
+  box-shadow: 4px 4px 0 var(--border);
 }
 
 .social-link:hover {
@@ -829,7 +829,7 @@ pre,
   background: var(--accent);
   color: #ffffff;
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px var(--border);
+  box-shadow: 6px 6px 0 var(--border);
 }
 
 /* Tippy Custom Theme */
@@ -837,7 +837,7 @@ pre,
   background-color: var(--bg-secondary);
   color: var(--text-primary);
   border: 1px solid var(--border);
-  box-shadow: 4px 4px 0px var(--border);
+  box-shadow: 4px 4px 0 var(--border);
   border-radius: 0;
   font-family: 'Fira Code', monospace;
   font-size: 0.8rem;
@@ -901,24 +901,24 @@ pre,
   .hero-title {
     font-size: 3rem;
   }
-  
+
   .section-title {
     font-size: 2rem;
   }
-  
+
   .contact-wrapper {
     padding: 2rem;
   }
-  
+
   .projects-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .hero-cta {
     flex-direction: column;
     width: 100%;
   }
-  
+
   .btn {
     width: 100%;
   }
@@ -1025,7 +1025,7 @@ pre,
 
 .timeline-marker {
   position: absolute;
-  left: -9px; /* (20px width / 2) - (2px line / 2) = 9px offset? No. 
+  left: -9px; /* (20px width / 2) - (2px line / 2) = 9px offset? No.
                  Line is at left: 0. Marker center should be at 1px.
                  Marker width 20px. Left should be 1px - 10px = -9px. */
   top: 0;
@@ -1047,14 +1047,14 @@ pre,
   background: var(--bg-secondary);
   border: 2px solid var(--border);
   padding: 2rem;
-  box-shadow: 4px 4px 0px var(--border);
+  box-shadow: 4px 4px 0 var(--border);
   transition: all 0.3s ease;
   position: relative;
 }
 
 .timeline-item:hover .timeline-content {
   transform: translate(-4px, -4px);
-  box-shadow: 8px 8px 0px var(--accent);
+  box-shadow: 8px 8px 0 var(--accent);
   border-color: var(--accent);
 }
 
@@ -1126,7 +1126,7 @@ pre,
   position: fixed;
   top: 0;
   left: 0;
-  width: 0%;
+  width: 0;
   height: 3px;
   background: var(--accent);
   z-index: 1002; /* Above navbar */
@@ -1306,7 +1306,7 @@ pre,
 
 /* Adjust footer to not be hidden by status bar */
 .footer {
-  padding-bottom: 2rem; 
+  padding-bottom: 2rem;
 }
 
 /* Scroll to Top Button */
@@ -1330,28 +1330,9 @@ pre,
   transition: all 0.2s;
   text-decoration: none;
   color: inherit;
-  box-shadow: 4px 4px 0px var(--border);
+  box-shadow: 4px 4px 0 var(--border);
   position: relative;
   overflow: hidden;
-}
-
-.featured-project-card::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
-  transform: skewX(-25deg);
-  transition: 0.5s;
-  pointer-events: none;
-  z-index: 1;
 }
 
 .featured-project-card:hover::after {
@@ -1361,7 +1342,7 @@ pre,
 
 .featured-project-card:hover {
   transform: translate(-4px, -4px);
-  box-shadow: 8px 8px 0px var(--accent);
+  box-shadow: 8px 8px 0 var(--accent);
   border-color: var(--accent);
 }
 
