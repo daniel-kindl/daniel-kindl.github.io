@@ -1,16 +1,6 @@
 {
-  "lastUpdated": "2025-12-20T01:15:04.717Z",
+  "lastUpdated": "2025-12-21T01:23:43.719Z",
   "repos": [
-    {
-      "name": "daniel-kindl.github.io",
-      "description": "Personal portfolio website.",
-      "html_url": "https://github.com/daniel-kindl/daniel-kindl.github.io",
-      "homepage": "https://daniel-kindl.github.io/",
-      "language": "JavaScript",
-      "stargazers_count": 0,
-      "updated_at": "2025-12-19T01:18:56Z",
-      "topics": []
-    },
     {
       "name": "data-and-algorithms-visualization",
       "description": "An interactive web application for visualizing algorithms and data structures with step-by-step animations.",
@@ -29,6 +19,16 @@
       "language": "TypeScript",
       "stargazers_count": 0,
       "updated_at": "2025-11-27T09:20:04Z",
+      "topics": []
+    },
+    {
+      "name": "directory-sync",
+      "description": "Program that synchronizes two folders: source and replica. The program maintains a full, identical copy of source folder at replica folder.",
+      "html_url": "https://github.com/daniel-kindl/directory-sync",
+      "homepage": null,
+      "language": "C#",
+      "stargazers_count": 0,
+      "updated_at": "2025-12-21T00:08:18Z",
       "topics": []
     }
   ]
