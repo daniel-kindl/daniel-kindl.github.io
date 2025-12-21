@@ -38,3 +38,43 @@ export function sanitizeHTML(html) {
 export function getLanguageIcon(language) {
   return config.languageIcons[language] || config.defaultIcons.language;
 }
+
+/**
+ * Normalize and validate a URL
+ * Handles missing protocols and validates the URL format
+ * @param {string} url - URL to normalize
+ * @returns {string|null} Normalized URL or null if invalid
+ */
+export function normalizeUrl(url) {
+  if (!url || typeof url !== 'string') {
+    return null;
+  }
+  
+  // Trim whitespace
+  url = url.trim();
+  
+  if (!url) {
+    return null;
+  }
+  
+  // If URL doesn't start with http:// or https://, try to add https://
+  if (!/^https?:\/\//i.test(url)) {
+    // Check if it looks like a domain (contains a dot and no spaces)
+    if (url.includes('.') && !url.includes(' ')) {
+      url = 'https://' + url;
+    } else {
+      return null;
+    }
+  }
+  
+  // Validate URL using URL constructor
+  try {
+    const validUrl = new URL(url);
+    if (validUrl.protocol !== 'http:' && validUrl.protocol !== 'https:') {
+      return null;
+    }
+    return validUrl.href;
+  } catch (error) {
+    return null;
+  }
+}
