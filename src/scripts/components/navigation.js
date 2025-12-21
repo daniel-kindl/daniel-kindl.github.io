@@ -12,6 +12,9 @@ class Navigation {
     this.navLinks = null;
     this.mobileToggle = null;
     this.isMenuOpen = false;
+    this.scrollHandler = null;
+    this.clickHandler = null;
+    this.observer = null;
   }
 
   /**
@@ -58,6 +61,7 @@ class Navigation {
     }, observerOptions);
 
     sections.forEach(section => observer.observe(section));
+    this.observer = observer; // Store for cleanup
   }
 
   /**
@@ -75,13 +79,22 @@ class Navigation {
    * Attach scroll listener for sticky nav
    */
   attachScrollListener() {
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 50) {
-        this.nav?.classList.add('scrolled');
-      } else {
-        this.nav?.classList.remove('scrolled');
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (window.scrollY > 50) {
+            this.nav?.classList.add('scrolled');
+          } else {
+            this.nav?.classList.remove('scrolled');
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
-    });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    this.scrollHandler = onScroll; // Store for cleanup
   }
 
   /**
@@ -95,13 +108,14 @@ class Navigation {
     });
 
     // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
+    this.clickHandler = (e) => {
       if (this.isMenuOpen && 
           !e.target.closest('.nav-links') && 
           !e.target.closest('.mobile-menu-toggle')) {
         this.closeMobileMenu();
       }
-    });
+    };
+    document.addEventListener('click', this.clickHandler);
   }
 
   /**
@@ -147,6 +161,21 @@ class Navigation {
     this.mobileToggle?.classList.remove('active');
     this.isMenuOpen = false;
     document.body.style.overflow = '';
+  }
+
+  /**
+   * Cleanup event listeners
+   */
+  destroy() {
+    if (this.scrollHandler) {
+      window.removeEventListener('scroll', this.scrollHandler);
+    }
+    if (this.clickHandler) {
+      document.removeEventListener('click', this.clickHandler);
+    }
+    if (this.observer) {
+      this.observer.disconnect();
+    }
   }
 }
 
