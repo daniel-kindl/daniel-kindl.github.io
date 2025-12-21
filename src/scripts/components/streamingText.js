@@ -3,6 +3,7 @@
  * Creates a typewriter effect with rotating text
  */
 
+import { logger } from '../utils/logger.js';
 import { querySelector } from '../utils/domHelpers.js';
 import { config } from '../config.js';
 
@@ -23,7 +24,7 @@ class StreamingText {
     this.element = querySelector('#streaming-text');
 
     if (!this.element) {
-      console.warn('Streaming text element not found');
+      logger.warn('Streaming text element not found');
       return;
     }
 
