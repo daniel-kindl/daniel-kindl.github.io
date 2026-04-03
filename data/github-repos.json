@@ -1,0 +1,60 @@
+{
+  "lastUpdated": "2026-04-03T00:00:00.000Z",
+  "repos": [
+    {
+      "name": "daniel-kindl.github.io",
+      "description": "Personal portfolio website.",
+      "html_url": "https://github.com/daniel-kindl/daniel-kindl.github.io",
+      "homepage": "https://daniel-kindl.github.io/",
+      "language": "JavaScript",
+      "stargazers_count": 0,
+      "updated_at": "2026-04-03T00:00:00Z",
+      "topics": ["portfolio", "javascript", "css"],
+      "forks_count": 0
+    },
+    {
+      "name": "data-and-algorithms-visualization",
+      "description": "An interactive web application for visualizing algorithms and data structures with step-by-step animations.",
+      "html_url": "https://github.com/daniel-kindl/data-and-algorithms-visualization",
+      "homepage": "https://daniel-kindl.github.io/data-and-algorithms-visualization/",
+      "language": "HTML",
+      "stargazers_count": 0,
+      "updated_at": "2025-11-22T19:30:26Z",
+      "topics": [],
+      "forks_count": 0
+    },
+    {
+      "name": "cryptolab",
+      "description": "An interactive, client-side educational web app that explains and visualizes Encoding, Hashing, and Encryption.",
+      "html_url": "https://github.com/daniel-kindl/cryptolab",
+      "homepage": "https://daniel-kindl.github.io/cryptolab/",
+      "language": "TypeScript",
+      "stargazers_count": 0,
+      "updated_at": "2025-11-27T09:20:04Z",
+      "topics": [],
+      "forks_count": 0
+    },
+    {
+      "name": "directory-sync",
+      "description": "Program that synchronizes two folders: source and replica.",
+      "html_url": "https://github.com/daniel-kindl/directory-sync",
+      "homepage": null,
+      "language": "C#",
+      "stargazers_count": 0,
+      "updated_at": "2025-12-26T22:22:44Z",
+      "topics": [],
+      "forks_count": 0
+    },
+    {
+      "name": "DkToolbox",
+      "description": "A command-line toolbox for system administration and diagnostics.",
+      "html_url": "https://github.com/daniel-kindl/DkToolbox",
+      "homepage": null,
+      "language": "C#",
+      "stargazers_count": 0,
+      "updated_at": "2025-12-26T21:35:56Z",
+      "topics": [],
+      "forks_count": 0
+    }
+  ]
+}

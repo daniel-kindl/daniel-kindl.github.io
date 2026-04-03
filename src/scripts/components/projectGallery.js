@@ -230,7 +230,7 @@ class ProjectGallery {
    */
   showErrorState() {
     if (this.gridContainer) {
-        this.gridContainer.innerHTML = '<p class="text-center error">Failed to load projects.</p>';
+        this.gridContainer.innerHTML = '<p class="text-center error">Projects temporarily unavailable.</p>';
     }
   }
 }

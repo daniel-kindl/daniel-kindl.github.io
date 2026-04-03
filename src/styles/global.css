@@ -1309,6 +1309,12 @@ pre,
   padding-bottom: 2rem;
 }
 
+.footer-updated {
+  font-size: 0.75rem;
+  color: var(--text-muted, #888);
+  margin-top: 0.25rem;
+}
+
 /* Scroll to Top Button */
 .scroll-top-btn {
   bottom: 3rem; /* Move up to avoid status bar */

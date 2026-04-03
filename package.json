@@ -4,10 +4,12 @@
   "description": "Personal portfolio website showcasing projects and skills",
   "main": "index.html",
   "scripts": {
-    "start": "npx live-server --port=8080 --open=/",
-    "dev": "npx live-server --port=8080 --open=/",
-    "format": "npx prettier --write \"**/*.{js,css,html,md}\"",
-    "lint": "npx eslint src/scripts/**/*.js"
+    "start": "live-server --port=8080 --open=/",
+    "dev": "live-server --port=8080 --open=/",
+    "format": "prettier --write \"**/*.{js,css,html,md}\"",
+    "lint": "eslint src/scripts/**/*.js",
+    "prefetch": "node scripts/fetch-github.js",
+    "build": "node scripts/build.js"
   },
   "keywords": [
     "portfolio",
@@ -27,6 +29,10 @@
     "url": "https://github.com/daniel-kindl/daniel-kindl.github.io/issues"
   },
   "homepage": "https://daniel-kindl.github.io",
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "live-server": "^1.2.2",
+    "prettier": "^3.0.0"
+  },
   "type": "module"
 }
