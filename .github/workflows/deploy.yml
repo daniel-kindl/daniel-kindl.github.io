@@ -40,6 +40,9 @@ jobs:
       - name: Pre-render HTML (SEO build)
         run: npm run build
 
+      - name: Remove build dependencies before artifact upload
+        run: rm -rf node_modules
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v4
 
