@@ -70,7 +70,7 @@ class Navigation {
    */
   handleLinkClick(event) {
     // Close mobile menu if open
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 1024) {
       this.closeMobileMenu();
     }
   }
@@ -122,10 +122,10 @@ class Navigation {
    * Attach click listeners to nav links
    */
   attachLinkClickListeners() {
-    const links = querySelectorAll('.nav-link');
+    const links = document.querySelectorAll('.nav-links a');
     links.forEach(link => {
       link.addEventListener('click', () => {
-        if (window.innerWidth <= 768) {
+        if (window.innerWidth <= 1024) {
           this.closeMobileMenu();
         }
       });
