@@ -331,7 +331,7 @@ pre,
     display: flex;
   }
 
-  .hero {
+  .hero.hero {
     padding: 4rem 2rem;
   }
 }
