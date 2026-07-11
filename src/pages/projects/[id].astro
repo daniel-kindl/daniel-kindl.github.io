@@ -1,0 +1,29 @@
+---
+import { getCollection, render } from 'astro:content';
+
+// 1. Generate pages for every markdown file found in src/content/projects/
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((entry) => ({
+    params: { id: entry.id }, // Matches the filename (e.g., 'production-portfolio-system')
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+
+// 2. Compile the Markdown body and components into executable HTML
+const { Content } = await render(entry);
+---
+
+<article class="prose mx-auto max-w-2xl p-8">
+  <header class="border-border mb-8 border-b pb-4">
+    <h1 class="font-display text-3xl font-bold uppercase">{entry.data.title}</h1>
+    <p class="text-text-secondary mt-2 font-mono text-sm">Role: {entry.data.role}</p>
+  </header>
+
+  {/* 3. Inject the parsed Markdown body text here */}
+  <section class="font-sans text-base leading-relaxed">
+    <Content />
+  </section>
+</article>

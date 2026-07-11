@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+
+// 1. Fetch all entries from the projects folder
+const projects = await getCollection('projects');
+
+// 2. Sort them by weight token
+const sortedProjects = projects.sort((a, b) => b.data.weight - a.data.weight);
+---
+
+<main class="mx-auto max-w-4xl p-8">
+  <h1 class="font-display mb-8 text-2xl uppercase">Selected Work</h1>
+
+  <div class="grid gap-12">
+    {
+      sortedProjects.map((project) => (
+        <article class="border-border border-b pb-8">
+          <h2 class="font-display text-xl font-bold">{project.data.title}</h2>
+          <p class="text-text-secondary my-2 text-sm">{project.data.summary}</p>
+
+          {/* Link to the individual project sub-page */}
+          <a
+            href={`/projects/${project.id}`}
+            class="text-link font-mono text-xs uppercase hover:underline"
+          >
+            View Technical Case Study →
+          </a>
+        </article>
+      ))
+    }
+  </div>
+</main>
