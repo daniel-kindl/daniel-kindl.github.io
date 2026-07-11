@@ -1,0 +1,60 @@
+---
+interface Props {
+  variant: 'h1' | 'h2' | 'h3' | 'body' | 'eyebrow' | 'mono';
+  class?: string;
+}
+
+const { variant, class: className = '' } = Astro.props;
+
+const styles = {
+  h1: 'text-3xl md:text-4xl font-bold uppercase tracking-tight text-[var(--text-primary)]',
+  h2: 'text-xl md:text-2xl font-bold uppercase tracking-tight text-[var(--text-primary)]',
+  h3: 'text-base md:text-lg font-bold uppercase tracking-tight text-[var(--text-primary)]',
+  body: 'text-base text-[var(--text-primary)] leading-relaxed font-sans',
+  eyebrow: 'font-mono text-xs text-[var(--text-muted)] uppercase tracking-wider block mb-2',
+  mono: 'font-mono text-sm text-[var(--text-primary)]',
+};
+---
+
+{
+  variant === 'h1' && (
+    <h1 class={`${styles.h1} ${className}`}>
+      <slot />
+    </h1>
+  )
+}
+{
+  variant === 'h2' && (
+    <h2 class={`${styles.h2} ${className}`}>
+      <slot />
+    </h2>
+  )
+}
+{
+  variant === 'h3' && (
+    <h3 class={`${styles.h3} ${className}`}>
+      <slot />
+    </h3>
+  )
+}
+{
+  variant === 'body' && (
+    <p class={`${styles.body} ${className}`}>
+      <slot />
+    </p>
+  )
+}
+{
+  variant === 'eyebrow' && (
+    <span class={`${styles.eyebrow} ${className}`}>
+      <slot />
+    </span>
+  )
+}
+{
+  variant === 'mono' && (
+    <span class={`${styles.mono} ${className}`}>
+      <slot />
+    </span>
+  )
+}

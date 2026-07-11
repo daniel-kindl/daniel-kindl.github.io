@@ -6,6 +6,12 @@
     --text-primary: #1a1a1a;
     --text-muted: #666666;
     --border-color: #e5e5e5;
+
+    /* Shiki Light/Dark Variable Tokens mapped directly to custom variables */
+    --shiki-light: var(--text-primary);
+    --shiki-dark: var(--text-primary);
+    --shiki-light-bg: transparent;
+    --shiki-dark-bg: transparent;
   }
 
   :root[data-theme='dark'] {
@@ -28,5 +34,36 @@
   ::view-transition-new(root) {
     animation-duration: 200ms;
     animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Scoped Markdown Type Hierarchy styling */
+  .prose h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.025em;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+
+  .prose p {
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.625;
+    margin-bottom: 1.25rem;
+    color: var(--text-primary);
+  }
+
+  .prose ul {
+    list-style-type: square;
+    padding-left: 1.25rem;
+    margin-bottom: 1.25rem;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    color: var(--text-primary);
+  }
+
+  .prose li {
+    margin-bottom: 0.5rem;
   }
 }
