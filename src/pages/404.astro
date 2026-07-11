@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="404 — Route Not Found">
+  <div class="flex min-h-[50vh] flex-col items-start justify-center font-mono">
+    <span class="mb-2 text-sm text-(--text-muted)">[ERROR_CODE: 404]</span>
+    <h1 class="mb-4 text-2xl font-bold tracking-tight text-(--text-primary) uppercase">
+      Requested Resource Missing
+    </h1>
+    <p class="mb-8 max-w-md text-sm leading-relaxed text-(--text-muted)">
+      The specified URL path does not map to an existing static module, collection entry, or asset
+      build layer route.
+    </p>
+    <a
+      href="/"
+      class="border border-(--border-color) px-4 py-2 text-xs uppercase transition-colors hover:bg-(--text-primary) hover:text-(--bg-primary)"
+    >
+      Return to Index System
+    </a>
+  </div>
+</Layout>

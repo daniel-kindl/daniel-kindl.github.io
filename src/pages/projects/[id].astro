@@ -1,29 +1,34 @@
 ---
 import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
 
-// 1. Generate pages for every markdown file found in src/content/projects/
 export async function getStaticPaths() {
-  const projects = await getCollection('projects');
-  return projects.map((entry) => ({
-    params: { id: entry.id }, // Matches the filename (e.g., 'production-portfolio-system')
+  const projectEntries = await getCollection('projects');
+  return projectEntries.map((entry) => ({
+    params: { id: entry.id },
     props: { entry },
   }));
 }
 
 const { entry } = Astro.props;
-
-// 2. Compile the Markdown body and components into executable HTML
 const { Content } = await render(entry);
 ---
 
-<article class="prose mx-auto max-w-2xl p-8">
-  <header class="border-border mb-8 border-b pb-4">
-    <h1 class="font-display text-3xl font-bold uppercase">{entry.data.title}</h1>
-    <p class="text-text-secondary mt-2 font-mono text-sm">Role: {entry.data.role}</p>
-  </header>
+<Layout title={`${entry.data.title} — Project`} description={entry.data.summary}>
+  <article class="mx-auto max-w-3xl py-12">
+    <header class="mb-12 border-b border-(--border-color) pb-6">
+      <h1 class="mb-4 text-3xl font-bold tracking-tight text-(--text-primary) uppercase">
+        {entry.data.title}
+      </h1>
+      <div class="flex flex-wrap gap-4 font-mono text-xs text-(--text-muted) uppercase">
+        <div><strong>Role:</strong> {entry.data.role}</div>
+        <div><strong>Stack:</strong> {entry.data.stack.join(', ')}</div>
+      </div>
+    </header>
 
-  {/* 3. Inject the parsed Markdown body text here */}
-  <section class="font-sans text-base leading-relaxed">
-    <Content />
-  </section>
-</article>
+    {/* Modern styled container for Markdown layout */}
+    <div class="prose max-w-none space-y-6 leading-relaxed text-(--text-primary)">
+      <Content />
+    </div>
+  </article>
+</Layout>

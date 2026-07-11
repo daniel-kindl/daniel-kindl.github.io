@@ -1,0 +1,54 @@
+---
+
+---
+
+<header class="mb-12 w-full border-b border-(--border-color) py-4">
+  <div
+    class="mx-auto flex max-w-5xl items-baseline justify-between px-4 font-mono text-xs tracking-tight"
+  >
+    <a href="/" class="font-bold tracking-normal text-(--text-primary) uppercase">Daniel Kindl</a>
+
+    <nav class="flex items-center gap-6">
+      <a
+        href="/projects"
+        class="text-(--text-muted) uppercase transition-colors hover:text-(--text-primary)"
+        >Projects</a
+      >
+      <a
+        href="/writing"
+        class="text-(--text-muted) uppercase transition-colors hover:text-(--text-primary)"
+        >Writing</a
+      >
+
+      <button
+        id="theme-toggle"
+        class="cursor-pointer border border-(--border-color) bg-(--bg-primary) px-2 py-0.5 text-(--text-primary) uppercase transition-colors"
+        aria-label="Toggle visual theme"
+      >
+        Theme
+      </button>
+    </nav>
+  </div>
+</header>
+
+<script>
+  function initializeThemeToggle() {
+    const toggle = document.getElementById('theme-toggle');
+    if (!toggle) return;
+
+    // Remove existing listener if any to avoid stacking duplicates
+    toggle.replaceWith(toggle.cloneNode(true));
+
+    const activeToggle = document.getElementById('theme-toggle');
+    activeToggle?.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  }
+
+  // Fire on standard load and after Astro swaps components during navigation
+  initializeThemeToggle();
+  document.addEventListener('astro:page-load', initializeThemeToggle);
+</script>

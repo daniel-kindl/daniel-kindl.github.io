@@ -1,0 +1,24 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="mt-24 w-full border-t border-(--border-color) py-6">
+  <div
+    class="mx-auto flex max-w-5xl flex-col items-start justify-between gap-4 px-4 font-mono text-xs text-(--text-muted) sm:flex-row sm:items-baseline"
+  >
+    <div>
+      <span>&copy; {currentYear} Daniel Kindl. Built with Astro 7.</span>
+    </div>
+    <div class="flex gap-6 uppercase">
+      <a href="https://github.com/dkindl" class="transition-colors hover:text-(--text-primary)"
+        >Github</a
+      >
+      <a href="https://linkedin.com" class="transition-colors hover:text-(--text-primary)"
+        >Linkedin</a
+      >
+      <a href="mailto:contact@danielkindl.com" class="transition-colors hover:text-(--text-primary)"
+        >Email</a
+      >
+    </div>
+  </div>
+</footer>

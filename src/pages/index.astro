@@ -1,17 +1,12 @@
 ---
-
+import Layout from '../layouts/Layout.astro';
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Astro</title>
-  </head>
-  <body>
-    <h1>Astro</h1>
-  </body>
-</html>
+<Layout title="Daniel Kindl — Home">
+  <div class="py-12">
+    <h1 class="mb-4 text-4xl font-bold tracking-tight uppercase">Engineering Systems</h1>
+    <p class="max-w-xl leading-relaxed text-(--text-muted)">
+      Welcome to the production platform core. This layout is bounded by Swiss design grid tokens.
+    </p>
+  </div>
+</Layout>

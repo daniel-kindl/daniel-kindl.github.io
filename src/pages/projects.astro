@@ -1,32 +1,47 @@
 ---
 import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
 
-// 1. Fetch all entries from the projects folder
+// Fetch all entries from your projects schema config
 const projects = await getCollection('projects');
-
-// 2. Sort them by weight token
 const sortedProjects = projects.sort((a, b) => b.data.weight - a.data.weight);
 ---
 
-<main class="mx-auto max-w-4xl p-8">
-  <h1 class="font-display mb-8 text-2xl uppercase">Selected Work</h1>
+<Layout title="Selected Work — Daniel Kindl">
+  <div class="mx-auto max-w-3xl py-12">
+    <header class="mb-12">
+      <h1 class="text-3xl font-bold tracking-tight text-[var(--text-primary)] uppercase">
+        Selected Systems
+      </h1>
+      <p class="mt-2 font-mono text-sm text-[var(--text-muted)]">[INDEX_CORE: WORK_COLLECTION]</p>
+    </header>
 
-  <div class="grid gap-12">
-    {
-      sortedProjects.map((project) => (
-        <article class="border-border border-b pb-8">
-          <h2 class="font-display text-xl font-bold">{project.data.title}</h2>
-          <p class="text-text-secondary my-2 text-sm">{project.data.summary}</p>
-
-          {/* Link to the individual project sub-page */}
-          <a
-            href={`/projects/${project.id}`}
-            class="text-link font-mono text-xs uppercase hover:underline"
-          >
-            View Technical Case Study →
-          </a>
-        </article>
-      ))
-    }
+    <div class="space-y-12">
+      {
+        sortedProjects.map((project) => (
+          <article class="border-b border-[var(--border-color)] pb-8 last:border-0">
+            <div class="flex flex-col gap-2">
+              <span class="font-mono text-xs text-[var(--text-muted)] uppercase">
+                {project.data.role}
+              </span>
+              <h2 class="text-xl font-bold tracking-tight text-[var(--text-primary)] uppercase">
+                {project.data.title}
+              </h2>
+              <p class="max-w-2xl text-sm leading-relaxed text-[var(--text-muted)]">
+                {project.data.summary}
+              </p>
+              <div class="mt-4">
+                <a
+                  href={`/projects/${project.id}`}
+                  class="inline-block border border-[var(--border-color)] px-3 py-1 font-mono text-xs uppercase transition-colors hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)]"
+                >
+                  Inspect Module →
+                </a>
+              </div>
+            </div>
+          </article>
+        ))
+      }
+    </div>
   </div>
-</main>
+</Layout>
