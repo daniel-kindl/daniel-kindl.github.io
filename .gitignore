@@ -1,0 +1,50 @@
+# build output
+dist/
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
+.DS_Store
+
+# jetbrains setting folder
+.idea/
+
+# more env variants
+.env.local
+.env.*.local
+
+# more logs
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Windows cruft
+Thumbs.db
+ehthumbs.db
+
+# editor swap/backup files
+*.swp
+*.swo
+*~
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# tool caches
+.eslintcache
+.cache/
