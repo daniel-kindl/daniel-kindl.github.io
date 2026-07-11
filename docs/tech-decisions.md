@@ -133,26 +133,16 @@ no separate Vite alias config is needed — verified once real files exist under
 
 ---
 
-# Epic 0 — Setup & Tooling: Completion Summary
+## 8. Typefaces: Space Grotesk / JetBrains Mono / IBM Plex Sans
 
-All nine issues in Epic 0 are closed. What exists now:
+**Status:** Accepted — 2026-07-11
 
-| #   | Issue                                     | Outcome                                                                          |
-| --- | ----------------------------------------- | -------------------------------------------------------------------------------- |
-| 1   | Decide final stack versions               | This document                                                                    |
-| 2   | Initialize fresh Astro project            | `npm create astro@latest`, strict TypeScript                                     |
-| 3   | Configure local + GitHub remotes          | `origin` (GitHub) + `local` (OneDev) push independently                          |
-| 4   | `.gitignore` + `.editorconfig`            | Extended Astro's default `.gitignore`; UTF-8/LF/2-space `.editorconfig`          |
-| 5   | ESLint + Prettier                         | Flat config (`eslint.config.mjs`), Astro/TS/Svelte-aware, Tailwind class sorting |
-| 6   | Commit convention                         | Husky pre-commit (lint-staged) + commit-msg (commitlint, Conventional Commits)   |
-| 7   | `tsconfig.json` strictness + path aliases | Strict mode inherited from Astro; `@components/*` etc. aliases, no `baseUrl`     |
-| 8   | `.nvmrc` + local dev doc                  | Node 24 pinned; README documents setup, commands, and hook behavior              |
-| —   | README                                    | Stack overview, folder structure, commands table, tooling notes                  |
+**Context:** Self-hosting fonts (not Google Fonts CDN) means license terms matter upfront.
+All three candidates needed to permit self-hosting/webfont embedding without restriction.
 
-**Verified working end-to-end:**
+**Decision:** Space Grotesk (display), JetBrains Mono (monospace/accent), IBM Plex Sans (body).
+All SIL OFL 1.1 — free commercial use, no attribution required, variable font format (single
+file per family covers the full weight range).
 
-- `npm run lint` — clean
-- `npm run format:check` — clean
-- `npm run typecheck` — 0 errors, 0 warnings, 0 hints
-- A non-conventional commit message is correctly rejected by commitlint
-- A conventional commit message runs lint-staged, then succeeds
+**Consequences:** No licensing risk. Variable fonts keep `public/fonts/` small — 3 files total
+instead of one per weight. Space Grotesk has no italic; use weight/color for emphasis instead.
