@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Container from '../components/ui/Container.astro';
 import Typography from '../components/ui/Typography.astro';
 import CodeBlock from '../components/portfolio/CodeBlock.astro';
+import MatrixWave from '../components/playground/MatrixWave.svelte';
 
 const experiments = [
   {
@@ -85,6 +86,9 @@ export function verifyMatrix(status: string): boolean {
 
           <CodeBlock code={validationSnippet} lang="typescript" filename="metrics.ts" />
         </div>
+
+        <!-- INTERACTIVE HYDRATION TARGET -->
+        <MatrixWave client:visible />
       </aside>
     </div>
   </Container>
