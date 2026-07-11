@@ -7,11 +7,19 @@
   let height = 250;
   let animationFrameId: number;
 
+  // State variables for safe rendering
+  let isReducedMotion = false;
+  let statusText = '● RUNNING';
+
   onMount(() => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Match dimensions to client boundary limits
+    // Browser evaluations are safe here
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    isReducedMotion = motionQuery.matches;
+    statusText = isReducedMotion ? '● PAUSED (STATIC_MODE)' : '● RUNNING';
+
     const resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
         width = entry.contentRect.width;
@@ -26,10 +34,9 @@
       if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
 
-      ctx.strokeStyle = 'rgba(16, 185, 129, 0.2)'; // Tailwind emerald-500 equivalent
+      ctx.strokeStyle = 'rgba(16, 185, 129, 0.2)';
       ctx.lineWidth = 1;
 
-      // Render 5 phase-shifted vector paths
       for (let j = 0; j < 5; j++) {
         ctx.beginPath();
         for (let x = 0; x < width; x += 5) {
@@ -40,15 +47,31 @@
         ctx.stroke();
       }
 
+      if (motionQuery.matches) {
+        return;
+      }
+
       phase += 0.02;
       animationFrameId = requestAnimationFrame(render);
     }
 
     render();
 
+    const handleMotionChange = () => {
+      isReducedMotion = motionQuery.matches;
+      statusText = isReducedMotion ? '● PAUSED (STATIC_MODE)' : '● RUNNING';
+      if (isReducedMotion) {
+        cancelAnimationFrame(animationFrameId);
+      } else {
+        render();
+      }
+    };
+    motionQuery.addEventListener('change', handleMotionChange);
+
     return () => {
       cancelAnimationFrame(animationFrameId);
       resizeObserver.disconnect();
+      motionQuery.removeEventListener('change', handleMotionChange);
     };
   });
 </script>
@@ -58,7 +81,9 @@
     class="font-mono text-[9px] text-(--text-muted) uppercase tracking-wider mb-2 flex justify-between"
   >
     <span>[SYS_LAB: GENERATIVE_WAVE]</span>
-    <span class="text-emerald-500 animate-pulse">● RUNNING</span>
+    <span class={isReducedMotion ? 'text-amber-500' : 'text-emerald-500'}>
+      {statusText}
+    </span>
   </div>
   <canvas bind:this={canvas} {width} {height} class="w-full block bg-black/40"></canvas>
 </div>
