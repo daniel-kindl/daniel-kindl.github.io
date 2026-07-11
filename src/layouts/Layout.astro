@@ -32,23 +32,26 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="canonical" href={canonicalURL} />
+    <link
+      rel="preload"
+      href="/fonts/IBMPlexSans-VariableFont_wdth,wght.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/JetBrainsMono-VariableFont_wght.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <meta name="generator" content={Astro.generator} />
 
     <!-- Core Runtime Utilities & Engine Routing -->
     <ThemeScript />
     <ClientRouter />
     <SEO title={title} description={description} />
-
-    <!-- Performance Optimization: Force critical font swap displays -->
-    <style is:global>
-      @font-face {
-        font-family: 'Geist Mono';
-        font-style: normal;
-        font-weight: 100 900;
-        font-display: swap;
-        src: local('Geist Mono'), local('GeistMono-Regular'), system-ui, monospace;
-      }
-    </style>
 
     <!-- Meta Indexing Titles -->
     <title>{title}</title>

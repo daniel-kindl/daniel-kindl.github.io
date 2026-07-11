@@ -24,16 +24,52 @@
   html {
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-family: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* View Transitions Morph Tuning */
+  /* Local font faces with swap to avoid FOIT */
+  @font-face {
+    font-family: 'IBM Plex Sans';
+    src: url('/fonts/IBMPlexSans-VariableFont_wdth,wght.woff2') format('woff2');
+    font-weight: 100 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'JetBrains Mono';
+    src: url('/fonts/JetBrainsMono-VariableFont_wght.woff2') format('woff2');
+    font-weight: 100 800;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation-duration: 200ms;
     animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 0ms;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 
   /* Scoped Markdown Type Hierarchy styling */

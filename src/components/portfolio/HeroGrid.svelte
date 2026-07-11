@@ -2,9 +2,14 @@
   let mouseX = 0;
   let mouseY = 0;
   let element: HTMLDivElement;
+  let reducedMotion = false;
+
+  if (typeof window !== 'undefined') {
+    reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
 
   function handleMouseMove(e: MouseEvent) {
-    if (!element) return;
+    if (!element || reducedMotion) return;
     const rect = element.getBoundingClientRect();
     // Normalize coordinates from -0.5 to 0.5
     mouseX = (e.clientX - rect.left) / rect.width - 0.5;
