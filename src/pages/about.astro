@@ -1,0 +1,69 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Container from '../components/ui/Container.astro';
+import Typography from '../components/ui/Typography.astro';
+import Timeline from '../components/ui/Timeline.astro';
+import TimelineEvent from '../components/ui/TimelineEvent.astro';
+import { technicalProfile } from '../data/cv';
+
+const { name, role, summary, skills, experience } = technicalProfile;
+---
+
+<Layout title="About & CV — Daniel Kindl">
+  <Container as="main" class="py-12 md:py-20">
+    <header class="mb-16 border-b border-(--border-color) pb-12">
+      <Typography variant="eyebrow">About</Typography>
+      <Typography variant="h1" class="mb-6">{name}</Typography>
+      <div class="max-w-2xl space-y-4">
+        <Typography variant="body" class="text-lg">{role}</Typography>
+        <Typography variant="body" class="text-(--text-muted)">{summary}</Typography>
+      </div>
+    </header>
+
+    <section class="mb-16 max-w-4xl">
+      <div class="mb-8">
+        <Typography variant="eyebrow">Skills</Typography>
+        <Typography variant="h2">Core Technical Stack</Typography>
+      </div>
+      <div class="grid gap-8 md:grid-cols-2">
+        <div>
+          <h3 class="mb-3 font-mono text-xs text-(--text-muted) uppercase">Languages</h3>
+          <p class="text-sm">{skills.languages.join(' · ')}</p>
+        </div>
+        <div>
+          <h3 class="mb-3 font-mono text-xs text-(--text-muted) uppercase">Frontend</h3>
+          <p class="text-sm">{skills.frontend.join(' · ')}</p>
+        </div>
+        <div>
+          <h3 class="mb-3 font-mono text-xs text-(--text-muted) uppercase">Backend</h3>
+          <p class="text-sm">{skills.backend.join(' · ')}</p>
+        </div>
+        <div>
+          <h3 class="mb-3 font-mono text-xs text-(--text-muted) uppercase">DevOps</h3>
+          <p class="text-sm">{skills.devops.join(' · ')}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="max-w-3xl">
+      <div class="mb-8">
+        <Typography variant="eyebrow">CV</Typography>
+        <Typography variant="h2">Experience</Typography>
+      </div>
+
+      <Timeline>
+        {
+          experience.map((item) => (
+            <TimelineEvent title={`${item.role} — ${item.company}`} time={item.period}>
+              <ul class="mt-2 list-disc space-y-1 pl-5 text-sm leading-relaxed text-(--text-muted)">
+                {item.achievements.map((achievement) => (
+                  <li>{achievement}</li>
+                ))}
+              </ul>
+            </TimelineEvent>
+          ))
+        }
+      </Timeline>
+    </section>
+  </Container>
+</Layout>

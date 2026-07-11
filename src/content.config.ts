@@ -12,16 +12,18 @@ const projects = defineCollection({
       summary: z.string().max(200),
       role: z.string(),
       stack: z.array(z.string()),
-      links: z.object({
-        production: z.string().url().optional(),
-        repository: z.string().url().optional(),
-      }),
+      links: z
+        .object({
+          production: z.string().url().optional(),
+          repository: z.string().url().optional(),
+        })
+        .optional(),
       status: z.enum(['development', 'production', 'archived']),
       dates: z.object({
         start: z.coerce.date(),
         end: z.coerce.date().nullable(),
       }),
-      coverImage: image(),
+      coverImage: image().optional(),
       weight: z.number().int().default(0),
     }),
 });

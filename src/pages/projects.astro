@@ -1,19 +1,23 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import Container from '../components/ui/Container.astro';
+import Typography from '../components/ui/Typography.astro';
+import Button from '../components/ui/Button.astro';
 
-// Fetch all entries from your projects schema config
 const projects = await getCollection('projects');
 const sortedProjects = projects.sort((a, b) => b.data.weight - a.data.weight);
 ---
 
-<Layout title="Selected Work — Daniel Kindl">
-  <div class="mx-auto max-w-3xl py-12">
+<Layout title="Projects — Daniel Kindl">
+  <Container as="main" class="py-12 md:py-20">
     <header class="mb-12">
-      <h1 class="text-3xl font-bold tracking-tight text-(--text-primary) uppercase">
-        Selected Systems
-      </h1>
-      <p class="mt-2 font-mono text-sm text-(--text-muted)">[INDEX_CORE: WORK_COLLECTION]</p>
+      <Typography variant="eyebrow">Projects</Typography>
+      <Typography variant="h1" class="mb-4">Industrial Software and Modernization Work</Typography>
+      <Typography variant="body" class="max-w-2xl text-(--text-muted)">
+        Selected projects focused on desktop software architecture, legacy migration, and production
+        integration in industrial contexts.
+      </Typography>
     </header>
 
     <div class="space-y-12">
@@ -21,27 +25,28 @@ const sortedProjects = projects.sort((a, b) => b.data.weight - a.data.weight);
         sortedProjects.map((project) => (
           <article class="border-b border-(--border-color) pb-8 last:border-0">
             <div class="flex flex-col gap-2">
-              <span class="font-mono text-xs text-(--text-muted) uppercase">
+              <span class="font-mono text-xs tracking-wide text-(--text-muted) uppercase">
                 {project.data.role}
               </span>
-              <h2 class="text-xl font-bold tracking-tight text-(--text-primary) uppercase">
+              <h2 class="text-xl font-bold tracking-tight text-(--text-primary)">
                 {project.data.title}
               </h2>
               <p class="max-w-2xl text-sm leading-relaxed text-(--text-muted)">
                 {project.data.summary}
               </p>
+              <p class="font-mono text-xs text-(--text-muted)">
+                {project.data.status.toUpperCase()} · {project.data.dates.start.getFullYear()}
+                {project.data.dates.end ? `–${project.data.dates.end.getFullYear()}` : '–Present'}
+              </p>
               <div class="mt-4">
-                <a
-                  href={`/projects/${project.id}`}
-                  class="inline-block border border-(--border-color) px-3 py-1 font-mono text-xs uppercase transition-colors hover:bg-(--text-primary) hover:text-(--bg-primary)"
-                >
-                  Inspect Module →
-                </a>
+                <Button href={`/projects/${project.id}`} variant="secondary">
+                  Read Case Study →
+                </Button>
               </div>
             </div>
           </article>
         ))
       }
     </div>
-  </div>
+  </Container>
 </Layout>

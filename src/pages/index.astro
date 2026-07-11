@@ -11,36 +11,35 @@ const projects = await getCollection('projects');
 const features = projects.sort((a, b) => b.data.weight - a.data.weight).slice(0, 2);
 ---
 
-<Layout title="Daniel Kindl — Portfolio Index">
-  <!-- HERO SECTION -->
+<Layout title="Daniel Kindl — Software Engineer">
   <div
     class="relative flex min-h-[70vh] w-full items-center overflow-hidden border-b border-(--border-color)"
   >
     <HeroGrid client:load />
     <Container class="py-20">
-      <Typography variant="eyebrow">[SYSTEM_STATUS: OPERATIONAL]</Typography>
+      <Typography variant="eyebrow">Industrial Software Engineer</Typography>
       <Typography variant="h1" class="mb-6 max-w-3xl text-4xl leading-none font-black md:text-6xl">
-        DESIGNING HIGH-<span class="text-(--text-muted)">PERFORMANCE</span> DIGITAL ARCHITECTURES.
+        Building reliable <span class="text-(--text-muted)">industrial software</span> and modernizing
+        legacy systems.
       </Typography>
       <Typography variant="body" class="mb-8 max-w-xl text-(--text-muted)">
-        Engineering clean systems, content pipelines, and interactive interfaces with surgical
-        precision and structural discipline.
+        I design and ship C#/.NET and Delphi desktop solutions for industrial environments, with a
+        focus on long-term maintainability, system integration, and safe migration from legacy code.
       </Typography>
       <div class="flex gap-4">
-        <Button href="/projects" variant="primary">View Stream</Button>
-        <Button href="/about" variant="secondary">About Operator</Button>
+        <Button href="/projects" variant="primary">View Projects</Button>
+        <Button href="/about" variant="secondary">About & CV</Button>
       </div>
     </Container>
   </div>
 
-  <!-- SELECTED PROJECTS STREAM SECTION -->
   <Container as="section" class="border-b border-(--border-color) py-20">
     <header class="mb-12 flex items-baseline justify-between">
       <div>
-        <Typography variant="eyebrow">// RECENT_OUTPUT</Typography>
-        <Typography variant="h2">Selected Systems</Typography>
+        <Typography variant="eyebrow">Selected Work</Typography>
+        <Typography variant="h2">Recent Project Highlights</Typography>
       </div>
-      <Button href="/projects" variant="secondary">All Systems →</Button>
+      <Button href="/projects" variant="secondary">All Projects →</Button>
     </header>
 
     <div class="space-y-12">
@@ -48,16 +47,17 @@ const features = projects.sort((a, b) => b.data.weight - a.data.weight).slice(0,
     </div>
   </Container>
 
-  <!-- PLAYGROUND TEASER SECTION -->
   <Container as="section" class="py-20">
     <div class="max-w-3xl border border-(--border-color) bg-(--bg-primary) p-8 md:p-12">
-      <Typography variant="eyebrow">MODULE_02 // LABORATORY</Typography>
-      <Typography variant="h3" class="mb-4">Interactive Experiments</Typography>
+      <Typography variant="eyebrow">Approach</Typography>
+      <Typography variant="h3" class="mb-4"
+        >Pragmatic modernization for production systems</Typography
+      >
       <Typography variant="body" class="mb-6 text-(--text-muted)">
-        A sandbox environment built to isolate components, performance testing profiles, and custom
-        framework integrations.
+        My work combines delivery speed with engineering discipline: clear architecture boundaries,
+        testable modules, and release pipelines that keep industrial software stable over time.
       </Typography>
-      <Button href="/playground" variant="primary">Enter Playground</Button>
+      <Button href="/about" variant="primary">Read About & CV</Button>
     </div>
   </Container>
 </Layout>
