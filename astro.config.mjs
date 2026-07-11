@@ -1,11 +1,13 @@
-// @ts-check
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 import svelte from '@astrojs/svelte';
 import tailwindcss from '@tailwindcss/vite';
 
-// https://astro.build/config
 export default defineConfig({
-  integrations: [svelte()],
+  // Highlight-start: Add your target live domain here
+  site: 'https://daniel-kindl.github.io',
+  // Highlight-end
+  integrations: [sitemap(), svelte()],
   vite: {
     plugins: [tailwindcss()],
   },

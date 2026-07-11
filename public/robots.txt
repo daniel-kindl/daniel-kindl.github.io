@@ -1,0 +1,7 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Host & Sitemap Mapping Direction
+Host: https://daniel-kindl.github.io
+Sitemap: https://daniel-kindl.github.io/sitemap-index.xml

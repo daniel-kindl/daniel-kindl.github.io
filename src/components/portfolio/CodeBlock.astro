@@ -1,0 +1,30 @@
+---
+import { Code } from 'astro:components';
+import type { ComponentProps } from 'astro/types';
+
+type AstroCodeProps = ComponentProps<typeof Code>;
+
+interface Props {
+  code: string;
+  lang?: AstroCodeProps['lang'];
+  filename?: string;
+}
+
+const { code, lang = 'typescript', filename } = Astro.props;
+---
+
+<div class="my-6 w-full border border-(--border-color) bg-(--bg-primary) font-mono text-xs">
+  {
+    filename && (
+      <div class="flex items-center justify-between border-b border-(--border-color) bg-(--bg-primary) px-4 py-2 text-[10px] tracking-tight text-(--text-muted) uppercase">
+        <span>{filename}</span>
+        <span>[SOURCE]</span>
+      </div>
+    )
+  }
+  <div
+    class="overflow-x-auto p-4 text-(--text-primary) [&>pre]:bg-transparent! [&>pre]:outline-none"
+  >
+    <Code code={code} lang={lang} theme="css-variables" />
+  </div>
+</div>

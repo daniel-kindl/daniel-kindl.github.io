@@ -1,0 +1,75 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Container from '../components/ui/Container.astro';
+import Typography from '../components/ui/Typography.astro';
+import Timeline from '../components/ui/Timeline.astro';
+import TimelineEvent from '../components/ui/TimelineEvent.astro';
+
+const professionalHistory = [
+  {
+    role: 'Senior Systems Engineer',
+    organization: 'Matrix Core Technologies',
+    period: '2024 — PRESENT',
+    description:
+      'Architecting high-throughput interface structures, headless CMS content delivery pipelines, and performance optimization micro-frameworks.',
+  },
+  {
+    role: 'Full-Stack Developer',
+    organization: 'Vector Digital Lab',
+    period: '2021 — 2024',
+    description:
+      'Developed production-ready reactive web applications, automated CI/CD pipeline deployments, and managed structured database schemas.',
+  },
+  {
+    role: 'Frontend Engineer',
+    organization: 'Monolith Systems',
+    period: '2019 — 2021',
+    description:
+      'Built clean design system component libraries, enforced semantic accessibility layers, and optimized web performance metrics.',
+  },
+];
+---
+
+<Layout title="Operator Profile — Daniel Kindl">
+  <Container as="main" class="py-12 md:py-20">
+    <!-- PROFILE HEADER -->
+    <header class="mb-16 border-b border-(--border-color) pb-12">
+      <Typography variant="eyebrow">[OPERATOR_METRICS: BIOGRAPHY]</Typography>
+      <Typography variant="h1" class="mb-6">Daniel Kindl</Typography>
+      <div class="max-w-2xl space-y-4">
+        <Typography variant="body" class="text-lg">
+          Pragmatic software engineer focusing on technical execution, clean codebase architectures,
+          and structured interface development.
+        </Typography>
+        <Typography variant="body" class="text-(--text-muted)">
+          Operating at the intersection of performance optimization and precise typographic layouts.
+          I eliminate structural fluff, optimize digital infrastructure, and design resilient
+          frontend layers.
+        </Typography>
+      </div>
+    </header>
+
+    <!-- CHRONOLOGY SECTION -->
+    <section class="max-w-3xl">
+      <div class="mb-10">
+        <Typography variant="eyebrow">// OPERATIONAL_CHRONOLOGY</Typography>
+        <Typography variant="h2">Professional History</Typography>
+      </div>
+
+      <Timeline>
+        {
+          /* Reason: Professional chronology requires direct, scannable data progression linked directly to year ranges. */
+        }
+        {
+          professionalHistory.map((item) => (
+            <TimelineEvent title={`${item.role} — ${item.organization}`} time={item.period}>
+              <p class="mt-1 font-mono text-xs leading-relaxed text-(--text-muted)">
+                {item.description}
+              </p>
+            </TimelineEvent>
+          ))
+        }
+      </Timeline>
+    </section>
+  </Container>
+</Layout>

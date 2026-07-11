@@ -1,12 +1,63 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import Container from '../components/ui/Container.astro';
+import Typography from '../components/ui/Typography.astro';
+import Button from '../components/ui/Button.astro';
+import ProjectCard from '../components/portfolio/ProjectCard.astro';
+import HeroGrid from '../components/portfolio/HeroGrid.svelte';
+
+const projects = await getCollection('projects');
+const features = projects.sort((a, b) => b.data.weight - a.data.weight).slice(0, 2);
 ---
 
-<Layout title="Daniel Kindl — Home">
-  <div class="py-12">
-    <h1 class="mb-4 text-4xl font-bold tracking-tight uppercase">Engineering Systems</h1>
-    <p class="max-w-xl leading-relaxed text-(--text-muted)">
-      Welcome to the production platform core. This layout is bounded by Swiss design grid tokens.
-    </p>
+<Layout title="Daniel Kindl — Portfolio Index">
+  <!-- HERO SECTION -->
+  <div
+    class="relative flex min-h-[70vh] w-full items-center overflow-hidden border-b border-(--border-color)"
+  >
+    <HeroGrid client:load />
+    <Container class="py-20">
+      <Typography variant="eyebrow">[SYSTEM_STATUS: OPERATIONAL]</Typography>
+      <Typography variant="h1" class="mb-6 max-w-3xl text-4xl leading-none font-black md:text-6xl">
+        DESIGNING HIGH-<span class="text-(--text-muted)">PERFORMANCE</span> DIGITAL ARCHITECTURES.
+      </Typography>
+      <Typography variant="body" class="mb-8 max-w-xl text-(--text-muted)">
+        Engineering clean systems, content pipelines, and interactive interfaces with surgical
+        precision and structural discipline.
+      </Typography>
+      <div class="flex gap-4">
+        <Button href="/projects" variant="primary">View Stream</Button>
+        <Button href="/about" variant="secondary">About Operator</Button>
+      </div>
+    </Container>
   </div>
+
+  <!-- SELECTED PROJECTS STREAM SECTION -->
+  <Container as="section" class="border-b border-(--border-color) py-20">
+    <header class="mb-12 flex items-baseline justify-between">
+      <div>
+        <Typography variant="eyebrow">// RECENT_OUTPUT</Typography>
+        <Typography variant="h2">Selected Systems</Typography>
+      </div>
+      <Button href="/projects" variant="secondary">All Systems →</Button>
+    </header>
+
+    <div class="space-y-12">
+      {features.map((project, index) => <ProjectCard project={project} index={index} />)}
+    </div>
+  </Container>
+
+  <!-- PLAYGROUND TEASER SECTION -->
+  <Container as="section" class="py-20">
+    <div class="max-w-3xl border border-(--border-color) bg-(--bg-primary) p-8 md:p-12">
+      <Typography variant="eyebrow">MODULE_02 // LABORATORY</Typography>
+      <Typography variant="h3" class="mb-4">Interactive Experiments</Typography>
+      <Typography variant="body" class="mb-6 text-(--text-muted)">
+        A sandbox environment built to isolate components, performance testing profiles, and custom
+        framework integrations.
+      </Typography>
+      <Button href="/playground" variant="primary">Enter Playground</Button>
+    </div>
+  </Container>
 </Layout>

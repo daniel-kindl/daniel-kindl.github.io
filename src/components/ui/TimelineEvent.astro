@@ -1,0 +1,28 @@
+---
+import Typography from './Typography.astro';
+
+interface Props {
+  title: string;
+  time: string;
+}
+
+const { title, time } = Astro.props;
+---
+
+<div class="relative">
+  <!-- Visual dot anchor -->
+  <div
+    class="absolute top-1.5 -left-7.75 h-2 w-2 rounded-full border border-(--bg-primary) bg-(--border-color)"
+  >
+  </div>
+
+  <div class="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
+    <Typography variant="h3" class="text-sm! font-bold tracking-tight">{title}</Typography>
+    <span class="font-mono text-[10px] tracking-wider text-(--text-muted) uppercase tabular-nums"
+      >{time}</span
+    >
+  </div>
+  <div class="mt-2">
+    <slot />
+  </div>
+</div>

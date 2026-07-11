@@ -1,0 +1,91 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Container from '../components/ui/Container.astro';
+import Typography from '../components/ui/Typography.astro';
+import CodeBlock from '../components/portfolio/CodeBlock.astro';
+
+const experiments = [
+  {
+    id: 'LAB-01',
+    title: 'Perspective Grid Matrix',
+    status: 'ACTIVE',
+    engine: 'Svelte 5',
+    description:
+      'Cursor-reactive coordinate tracking mapped to matrix transformations via Hardware Accelerated CSS layers.',
+  },
+  {
+    id: 'LAB-02',
+    title: 'Theme Token Pipeline',
+    status: 'STABLE',
+    engine: 'Astro Engine',
+    description:
+      'Decoupled CSS-variable mapping configuration enabling zero-runtime layout style synchronization.',
+  },
+];
+
+const validationSnippet = `// Metric validation module
+export function verifyMatrix(status: string): boolean {
+  const state = status === "ACTIVE" ? true : false;
+  console.log(\`[SYS_LOG]: Sandbox verification \${status}\`);
+  return state;
+}`;
+---
+
+<Layout title="Laboratory Sandbox — Daniel Kindl">
+  <Container as="main" class="py-12 md:py-20">
+    <!-- PAGE HEADER -->
+    <header class="mb-16 border-b border-(--border-color) pb-12">
+      <Typography variant="eyebrow">[SANDBOX_METRICS: DECOUPLED_TESTS]</Typography>
+      <Typography variant="h1" class="mb-4">Playground Laboratory</Typography>
+      <Typography variant="body" class="max-w-xl text-(--text-muted)">
+        Isolated technological evaluations, micro-benchmarks, and modular UI component prototypes.
+      </Typography>
+    </header>
+
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-12">
+      <!-- SYSTEM REGISTRY LIST -->
+      <section class="space-y-8 lg:col-span-7">
+        <Typography variant="eyebrow">// REGISTRY_INDEX</Typography>
+
+        <div class="space-y-6">
+          {
+            experiments.map((exp) => (
+              <div class="group border border-(--border-color) bg-(--bg-primary) p-6 transition-colors duration-150 hover:border-(--text-primary)">
+                <div class="mb-3 flex items-baseline justify-between">
+                  <span class="font-mono text-[10px] text-(--text-muted)">
+                    {exp.id} // ENGINE: {exp.engine}
+                  </span>
+                  <span class="border border-emerald-500/20 bg-emerald-500/5 px-1.5 py-0.5 font-mono text-[9px] text-emerald-600 uppercase">
+                    {exp.status}
+                  </span>
+                </div>
+                <Typography variant="h3" class="mb-2 text-base! group-hover:underline">
+                  {exp.title}
+                </Typography>
+                <p class="font-mono text-xs leading-relaxed text-(--text-muted)">
+                  {exp.description}
+                </p>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- LIVE RUNTIME DEMO PIPELINE -->
+      <aside class="space-y-6 lg:col-span-5">
+        <Typography variant="eyebrow">// INTEGRITY_CHECK</Typography>
+        <div
+          class="border border-(--border-color) bg-(--bg-primary) p-4 font-mono text-[11px] text-(--text-muted)"
+        >
+          <div class="mb-2 font-bold text-(--text-primary)">[SYS_INTEGRITY]</div>
+          <p class="mb-4">
+            Compiling test configurations against core rendering engines. Code snippets route
+            automatically through native Shiki token pipelines.
+          </p>
+
+          <CodeBlock code={validationSnippet} lang="typescript" filename="metrics.ts" />
+        </div>
+      </aside>
+    </div>
+  </Container>
+</Layout>
