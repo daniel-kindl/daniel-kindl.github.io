@@ -34,8 +34,24 @@ const projectDate = project.data.dates?.start || project.data.dates;
         <Typography variant="h1" class="mb-6 max-w-4xl">
           {project.data.title}
         </Typography>
-        <div class="flex flex-wrap gap-2">
+        <div class="mb-6 flex flex-wrap gap-2">
           {project.data.stack.map((tech: string) => <Tag label={tech} />)}
+        </div>
+        <div class="flex gap-3">
+          {
+            project.data.links?.repository && (
+              <Button href={project.data.links.repository} variant="secondary">
+                View Repository →
+              </Button>
+            )
+          }
+          {
+            project.data.links?.production && (
+              <Button href={project.data.links.production} variant="primary">
+                View Live →
+              </Button>
+            )
+          }
         </div>
       </Container>
     </div>

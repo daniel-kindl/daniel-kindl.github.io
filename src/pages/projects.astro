@@ -13,10 +13,9 @@ const sortedProjects = projects.sort((a, b) => b.data.weight - a.data.weight);
   <Container as="main" class="py-12 md:py-20">
     <header class="mb-12">
       <Typography variant="eyebrow">Projects</Typography>
-      <Typography variant="h1" class="mb-4">Industrial Software and Modernization Work</Typography>
+      <Typography variant="h1" class="mb-4">Software Projects and Engineering Work</Typography>
       <Typography variant="body" class="max-w-2xl text-(--text-muted)">
-        Selected projects focused on desktop software architecture, legacy migration, and production
-        integration in industrial contexts.
+        Selected projects across backend systems, developer tooling, and web development.
       </Typography>
     </header>
 
@@ -42,6 +41,11 @@ const sortedProjects = projects.sort((a, b) => b.data.weight - a.data.weight);
                 <Button href={`/projects/${project.id}`} variant="secondary">
                   Read Case Study →
                 </Button>
+                {project.data.links?.repository && (
+                  <Button href={project.data.links.repository} variant="secondary">
+                    Repository →
+                  </Button>
+                )}
               </div>
             </div>
           </article>

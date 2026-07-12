@@ -27,8 +27,15 @@ const isEven = index % 2 === 0;
     <div class="mb-6 flex flex-wrap gap-2">
       {project.data.stack.map((tech: string) => <Tag label={tech} />)}
     </div>
-    <div>
+    <div class="flex gap-3">
       <Button href={`/projects/${project.id}`} variant="primary"> Read Case Study → </Button>
+      {
+        project.data.links?.repository && (
+          <Button href={project.data.links.repository} variant="secondary">
+            Repository →
+          </Button>
+        )
+      }
     </div>
   </div>
 
@@ -37,8 +44,11 @@ const isEven = index % 2 === 0;
   >
     <div class="space-y-1">
       <div>Status: {project.data.status}</div>
-      <div>Stack size: {project.data.stack.length}</div>
-      <div>Priority weight: {project.data.weight}</div>
+      <div>
+        Timeline: {project.data.dates.start.getFullYear()}
+        {project.data.dates.end ? `–${project.data.dates.end.getFullYear()}` : '–Present'}
+      </div>
+      <div>Stack: {project.data.stack.length} technologies</div>
     </div>
   </div>
 </article>
