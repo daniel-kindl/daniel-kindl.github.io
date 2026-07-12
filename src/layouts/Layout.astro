@@ -1,6 +1,5 @@
 ---
 import { ClientRouter } from 'astro:transitions';
-import SEO from '../components/SEO.astro';
 import ThemeScript from '../components/ThemeScript.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -51,7 +50,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <!-- Core Runtime Utilities & Engine Routing -->
     <ThemeScript />
     <ClientRouter />
-    <SEO title={title} description={description} />
 
     <!-- Meta Indexing Titles -->
     <title>{title}</title>
