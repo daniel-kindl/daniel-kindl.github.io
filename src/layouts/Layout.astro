@@ -45,6 +45,12 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       type="font/woff2"
       crossorigin
     />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Daniel Kindl — Writing"
+      href="/rss.xml"
+    />
     <meta name="generator" content={Astro.generator} />
 
     <!-- Core Runtime Utilities & Engine Routing -->

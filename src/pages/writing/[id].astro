@@ -1,0 +1,60 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Container from '../../components/ui/Container.astro';
+import Typography from '../../components/ui/Typography.astro';
+import Tag from '../../components/ui/Tag.astro';
+import Button from '../../components/ui/Button.astro';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('writing')).filter(
+    (post) => !post.data.draft || import.meta.env.DEV,
+  );
+  return posts.map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout title={`${post.data.title} — Writing`} description={post.data.summary}>
+  <article>
+    <div class="border-b border-(--border-color) bg-(--bg-primary) py-12 md:py-20">
+      <Container>
+        <div class="mb-4">
+          <Button href="/writing" variant="secondary" class="min-w-0! px-0!"
+            >← Back to Writing</Button
+          >
+        </div>
+        <Typography variant="eyebrow">
+          {
+            post.data.date.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })
+          }
+        </Typography>
+        <Typography variant="h1" class="mb-6 max-w-4xl">{post.data.title}</Typography>
+        {
+          post.data.tags.length > 0 && (
+            <div class="flex flex-wrap gap-2">
+              {post.data.tags.map((tag: string) => (
+                <Tag label={tag} />
+              ))}
+            </div>
+          )
+        }
+      </Container>
+    </div>
+
+    <Container class="py-12 md:py-16">
+      <div class="prose max-w-none md:max-w-3xl">
+        <Content />
+      </div>
+    </Container>
+  </article>
+</Layout>

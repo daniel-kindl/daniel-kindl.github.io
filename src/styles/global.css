@@ -102,4 +102,63 @@
   .prose li {
     margin-bottom: 0.5rem;
   }
+
+  .prose h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+  }
+
+  .prose strong {
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .prose a {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: var(--border-color);
+    transition: text-decoration-color 0.15s ease;
+  }
+
+  .prose a:hover {
+    text-decoration-color: var(--text-primary);
+  }
+
+  .prose blockquote {
+    border-left: 2px solid var(--border-color);
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: var(--text-muted);
+  }
+
+  .prose code:not(pre code) {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.875em;
+    background-color: var(--border-color);
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    color: var(--text-primary);
+  }
+
+  .prose pre {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-primary);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+  }
+
+  .prose pre code {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    background: none;
+    padding: 0;
+  }
 }

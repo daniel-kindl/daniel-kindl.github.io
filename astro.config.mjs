@@ -6,6 +6,9 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://daniel-kindl.github.io',
   integrations: [sitemap(), svelte()],
+  markdown: {
+    shikiConfig: { theme: 'css-variables' },
+  },
   vite: {
     plugins: [tailwindcss()],
   },
