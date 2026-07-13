@@ -1,0 +1,39 @@
+---
+import Tag from '../ui/Tag.astro';
+import Button from '../ui/Button.astro';
+import { slugify } from '@lib/slug';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'writing'>;
+}
+const { post } = Astro.props;
+---
+
+<article class="border-b border-(--border-color) pb-8 last:border-0">
+  <div class="flex flex-col gap-2">
+    <p class="font-mono text-xs text-(--text-muted)">
+      {
+        post.data.date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })
+      }
+    </p>
+    <h2 class="text-xl font-bold tracking-tight text-(--text-primary)">{post.data.title}</h2>
+    <p class="max-w-2xl text-sm leading-relaxed text-(--text-muted)">{post.data.summary}</p>
+    {
+      post.data.tags.length > 0 && (
+        <div class="mt-2 flex flex-wrap gap-2">
+          {post.data.tags.map((tag: string) => (
+            <Tag label={tag} href={`/writing/tags/${slugify(tag)}`} />
+          ))}
+        </div>
+      )
+    }
+    <div class="mt-4">
+      <Button href={`/writing/${post.id}`} variant="secondary">Read Post →</Button>
+    </div>
+  </div>
+</article>

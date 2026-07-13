@@ -1,12 +1,23 @@
 ---
 interface Props {
   label: string;
+  href?: string;
 }
-const { label } = Astro.props;
+const { label, href } = Astro.props;
+
+const classes =
+  'inline-block border border-(--border-color) bg-(--bg-primary) px-2 py-0.5 font-mono text-[10px] tracking-tight text-(--text-muted) uppercase select-none';
 ---
 
-<span
-  class="inline-block border border-(--border-color) bg-(--bg-primary) px-2 py-0.5 font-mono text-[10px] tracking-tight text-(--text-muted) uppercase select-none"
->
-  {label}
-</span>
+{
+  href ? (
+    <a
+      href={href}
+      class={`${classes} transition-colors hover:border-(--text-primary) hover:text-(--text-primary)`}
+    >
+      {label}
+    </a>
+  ) : (
+    <span class={classes}>{label}</span>
+  )
+}
