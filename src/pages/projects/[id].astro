@@ -5,6 +5,7 @@ import Container from '../../components/ui/Container.astro';
 import Typography from '../../components/ui/Typography.astro';
 import Tag from '../../components/ui/Tag.astro';
 import Button from '../../components/ui/Button.astro';
+import ExternalLink from '../../components/ui/ExternalLink.astro';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -40,16 +41,16 @@ const projectDate = project.data.dates?.start || project.data.dates;
         <div class="flex gap-3">
           {
             project.data.links?.repository && (
-              <Button href={project.data.links.repository} variant="secondary">
-                View Repository →
-              </Button>
+              <ExternalLink href={project.data.links.repository} variant="secondary">
+                View Repository
+              </ExternalLink>
             )
           }
           {
             project.data.links?.production && (
-              <Button href={project.data.links.production} variant="primary">
-                View Live →
-              </Button>
+              <ExternalLink href={project.data.links.production} variant="primary">
+                View Live
+              </ExternalLink>
             )
           }
         </div>

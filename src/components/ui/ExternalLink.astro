@@ -1,0 +1,43 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { buttonBaseStyles, buttonVariants, type ButtonVariant } from '@lib/buttonStyles';
+
+interface Props extends Omit<HTMLAttributes<'a'>, 'target' | 'rel' | 'href'> {
+  href: string;
+  variant?: ButtonVariant | 'plain';
+  class?: string;
+  showIcon?: boolean;
+}
+
+const { href, variant = 'plain', class: className = '', showIcon = true, ...rest } = Astro.props;
+
+const variantClass = variant === 'plain' ? '' : `${buttonBaseStyles} ${buttonVariants[variant]}`;
+const combinedClass = ['inline-flex items-center gap-1', variantClass, className]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<a href={href} target="_blank" rel="noopener noreferrer" class={combinedClass} {...rest}>
+  <slot />
+  {
+    showIcon && (
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        viewBox="0 0 24 24"
+        width="0.75em"
+        height="0.75em"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="shrink-0"
+      >
+        <path d="M7 17 17 7" />
+        <path d="M8 7h9v9" />
+      </svg>
+    )
+  }
+  <span class="sr-only">(opens in new tab)</span>
+</a>

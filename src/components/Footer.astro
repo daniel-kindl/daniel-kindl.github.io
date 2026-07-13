@@ -1,4 +1,6 @@
 ---
+import ExternalLink from '@components/ui/ExternalLink.astro';
+
 const currentYear = new Date().getFullYear();
 ---
 
@@ -7,16 +9,23 @@ const currentYear = new Date().getFullYear();
     class="mx-auto flex max-w-5xl flex-col items-start justify-between gap-4 px-4 font-mono text-xs text-(--text-muted) sm:flex-row sm:items-baseline"
   >
     <div>
-      <span>&copy; {currentYear} Daniel Kindl. Built with Astro 7.</span>
+      <span
+        >&copy; {currentYear} Daniel Kindl Built with <ExternalLink
+          href="https://astro.build"
+          showIcon={false}
+          class="underline decoration-(--border-color) underline-offset-4 transition-colors hover:text-(--text-primary) hover:decoration-(--text-primary)"
+          >Astro</ExternalLink
+        ></span
+      >
     </div>
     <div class="flex gap-6 uppercase">
-      <a
+      <ExternalLink
         href="https://github.com/daniel-kindl"
-        class="transition-colors hover:text-(--text-primary)">Github</a
+        class="transition-colors hover:text-(--text-primary)">Github</ExternalLink
       >
-      <a
+      <ExternalLink
         href="https://www.linkedin.com/in/kindldaniel/"
-        class="transition-colors hover:text-(--text-primary)">Linkedin</a
+        class="transition-colors hover:text-(--text-primary)">Linkedin</ExternalLink
       >
       <a href="mailto:daniel.kindl@proton.me" class="transition-colors hover:text-(--text-primary)"
         >Email</a

@@ -3,6 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import Typography from '../ui/Typography.astro';
 import Tag from '../ui/Tag.astro';
 import Button from '../ui/Button.astro';
+import ExternalLink from '../ui/ExternalLink.astro';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -31,9 +32,9 @@ const isEven = index % 2 === 0;
       <Button href={`/projects/${project.id}`} variant="primary"> Read Case Study → </Button>
       {
         project.data.links?.repository && (
-          <Button href={project.data.links.repository} variant="secondary">
-            Repository →
-          </Button>
+          <ExternalLink href={project.data.links.repository} variant="secondary">
+            Repository
+          </ExternalLink>
         )
       }
     </div>
