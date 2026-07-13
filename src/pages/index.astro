@@ -5,26 +5,26 @@ import Container from '../components/ui/Container.astro';
 import Typography from '../components/ui/Typography.astro';
 import Button from '../components/ui/Button.astro';
 import ProjectCard from '../components/portfolio/ProjectCard.astro';
-import HeroGrid from '../components/portfolio/HeroGrid.svelte';
 
 const projects = await getCollection('projects');
 const features = projects.sort((a, b) => b.data.weight - a.data.weight).slice(0, 2);
 ---
 
 <Layout title="Daniel Kindl — Software Engineer">
-  <div
-    class="relative flex min-h-[70vh] w-full items-center overflow-hidden border-b border-(--border-color)"
-  >
-    <HeroGrid client:load />
+  <div class="relative flex min-h-[70vh] w-full items-center border-b border-(--border-color)">
     <Container class="py-20">
-      <Typography variant="eyebrow">Software Engineer</Typography>
+      <Typography
+        variant="eyebrow"
+        class="before:mr-1 before:text-(--text-muted) before:content-['['] after:ml-1 after:text-(--text-muted) after:content-[']']"
+        >Software Engineer</Typography
+      >
       <Typography variant="h1" class="mb-6 max-w-3xl text-4xl leading-none font-black md:text-6xl">
-        Building reliable software <span class="text-(--text-muted)">end-to-end</span>.
+        I design systems, <span class="text-(--text-muted)">then build them</span>.
       </Typography>
       <Typography variant="body" class="mb-8 max-w-xl text-(--text-muted)">
-        I design and ship applications across desktop UI, backend services, and databases —
-        combining hands-on engineering experience with AI-assisted development to deliver reliable
-        software faster, without cutting corners on quality.
+        I think through how software should be structured before writing any code — then combine
+        hands-on engineering experience with AI-assisted development to build it, ship it, and keep
+        it running well over time.
       </Typography>
       <div class="flex gap-4">
         <Button href="/projects" variant="primary">View Projects</Button>
