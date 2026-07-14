@@ -40,6 +40,11 @@ anything affecting bundle size, LCP, or accessibility, expect Lighthouse to gate
 Commits are enforced via Husky + commitlint (Conventional Commits: `type: description`,
 e.g. `feat:`, `fix:`, `chore:`). `lint-staged` runs ESLint/Prettier on staged files at commit time.
 
+**Commit message style**: this repo's history is single-line subjects only — no body paragraphs,
+no trailers (e.g. no `Co-Authored-By:`). Match that: `type: short imperative description`, optionally
+suffixed with `(#issueNumber)` when tied to a tracked issue. Don't add explanatory bodies; the diff
+is the explanation.
+
 ## Documentation
 
 Full documentation: https://docs.astro.build
