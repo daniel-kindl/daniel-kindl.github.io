@@ -23,6 +23,12 @@ jobs:
       - name: Generate Programmatic Assets
         run: npm run generate-assets
 
+      - name: Execute Lint Verification
+        run: npm run lint
+
+      - name: Execute Format Verification
+        run: npm run format:check
+
       - name: Execute Type Verification
         run: npx astro check
 

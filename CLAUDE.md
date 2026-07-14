@@ -18,7 +18,7 @@ npm run lint             # eslint .
 npm run lint:fix         # eslint . --fix
 npm run format            # prettier --write .
 npm run format:check     # prettier --check .
-npm run generate-assets  # regenerate public/assets/meta and public/assets/projects PNGs + icon.svg (uses `canvas`)
+npm run generate-assets  # regenerate public/assets/meta PNGs, apple-touch-icon.png, and icon.svg (uses `canvas`)
 ```
 
 There is no test runner/test script in this repo (`directory-sync-tool` project referenced in
@@ -32,8 +32,9 @@ astro dev --background
 
 Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
-CI (`.github/workflows/ci.yml`) runs on PRs to `master`: `npm run generate-assets` → `astro check` →
-`npm run build`. Deploy (`.github/workflows/deploy.yml`) runs on push to `master`: build, then a
+CI (`.github/workflows/ci.yml`) runs on PRs to `master`: `npm run generate-assets` → `npm run lint`
+→ `npm run format:check` → `astro check` → `npm run build`. Deploy (`.github/workflows/deploy.yml`)
+runs on push to `master`: build, then a
 Lighthouse CI budget check (`lighthouserc.json`) before publishing to GitHub Pages. If you change
 anything affecting bundle size, LCP, or accessibility, expect Lighthouse to gate the deploy.
 
@@ -67,9 +68,10 @@ dated entries there when making a comparable decision — don't edit existing on
 **Content is data-driven via two Zod-validated collections** (`src/content.config.ts`), loaded
 from `src/content/{projects,writing}/*.md`:
 
-- `projects`: title, summary, role, stack, links (production/repository, both optional URLs),
-  status (`development | production | archived`), dates (start/end), optional coverImage,
-  `weight` (int, controls homepage feature ordering — higher sorts first).
+- `projects`: title, summary, role, stack, links (production/repository/release, all optional
+  URLs — `release` renders as a third "View Release" button on the case-study page when present),
+  status (`development | production | archived`), dates (start/end), `weight` (int, controls
+  homepage feature ordering — higher sorts first).
 - `writing`: title, summary, date, tags (string array), draft (bool — draft posts are excluded from
   builds and RSS except in `import.meta.env.DEV`).
 
@@ -89,8 +91,7 @@ page-level layouts — `Container`, `Typography` (h1/h2/h3/body/eyebrow/mono var
 `ExternalLink` (share variant classes from `src/lib/buttonStyles.ts`; `ExternalLink` always sets
 `target="_blank" rel="noopener noreferrer"` and appends a screen-reader "(opens in new tab)" label
 plus an optional icon), `Tag`, `Timeline`/`TimelineEvent`. `src/components/portfolio/` holds
-content-specific composites (`ProjectCard`, `WritingPostCard`, `CodeBlock` — wraps `astro:components`
-`Code` for syntax highlighting via Shiki, theme `css-variables`).
+content-specific composites (`ProjectCard`, `WritingPostCard`).
 
 **Theming uses a `data-theme` attribute, not Tailwind's `.dark` class.** `ThemeScript.astro`
 (inlined in `<head>` before paint, to avoid FOUC) and the inline script in `Header.astro` read/write
@@ -98,17 +99,15 @@ content-specific composites (`ProjectCard`, `WritingPostCard`, `CodeBlock` — w
 `astro:page-load`/`astro:after-swap` for View Transitions. CSS variables (`--bg-primary`,
 `--text-primary`, `--text-muted`, `--border-color`) are defined in `src/styles/global.css` under
 `:root` and `:root[data-theme='dark']`, and components consume them via Tailwind's arbitrary-value
-syntax `bg-(--bg-primary)` / `text-(--text-primary)`, not Tailwind theme color utilities.
-`src/styles/tokens.css` (a `.dark`-class-based `@theme` token file, per ADR-4 in
-`docs/tech-decisions.md`) and `src/components/islands/ThemeToggle.svelte` (which toggles the `.dark`
-class) are **not wired into the site** — `tokens.css` isn't imported anywhere and `ThemeToggle.svelte`
-isn't rendered on any page. Don't assume either is live; the working theme system is the
-`data-theme`/`global.css` pair described above.
+syntax `bg-(--bg-primary)` / `text-(--text-primary)`, not Tailwind theme color utilities. An
+earlier `.dark`-class-based token file (`tokens.css`) and a `ThemeToggle.svelte` island that used
+it were dead code and have been removed — see ADR-9 in `docs/tech-decisions.md` if you find
+references to either in history.
 
-**Svelte islands are opt-in and currently unused on live pages.** `src/components/islands/` and
-`src/components/playground/` (`MainActionButton.svelte`, `MatrixWave.svelte`) exist but aren't
-imported by any `.astro` page yet — check before assuming a component is rendered anywhere. Per
-ADR-3, new interactive components should use Svelte 5 runes (`$state`, etc.), not the legacy
+**Svelte islands directories are currently empty.** `src/components/islands/` and
+`src/components/playground/` exist as the intended home for interactive "playground" pieces (per
+ADR-3) but hold no components right now — prior placeholders were unused dead code and were
+removed. New interactive components should use Svelte 5 runes (`$state`, etc.), not the legacy
 `export let` API, and should only hydrate via explicit `client:*` directives.
 
 **Global layout**: `src/layouts/Layout.astro` is the single page shell (meta/OG/Twitter tags,
@@ -120,5 +119,6 @@ font preloads, `ThemeScript`, `ClientRouter` for View Transitions, skip-to-conte
 to render skills/experience via `Timeline`.
 
 **Asset generation**: `generate-assets.js` uses `node-canvas` to procedurally generate OG images,
-favicons, and project cover placeholders into `public/assets/`. It runs in CI before every build —
-run it locally after adding a new project if you need its placeholder cover image.
+`icon-192`/`icon-512`, `apple-touch-icon.png`, and `icon.svg`. It runs in CI before every build.
+`node-canvas` is a native module — see the Setup section in `README.md` for the system-library
+prerequisite (Cairo/Pango) if `npm install` fails locally.

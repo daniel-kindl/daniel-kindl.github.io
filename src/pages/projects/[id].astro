@@ -53,6 +53,13 @@ const projectDate = project.data.dates?.start || project.data.dates;
               </ExternalLink>
             )
           }
+          {
+            project.data.links?.release && (
+              <ExternalLink href={project.data.links.release} variant="secondary">
+                View Release
+              </ExternalLink>
+            )
+          }
         </div>
       </Container>
     </div>

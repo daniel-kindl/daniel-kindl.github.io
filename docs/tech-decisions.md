@@ -146,3 +146,42 @@ file per family covers the full weight range).
 
 **Consequences:** No licensing risk. Variable fonts keep `public/fonts/` small — 3 files total
 instead of one per weight. Space Grotesk has no italic; use weight/color for emphasis instead.
+
+---
+
+## 9. Theming: `data-theme` attribute + `global.css`, not `tokens.css`/`.dark` class
+
+**Status:** Accepted — 2026-07-14
+
+**Context:** ADR-4 planned `src/styles/tokens.css` as the Tailwind `@theme` config, with dark mode
+via a `.dark` class. Implementation diverged: the theme toggle (`ThemeScript.astro`, `Header.astro`)
+sets a `data-theme="dark"` attribute on `<html>`, and `src/styles/global.css` defines the actual
+`--bg-primary`/`--text-primary`/`--text-muted`/`--border-color` variables under
+`:root`/`:root[data-theme='dark']`. `tokens.css` was never imported anywhere and had no effect.
+
+**Decision:** Delete `tokens.css`. `global.css` + the `data-theme` attribute is the theme system;
+components consume tokens via Tailwind arbitrary-value syntax (`bg-(--bg-primary)`), not `@theme`
+color utilities.
+
+**Consequences:** No dead file conflicting with the live implementation. Any future rework of the
+token/theme system should extend `global.css` directly rather than reintroducing a `.dark`-class
+config file.
+
+---
+
+## 10. TypeScript: staying on `^6.0.3`, not upgrading to 7 yet
+
+**Status:** Accepted — 2026-07-14
+
+**Context:** TypeScript 7 (`7.0.2`) is out and ADR-7 was written anticipating it. Attempted the
+bump: `@astrojs/language-server` (via `@astrojs/check`, which backs `astro check`) crashes
+outright on TS 7 (`Cannot read properties of undefined (reading 'fileExists')` in
+`AstroCheck.getTsconfig`), and `typescript-eslint@8.63.0`'s peer dependency caps at
+`typescript@>=4.8.4 <6.1.0` — npm only warns, but the crash confirms real incompatibility, not
+just an unacknowledged peer range.
+
+**Decision:** Stay on `typescript@^6.0.3` until `@astrojs/check`/`@astrojs/language-server` and
+`typescript-eslint` both ship TS 7 support.
+
+**Consequences:** Re-attempt this bump by running `npm run typecheck` after upgrading — if it
+still crashes, the toolchain isn't ready yet. Don't bump `typescript` alone without re-verifying.

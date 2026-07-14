@@ -49,5 +49,8 @@ ehthumbs.db
 .eslintcache
 .cache/
 
-# IDE/Editor local settings
-.vscode/
+# IDE/Editor local settings (allow the shared, checked-in ones below)
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json

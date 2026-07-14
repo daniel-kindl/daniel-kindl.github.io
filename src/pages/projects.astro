@@ -10,7 +10,10 @@ const projects = await getCollection('projects');
 const sortedProjects = projects.sort((a, b) => b.data.weight - a.data.weight);
 ---
 
-<Layout title="Projects — Daniel Kindl">
+<Layout
+  title="Projects — Daniel Kindl"
+  description="Selected projects across backend systems, developer tooling, and web development."
+>
   <Container as="main" class="py-12 md:py-20">
     <header class="mb-12">
       <Typography variant="eyebrow">Projects</Typography>

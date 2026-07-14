@@ -9,7 +9,7 @@ import { technicalProfile } from '../data/cv';
 const { name, role, summary, skills, experience } = technicalProfile;
 ---
 
-<Layout title="About & CV — Daniel Kindl">
+<Layout title="About & CV — Daniel Kindl" description={summary}>
   <Container as="main" class="py-12 md:py-20">
     <header class="mb-16 border-b border-(--border-color) pb-12">
       <Typography variant="eyebrow">About</Typography>
