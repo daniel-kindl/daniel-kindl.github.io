@@ -14,7 +14,42 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  bump-version:
+    name: Bump Package Version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Determine and Apply Version Bump
+        run: |
+          SUBJECT="${{ github.event.head_commit.message }}"
+          BUMP=""
+          if echo "$SUBJECT" | grep -qE '^chore: bump version to '; then
+            echo "This is a version bump commit, skipping."
+            exit 0
+          elif echo "$SUBJECT" | grep -qE '^[a-z]+(\([^)]+\))?!:'; then
+            BUMP="major"
+          elif echo "$SUBJECT" | grep -qE '^feat(\([^)]+\))?:'; then
+            BUMP="minor"
+          elif echo "$SUBJECT" | grep -qE '^(fix|perf)(\([^)]+\))?:'; then
+            BUMP="patch"
+          fi
+
+          if [ -z "$BUMP" ]; then
+            echo "No version-worthy commit type, skipping bump."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          npm version "$BUMP" --no-git-tag-version -m "chore: bump version to %s"
+          git push
+
   deploy:
+    needs: bump-version
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
