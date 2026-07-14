@@ -1,5 +1,5 @@
 // src/content.config.ts
-import { defineCollection } from 'astro:content';
+import { defineCollection, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod'; // Correct import for Astro 7
 
@@ -36,6 +36,7 @@ const writing = defineCollection({
     date: z.coerce.date(),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
+    project: reference('projects').optional(),
   }),
 });
 

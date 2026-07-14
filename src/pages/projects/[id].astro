@@ -20,6 +20,10 @@ const { Content } = await render(project);
 
 // Safely resolve start date out of your content collection schema structure
 const projectDate = project.data.dates?.start || project.data.dates;
+
+const relatedPosts = (await getCollection('writing')).filter(
+  (post) => (!post.data.draft || import.meta.env.DEV) && post.data.project?.id === project.id,
+);
 ---
 
 <Layout title={`${project.data.title} — Case Study`}>
@@ -109,6 +113,25 @@ const projectDate = project.data.dates?.start || project.data.dates;
             <div class="mb-1 font-bold text-(--text-primary)">Summary</div>
             <p class="leading-relaxed">{project.data.summary}</p>
           </div>
+          {
+            relatedPosts.length > 0 && (
+              <div>
+                <div class="mb-2 font-bold text-(--text-primary)">Related Writing</div>
+                <ul class="space-y-2">
+                  {relatedPosts.map((post) => (
+                    <li>
+                      <a
+                        href={`/writing/${post.id}`}
+                        class="leading-relaxed text-(--text-primary) underline decoration-(--border-color) underline-offset-2 hover:decoration-(--text-primary)"
+                      >
+                        {post.data.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
         </aside>
       </div>
     </Container>

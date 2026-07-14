@@ -63,6 +63,11 @@ Consult these guides before working on related tasks:
 Tailwind v4, ESLint flat config, commit discipline, `tsconfig` path aliases, fonts). Append new
 dated entries there when making a comparable decision — don't edit existing ones.
 
+`docs/content-guide.md` is the how-to for adding new `projects`/`writing` entries: required
+frontmatter fields, tag/slug behavior, draft handling, and how to link a post to a project via the
+`project` reference field. Consult it before adding content rather than reverse-engineering the
+schema from `src/content.config.ts`.
+
 ## Architecture
 
 **Content is data-driven via two Zod-validated collections** (`src/content.config.ts`), loaded

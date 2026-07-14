@@ -1,5 +1,5 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection, getEntry, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Container from '../../components/ui/Container.astro';
 import Typography from '../../components/ui/Typography.astro';
@@ -19,6 +19,7 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+const relatedProject = post.data.project ? await getEntry(post.data.project) : undefined;
 ---
 
 <Layout title={`${post.data.title} — Writing`} description={post.data.summary}>
@@ -56,6 +57,16 @@ const { Content } = await render(post);
       <div class="prose max-w-none md:max-w-3xl">
         <Content />
       </div>
+      {
+        relatedProject && (
+          <div class="mt-12 max-w-3xl border-t border-(--border-color) pt-8">
+            <p class="mb-3 font-mono text-xs text-(--text-muted) uppercase">Related Project</p>
+            <Button href={`/projects/${relatedProject.id}`} variant="secondary">
+              {relatedProject.data.title} →
+            </Button>
+          </div>
+        )
+      }
     </Container>
   </article>
 </Layout>

@@ -4,6 +4,7 @@ summary: 'Why comparing two directories efficiently means avoiding SHA-256 hashi
 date: 2026-07-12
 tags: ['C#', '.NET', 'File Systems', 'Performance']
 draft: false
+project: directory-sync-tool
 ---
 
 ## The problem
