@@ -81,7 +81,7 @@ jobs:
           configPath: './lighthouserc.json'
 
       - name: Setup Pages Architecture
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Upload Static Package
         uses: actions/upload-pages-artifact@v3
