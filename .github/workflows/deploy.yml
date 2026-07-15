@@ -45,7 +45,7 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          npm version "$BUMP" --no-git-tag-version -m "chore: bump version to %s"
+          npm version "$BUMP" --no-git-tag-version -m "chore: bump version to %s [skip ci]"
           git push
 
   deploy:
