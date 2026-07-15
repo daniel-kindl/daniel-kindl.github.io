@@ -24,8 +24,9 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Determine and Apply Version Bump
+        env:
+          SUBJECT: ${{ github.event.head_commit.message }}
         run: |
-          SUBJECT="${{ github.event.head_commit.message }}"
           BUMP=""
           if echo "$SUBJECT" | grep -qE '^chore: bump version to '; then
             echo "This is a version bump commit, skipping."
