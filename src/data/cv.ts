@@ -16,8 +16,8 @@ export const technicalProfile = {
       role: 'Software Engineer',
       period: '2026 - Present',
       achievements: [
-        'Led complex task implementation from design to production with high autonomy.',
-        'Engineered customer device integrations utilizing non-standard protocols.',
+        'Led complex features from design through production with high autonomy.',
+        'Engineered customer device integrations using non-standard protocols.',
         'Facilitated architectural modernization and provided code reviews to mentor junior team members.',
         'Managed internal Git infrastructure and CI/CD pipelines.',
       ],
