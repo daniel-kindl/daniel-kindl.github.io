@@ -38,6 +38,8 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
         }
       </nav>
 
+      <span aria-hidden="true" class="text-(--text-muted)">|</span>
+
       <button
         id="theme-toggle"
         class="inline-flex min-h-[44px] cursor-pointer items-center px-3 text-(--text-muted) uppercase transition-colors outline-none hover:text-(--text-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--text-primary)"
