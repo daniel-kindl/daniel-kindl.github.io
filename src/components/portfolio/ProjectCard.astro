@@ -8,9 +8,10 @@ import ExternalLink from '../ui/ExternalLink.astro';
 interface Props {
   project: CollectionEntry<'projects'>;
   index: number;
+  headingLevel?: 'h2' | 'h3';
 }
 
-const { project, index } = Astro.props;
+const { project, index, headingLevel = 'h2' } = Astro.props;
 const isEven = index % 2 === 0;
 
 const startYear = project.data.dates.start.getFullYear();
@@ -29,7 +30,9 @@ const timelineLabel = !project.data.dates.end
     <Typography variant="eyebrow"
       >Project {String(index + 1).padStart(2, '0')} · {project.data.role}</Typography
     >
-    <Typography variant="h2" class="mb-4">{project.data.title}</Typography>
+    <Typography variant="h2" as={headingLevel} class="mb-4">
+      {project.data.title}
+    </Typography>
     <Typography variant="body" class="mb-6 max-w-xl text-(--text-muted)">
       {project.data.summary}
     </Typography>

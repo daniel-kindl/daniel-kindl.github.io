@@ -11,7 +11,7 @@ const features = projects.sort((a, b) => b.data.weight - a.data.weight).slice(0,
 ---
 
 <Layout title="Daniel Kindl — Software Engineer">
-  <div class="relative flex min-h-[70vh] w-full items-center border-b border-(--border-color)">
+  <div class="relative flex min-h-[70dvh] w-full items-center border-b border-(--border-color)">
     <Container class="py-20">
       <Typography
         variant="eyebrow"
@@ -42,18 +42,23 @@ const features = projects.sort((a, b) => b.data.weight - a.data.weight).slice(0,
     </header>
 
     <div class="space-y-12">
-      {features.map((project, index) => <ProjectCard project={project} index={index} />)}
+      {
+        features.map((project, index) => (
+          <ProjectCard project={project} index={index} headingLevel="h3" />
+        ))
+      }
     </div>
   </Container>
 
   <Container as="section" class="py-20">
     <div class="max-w-3xl border border-(--border-color) bg-(--bg-primary) p-8 md:p-12">
       <Typography variant="eyebrow">Approach</Typography>
-      <Typography variant="h3" class="mb-4">Pragmatic engineering across the stack</Typography>
+      <Typography variant="h2" as="h3" class="mb-4">
+        Pragmatic engineering across the stack
+      </Typography>
       <Typography variant="body" class="mb-6 text-(--text-muted)">
         My work combines delivery speed with engineering discipline: clear architecture boundaries,
-        testable modules, and release pipelines that keep software stable and maintainable over
-        time.
+        testable modules, and release pipelines that hold up under real production use.
       </Typography>
       <Button href="/about" variant="primary">About & CV</Button>
     </div>
