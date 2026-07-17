@@ -6,6 +6,7 @@
     --text-primary: #1a1a1a;
     --text-muted: #666666;
     --border-color: #e5e5e5;
+    --accent: #10b981;
 
     /* Shiki Light/Dark Variable Tokens mapped directly to custom variables */
     --shiki-light: var(--text-primary);
@@ -54,6 +55,19 @@
   ::view-transition-new(root) {
     animation-duration: 200ms;
     animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Current-theme label inside the theme toggle button; default (no data-theme yet) matches :root's light values */
+  .theme-label-dark {
+    display: none;
+  }
+
+  :root[data-theme='dark'] .theme-label-dark {
+    display: inline;
+  }
+
+  :root[data-theme='dark'] .theme-label-light {
+    display: none;
   }
 
   @media (prefers-reduced-motion: reduce) {
