@@ -21,7 +21,9 @@ const { post } = Astro.props;
         })
       }
     </p>
-    <h2 class="text-xl font-bold tracking-tight text-(--text-primary)">{post.data.title}</h2>
+    <h2 class="text-xl font-bold tracking-tight text-(--text-primary) md:text-2xl">
+      {post.data.title}
+    </h2>
     <p class="max-w-2xl text-sm leading-relaxed text-(--text-muted)">{post.data.summary}</p>
     {
       post.data.tags.length > 0 && (
