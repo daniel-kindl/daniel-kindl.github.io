@@ -4,9 +4,18 @@ import Container from '../components/ui/Container.astro';
 import Typography from '../components/ui/Typography.astro';
 import Timeline from '../components/ui/Timeline.astro';
 import TimelineEvent from '../components/ui/TimelineEvent.astro';
+import Tag from '../components/ui/Tag.astro';
 import { technicalProfile } from '../data/cv';
 
 const { name, role, summary, skills, experience } = technicalProfile;
+
+const skillGroups = [
+  { label: 'Languages', items: skills.languages },
+  { label: 'Frontend', items: skills.frontend },
+  { label: 'Backend', items: skills.backend },
+  { label: 'Databases', items: skills.databases },
+  { label: 'DevOps', items: skills.devops },
+];
 ---
 
 <Layout title="About & CV — Daniel Kindl" description={summary}>
@@ -26,32 +35,24 @@ const { name, role, summary, skills, experience } = technicalProfile;
         <Typography variant="h2">Core Technical Stack</Typography>
       </div>
       <div class="grid gap-8 md:grid-cols-2">
-        <div>
-          <h3 class="mb-3 font-mono text-xs text-(--text-muted) uppercase">Languages</h3>
-          <p class="text-sm">{skills.languages.join(' · ')}</p>
-        </div>
-        <div>
-          <h3 class="mb-3 font-mono text-xs text-(--text-muted) uppercase">Frontend</h3>
-          <p class="text-sm">{skills.frontend.join(' · ')}</p>
-        </div>
-        <div>
-          <h3 class="mb-3 font-mono text-xs text-(--text-muted) uppercase">Backend</h3>
-          <p class="text-sm">{skills.backend.join(' · ')}</p>
-        </div>
-        <div>
-          <h3 class="mb-3 font-mono text-xs text-(--text-muted) uppercase">Databases</h3>
-          <p class="text-sm">{skills.databases.join(' · ')}</p>
-        </div>
-        <div>
-          <h3 class="mb-3 font-mono text-xs text-(--text-muted) uppercase">DevOps</h3>
-          <p class="text-sm">{skills.devops.join(' · ')}</p>
-        </div>
+        {
+          skillGroups.map((group, index) => (
+            <div class={index === skillGroups.length - 1 ? 'md:col-span-2' : undefined}>
+              <h3 class="mb-3 font-mono text-xs text-(--text-muted) uppercase">{group.label}</h3>
+              <div class="flex flex-wrap gap-2">
+                {group.items.map((item) => (
+                  <Tag label={item} />
+                ))}
+              </div>
+            </div>
+          ))
+        }
       </div>
     </section>
 
     <section class="max-w-3xl">
       <div class="mb-8">
-        <Typography variant="eyebrow">CV</Typography>
+        <Typography variant="eyebrow">Work History</Typography>
         <Typography variant="h2">Experience</Typography>
       </div>
 
