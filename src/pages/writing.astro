@@ -1,14 +1,11 @@
 ---
-import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Container from '../components/ui/Container.astro';
 import Typography from '../components/ui/Typography.astro';
 import WritingPostCard from '../components/portfolio/WritingPostCard.astro';
+import { getPublishedPosts } from '@lib/content';
 
-const posts = (await getCollection('writing')).filter(
-  (post) => !post.data.draft || import.meta.env.DEV,
-);
-const sortedPosts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const sortedPosts = await getPublishedPosts();
 ---
 
 <Layout

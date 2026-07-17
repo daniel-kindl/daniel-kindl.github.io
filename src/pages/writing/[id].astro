@@ -1,16 +1,16 @@
 ---
-import { getCollection, getEntry, render } from 'astro:content';
+import { getEntry, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Container from '../../components/ui/Container.astro';
 import Typography from '../../components/ui/Typography.astro';
 import Tag from '../../components/ui/Tag.astro';
 import Button from '../../components/ui/Button.astro';
 import { slugify } from '@lib/slug';
+import { getPublishedPosts } from '@lib/content';
+import { formatDate } from '@lib/formatDate';
 
 export async function getStaticPaths() {
-  const posts = (await getCollection('writing')).filter(
-    (post) => !post.data.draft || import.meta.env.DEV,
-  );
+  const posts = await getPublishedPosts();
   return posts.map((post) => ({
     params: { id: post.id },
     props: { post },
@@ -31,15 +31,7 @@ const relatedProject = post.data.project ? await getEntry(post.data.project) : u
             >← Back to Writing</Button
           >
         </div>
-        <Typography variant="eyebrow">
-          {
-            post.data.date.toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            })
-          }
-        </Typography>
+        <Typography variant="eyebrow">{formatDate(post.data.date)}</Typography>
         <Typography variant="h1" class="mb-6 max-w-4xl">{post.data.title}</Typography>
         {
           post.data.tags.length > 0 && (

@@ -1,16 +1,14 @@
 ---
-import { getCollection } from 'astro:content';
 import Layout from '../../../layouts/Layout.astro';
 import Container from '../../../components/ui/Container.astro';
 import Typography from '../../../components/ui/Typography.astro';
 import Button from '../../../components/ui/Button.astro';
 import WritingPostCard from '../../../components/portfolio/WritingPostCard.astro';
 import { slugify } from '@lib/slug';
+import { getPublishedPosts } from '@lib/content';
 
 export async function getStaticPaths() {
-  const posts = (await getCollection('writing')).filter(
-    (post) => !post.data.draft || import.meta.env.DEV,
-  );
+  const posts = await getPublishedPosts();
 
   const tagMap = new Map<string, { label: string; posts: typeof posts }>();
 
@@ -27,7 +25,8 @@ export async function getStaticPaths() {
     params: { tag: slug },
     props: {
       tagLabel: label,
-      posts: posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()),
+      // already sorted by date via getPublishedPosts()
+      posts,
     },
   }));
 }

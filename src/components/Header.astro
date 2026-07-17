@@ -1,4 +1,6 @@
 ---
+import { focusRingStyles } from '@lib/buttonStyles';
+
 const navItems = [
   { href: '/projects', label: 'Projects' },
   { href: '/writing', label: 'Writing' },
@@ -15,7 +17,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
   >
     <a
       href="/"
-      class="inline-flex min-h-[44px] items-center font-bold tracking-normal text-(--text-primary) uppercase transition-colors outline-none hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--text-primary)"
+      class={`inline-flex min-h-[44px] items-center font-bold tracking-normal text-(--text-primary) uppercase transition-colors hover:underline ${focusRingStyles}`}
       >Daniel Kindl</a
     >
 
@@ -26,7 +28,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
             <a
               href={item.href}
               aria-current={isActive(item.href) ? 'page' : undefined}
-              class={`inline-flex min-h-[44px] items-center px-3 uppercase transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--text-primary) ${
+              class={`inline-flex min-h-[44px] items-center px-3 uppercase transition-colors ${focusRingStyles} ${
                 isActive(item.href)
                   ? 'text-(--text-primary) underline decoration-(--text-primary) underline-offset-4'
                   : 'text-(--text-muted) hover:text-(--text-primary)'
@@ -42,7 +44,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
 
       <button
         id="theme-toggle"
-        class="inline-flex min-h-[44px] cursor-pointer items-center px-3 text-(--text-muted) uppercase transition-colors outline-none hover:text-(--text-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--text-primary)"
+        class={`inline-flex min-h-[44px] cursor-pointer items-center px-3 text-(--text-muted) uppercase transition-colors hover:text-(--text-primary) ${focusRingStyles}`}
         aria-label="Toggle color theme"
         aria-pressed="false"
       >

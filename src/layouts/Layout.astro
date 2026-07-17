@@ -15,7 +15,7 @@ const {
   title,
   description = 'Software engineer who designs systems, then builds them — combining hands-on engineering experience with AI-assisted development to ship and maintain production software.',
   ogImage = '/assets/meta/og-default.png',
-} = Astro.props;
+}: Props = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---

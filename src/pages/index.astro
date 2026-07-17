@@ -1,19 +1,14 @@
 ---
-import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Container from '../components/ui/Container.astro';
 import Typography from '../components/ui/Typography.astro';
 import Button from '../components/ui/Button.astro';
 import ProjectCard from '../components/portfolio/ProjectCard.astro';
 import WritingPostCard from '../components/portfolio/WritingPostCard.astro';
+import { getPublishedPosts, getSortedProjects } from '@lib/content';
 
-const projects = await getCollection('projects');
-const features = projects.sort((a, b) => b.data.weight - a.data.weight).slice(0, 2);
-
-const posts = (await getCollection('writing')).filter(
-  (post) => !post.data.draft || import.meta.env.DEV,
-);
-const recentPosts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 2);
+const features = (await getSortedProjects()).slice(0, 2);
+const recentPosts = (await getPublishedPosts()).slice(0, 2);
 ---
 
 <Layout title="Daniel Kindl — Software Engineer">

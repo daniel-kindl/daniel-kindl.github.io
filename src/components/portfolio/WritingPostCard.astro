@@ -2,6 +2,7 @@
 import Tag from '../ui/Tag.astro';
 import Button from '../ui/Button.astro';
 import { slugify } from '@lib/slug';
+import { formatDate } from '@lib/formatDate';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -9,21 +10,13 @@ interface Props {
   headingLevel?: 'h2' | 'h3';
   class?: string;
 }
-const { post, headingLevel = 'h2', class: className = '' } = Astro.props;
+const { post, headingLevel = 'h2', class: className = '' }: Props = Astro.props;
 const TitleTag = headingLevel;
 ---
 
 <article class={`border-b border-(--border-color) pb-8 last:border-0 ${className}`}>
   <div class="flex flex-col gap-2">
-    <p class="font-mono text-xs text-(--text-muted)">
-      {
-        post.data.date.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        })
-      }
-    </p>
+    <p class="font-mono text-xs text-(--text-muted)">{formatDate(post.data.date)}</p>
     <TitleTag class="text-xl font-bold tracking-tight text-(--text-primary) md:text-2xl">
       {post.data.title}
     </TitleTag>

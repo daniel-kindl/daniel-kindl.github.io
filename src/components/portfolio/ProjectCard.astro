@@ -12,7 +12,7 @@ interface Props {
   class?: string;
 }
 
-const { project, index, headingLevel = 'h2', class: className = '' } = Astro.props;
+const { project, index, headingLevel = 'h2', class: className = '' }: Props = Astro.props;
 const isEven = index % 2 === 0;
 
 const startYear = project.data.dates.start.getFullYear();

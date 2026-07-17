@@ -1,9 +1,8 @@
 import rss from '@astrojs/rss';
-import { getCollection } from 'astro:content';
+import { getPublishedPosts } from '@lib/content';
 
 export async function GET(context) {
-  const posts = (await getCollection('writing')).filter((post) => !post.data.draft);
-  const sortedPosts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  const sortedPosts = await getPublishedPosts();
 
   return rss({
     title: 'Daniel Kindl — Writing',

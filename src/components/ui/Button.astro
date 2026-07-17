@@ -19,8 +19,7 @@ type ButtonProps = BaseProps &
 
 type Props = AnchorProps | ButtonProps;
 
-const props = Astro.props as Props;
-const { variant = 'primary', class: className = '', ...rest } = props;
+const { variant = 'primary', class: className = '', ...rest }: Props = Astro.props;
 
 const combinedClass = `${buttonBaseStyles} ${buttonVariants[variant]} ${className}`;
 const isAnchor = 'href' in rest && rest.href !== undefined;

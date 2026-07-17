@@ -9,7 +9,13 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'target' | 'rel' | 'href'> {
   showIcon?: boolean;
 }
 
-const { href, variant = 'plain', class: className = '', showIcon = true, ...rest } = Astro.props;
+const {
+  href,
+  variant = 'plain',
+  class: className = '',
+  showIcon = true,
+  ...rest
+}: Props = Astro.props;
 
 const variantClass = variant === 'plain' ? '' : `${buttonBaseStyles} ${buttonVariants[variant]}`;
 const combinedClass = ['inline-flex items-center gap-1', variantClass, className]
