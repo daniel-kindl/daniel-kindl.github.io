@@ -1,5 +1,12 @@
 ---
+const navItems = [
+  { href: '/projects', label: 'Projects' },
+  { href: '/writing', label: 'Writing' },
+  { href: '/about', label: 'About' },
+];
 
+const pathname = Astro.url.pathname;
+const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 ---
 
 <header class="mb-12 w-full border-b border-(--border-color) py-4">
@@ -13,21 +20,21 @@
     >
 
     <nav class="flex items-center gap-2">
-      <a
-        href="/projects"
-        class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-(--text-muted) uppercase transition-colors hover:text-(--text-primary)"
-        >Projects</a
-      >
-      <a
-        href="/writing"
-        class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-(--text-muted) uppercase transition-colors hover:text-(--text-primary)"
-        >Writing</a
-      >
-      <a
-        href="/about"
-        class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-(--text-muted) uppercase transition-colors hover:text-(--text-primary)"
-        >About</a
-      >
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+            class={`inline-flex min-h-[44px] min-w-[44px] items-center justify-center uppercase transition-colors ${
+              isActive(item.href)
+                ? 'text-(--text-primary) underline decoration-(--text-primary) underline-offset-4'
+                : 'text-(--text-muted) hover:text-(--text-primary)'
+            }`}
+          >
+            {item.label}
+          </a>
+        ))
+      }
 
       <button
         id="theme-toggle"
