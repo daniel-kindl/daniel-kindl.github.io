@@ -5,7 +5,7 @@ export const buttonBaseStyles =
 
 export const buttonVariants: Record<ButtonVariant, string> = {
   primary:
-    'border border-[var(--border-color)] text-[var(--text-primary)] bg-[var(--bg-primary)] hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)]',
+    'border border-[var(--text-muted)] text-[var(--text-primary)] bg-[var(--bg-primary)] hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)]',
   secondary:
     'text-[var(--text-muted)] hover:text-[var(--text-primary)] underline underline-offset-4 decoration-[var(--border-color)] hover:decoration-[var(--text-primary)]',
 };
