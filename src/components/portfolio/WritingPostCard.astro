@@ -6,8 +6,10 @@ import type { CollectionEntry } from 'astro:content';
 
 interface Props {
   post: CollectionEntry<'writing'>;
+  headingLevel?: 'h2' | 'h3';
 }
-const { post } = Astro.props;
+const { post, headingLevel = 'h2' } = Astro.props;
+const TitleTag = headingLevel;
 ---
 
 <article class="border-b border-(--border-color) pb-8 last:border-0">
@@ -21,9 +23,9 @@ const { post } = Astro.props;
         })
       }
     </p>
-    <h2 class="text-xl font-bold tracking-tight text-(--text-primary) md:text-2xl">
+    <TitleTag class="text-xl font-bold tracking-tight text-(--text-primary) md:text-2xl">
       {post.data.title}
-    </h2>
+    </TitleTag>
     <p class="max-w-2xl text-sm leading-relaxed text-(--text-muted)">{post.data.summary}</p>
     {
       post.data.tags.length > 0 && (
