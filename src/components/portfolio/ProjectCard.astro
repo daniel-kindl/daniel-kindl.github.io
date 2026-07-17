@@ -9,9 +9,10 @@ interface Props {
   project: CollectionEntry<'projects'>;
   index: number;
   headingLevel?: 'h2' | 'h3';
+  class?: string;
 }
 
-const { project, index, headingLevel = 'h2' } = Astro.props;
+const { project, index, headingLevel = 'h2', class: className = '' } = Astro.props;
 const isEven = index % 2 === 0;
 
 const startYear = project.data.dates.start.getFullYear();
@@ -24,7 +25,7 @@ const timelineLabel = !project.data.dates.end
 ---
 
 <article
-  class={`grid grid-cols-1 md:grid-cols-12 gap-6 items-start border-b border-(--border-color) pb-12 last:border-0 ${isEven ? 'md:pt-4' : 'md:pt-16'}`}
+  class={`grid grid-cols-1 md:grid-cols-12 gap-6 items-start border-b border-(--border-color) pb-12 last:border-0 ${isEven ? 'md:pt-4' : 'md:pt-16'} ${className}`}
 >
   <div class={`md:col-span-7 flex flex-col ${isEven ? 'md:order-1' : 'md:order-2'}`}>
     <Typography variant="eyebrow"

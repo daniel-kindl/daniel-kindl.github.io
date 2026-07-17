@@ -39,7 +39,7 @@ const recentPosts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.val
   </div>
 
   <Container as="section" class="border-b border-(--border-color) py-20">
-    <header class="mb-12 flex items-baseline justify-between">
+    <header class="reveal mb-12 flex items-baseline justify-between">
       <div>
         <Typography variant="eyebrow">Selected Work</Typography>
         <Typography variant="h2">Recent Project Highlights</Typography>
@@ -50,14 +50,19 @@ const recentPosts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.val
     <div class="space-y-12">
       {
         features.map((project, index) => (
-          <ProjectCard project={project} index={index} headingLevel="h3" />
+          <ProjectCard
+            project={project}
+            index={index}
+            headingLevel="h3"
+            class={`reveal ${index === 1 ? 'delay-150' : ''}`}
+          />
         ))
       }
     </div>
   </Container>
 
   <Container as="section" class="border-b border-(--border-color) py-20">
-    <header class="mb-12 flex items-baseline justify-between">
+    <header class="reveal mb-12 flex items-baseline justify-between">
       <div>
         <Typography variant="eyebrow">Latest Writing</Typography>
         <Typography variant="h2">Recent Write-Ups</Typography>
@@ -66,12 +71,20 @@ const recentPosts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.val
     </header>
 
     <div class="space-y-12">
-      {recentPosts.map((post) => <WritingPostCard post={post} headingLevel="h3" />)}
+      {
+        recentPosts.map((post, index) => (
+          <WritingPostCard
+            post={post}
+            headingLevel="h3"
+            class={`reveal ${index === 1 ? 'delay-150' : ''}`}
+          />
+        ))
+      }
     </div>
   </Container>
 
   <Container as="section" class="py-20">
-    <div class="max-w-3xl border border-(--border-color) bg-(--bg-primary) p-8 md:p-12">
+    <div class="reveal max-w-3xl border border-(--border-color) bg-(--bg-primary) p-8 md:p-12">
       <Typography variant="eyebrow">Approach</Typography>
       <Typography variant="h2" as="h3" class="mb-4">
         Pragmatic engineering across the stack
@@ -84,3 +97,31 @@ const recentPosts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.val
     </div>
   </Container>
 </Layout>
+
+<script>
+  function initScrollReveal() {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const elements = document.querySelectorAll<HTMLElement>('.reveal');
+
+    if (prefersReducedMotion || elements.length === 0) return;
+
+    elements.forEach((el) => el.classList.add('reveal-hidden'));
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove('reveal-hidden');
+            observer.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' },
+    );
+
+    elements.forEach((el) => observer.observe(el));
+  }
+
+  initScrollReveal();
+  document.addEventListener('astro:page-load', initScrollReveal);
+</script>

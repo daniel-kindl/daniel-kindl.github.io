@@ -57,6 +57,18 @@
     animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
+  /* Scroll-reveal: JS adds .reveal-hidden on load, then removes it once an element enters the viewport */
+  .reveal {
+    transition:
+      opacity 0.4s ease-out,
+      transform 0.4s ease-out;
+  }
+
+  .reveal.reveal-hidden {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+
   /* Current-theme label inside the theme toggle button; default (no data-theme yet) matches :root's light values */
   .theme-label-dark {
     display: none;

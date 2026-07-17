@@ -7,12 +7,13 @@ import type { CollectionEntry } from 'astro:content';
 interface Props {
   post: CollectionEntry<'writing'>;
   headingLevel?: 'h2' | 'h3';
+  class?: string;
 }
-const { post, headingLevel = 'h2' } = Astro.props;
+const { post, headingLevel = 'h2', class: className = '' } = Astro.props;
 const TitleTag = headingLevel;
 ---
 
-<article class="border-b border-(--border-color) pb-8 last:border-0">
+<article class={`border-b border-(--border-color) pb-8 last:border-0 ${className}`}>
   <div class="flex flex-col gap-2">
     <p class="font-mono text-xs text-(--text-muted)">
       {
