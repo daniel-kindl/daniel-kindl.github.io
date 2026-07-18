@@ -88,7 +88,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
     <Header />
 
-    <main id="main-content" class="mx-auto w-full max-w-7xl grow px-4 sm:px-6 lg:px-8">
+    <main
+      id="main-content"
+      data-pagefind-body
+      class="mx-auto w-full max-w-7xl grow px-4 sm:px-6 lg:px-8"
+    >
       <slot />
     </main>
 

@@ -1,0 +1,112 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Container from '../components/ui/Container.astro';
+import Typography from '../components/ui/Typography.astro';
+import { focusRingStyles } from '@lib/buttonStyles';
+---
+
+<Layout title="Search — Daniel Kindl" description="Search projects and writing.">
+  <Container as="main" class="py-12 md:py-20">
+    <Typography variant="eyebrow">Search</Typography>
+    <Typography variant="h1" class="mb-8">Search the Site</Typography>
+
+    <div class="max-w-2xl">
+      <input
+        id="search-input"
+        type="search"
+        placeholder="Search projects and writing..."
+        class={`w-full border border-(--border-color) bg-(--bg-primary) px-4 py-3 font-mono text-sm text-(--text-primary) placeholder:text-(--text-muted) ${focusRingStyles}`}
+      />
+      <div id="search-results" class="mt-8 space-y-6"></div>
+      <p id="search-empty" class="mt-8 hidden text-sm text-(--text-muted)">No results found.</p>
+      <p id="search-unavailable" class="mt-8 hidden text-sm text-(--text-muted)">
+        Search isn't available in this environment — it only works on the deployed site, or after
+        running a production build.
+      </p>
+    </div>
+  </Container>
+</Layout>
+
+<script>
+  interface PagefindResult {
+    url: string;
+    excerpt: string;
+    meta: { title?: string };
+  }
+
+  interface PagefindModule {
+    search: (query: string) => Promise<{ results: { data: () => Promise<PagefindResult> }[] }>;
+  }
+
+  async function initSearch() {
+    const existingInput = document.getElementById('search-input') as HTMLInputElement | null;
+    const resultsEl = document.getElementById('search-results');
+    const emptyEl = document.getElementById('search-empty');
+    const unavailableEl = document.getElementById('search-unavailable');
+    if (!existingInput || !resultsEl || !emptyEl || !unavailableEl) return;
+
+    // astro:page-load fires on the initial load too (not just later navigations), and this
+    // function also runs once directly below — clone-and-replace strips any listener from a
+    // previous run so keystrokes never trigger more than one active search.
+    existingInput.replaceWith(existingInput.cloneNode(true));
+    const input = document.getElementById('search-input') as HTMLInputElement;
+
+    let pagefind: PagefindModule;
+    try {
+      // Vite wraps every dynamic import() it can see with a preload helper that expects
+      // build-time substitution — which never happens for pagefind.js, a static asset
+      // generated outside Vite's module graph, and breaks the import. Constructing the
+      // import call from a string via `new Function` hides it from Vite's static analysis
+      // entirely, so it's never wrapped or transformed.
+      const dynamicImport = new Function('path', 'return import(path)') as (
+        path: string,
+      ) => Promise<PagefindModule>;
+      pagefind = await dynamicImport('/pagefind/pagefind.js');
+    } catch {
+      unavailableEl.classList.remove('hidden');
+      input.disabled = true;
+      return;
+    }
+
+    async function runSearch(query: string) {
+      resultsEl!.innerHTML = '';
+      emptyEl!.classList.add('hidden');
+      if (!query.trim()) return;
+
+      const search = await pagefind.search(query);
+      const results = await Promise.all(search.results.slice(0, 10).map((r) => r.data()));
+
+      if (results.length === 0) {
+        emptyEl!.classList.remove('hidden');
+        return;
+      }
+
+      for (const result of results) {
+        const item = document.createElement('a');
+        item.href = result.url;
+        item.className =
+          'block border-b border-(--border-color) pb-4 last:border-0 hover:text-(--text-primary)';
+
+        const title = document.createElement('p');
+        title.className = 'font-bold text-(--text-primary)';
+        title.textContent = result.meta.title ?? result.url;
+
+        const excerpt = document.createElement('p');
+        excerpt.className = 'mt-1 text-sm text-(--text-muted)';
+        excerpt.innerHTML = result.excerpt;
+
+        item.append(title, excerpt);
+        resultsEl!.appendChild(item);
+      }
+    }
+
+    let debounceTimer: ReturnType<typeof setTimeout>;
+    input.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => runSearch(input.value), 200);
+    });
+  }
+
+  initSearch();
+  document.addEventListener('astro:page-load', initSearch);
+</script>

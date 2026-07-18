@@ -16,7 +16,10 @@ const TitleTag = headingLevel;
 const readingTime = getReadingTime(post.body ?? '');
 ---
 
-<article class={`border-b border-(--border-color) pb-8 last:border-0 ${className}`}>
+<article
+  data-pagefind-ignore
+  class={`border-b border-(--border-color) pb-8 last:border-0 ${className}`}
+>
   <div class="flex flex-col gap-2">
     <p class="font-mono text-xs text-(--text-muted)">
       {formatDate(post.data.date)} · {readingTime} min read
