@@ -1,0 +1,99 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Container from '../components/ui/Container.astro';
+import Typography from '../components/ui/Typography.astro';
+import Tag from '../components/ui/Tag.astro';
+
+const stack = ['Astro 7', 'TypeScript (strict)', 'Tailwind CSS 4', 'Svelte 5', 'Pagefind'];
+const fonts = ['Space Grotesk', 'JetBrains Mono', 'IBM Plex Sans'];
+---
+
+<Layout
+  title="Colophon — Daniel Kindl"
+  description="What this site is actually built with: stack, architecture, and CI/CD pipeline."
+>
+  <Container as="main" class="py-12 md:py-20">
+    <header class="mb-16 border-b border-(--border-color) pb-12">
+      <Typography variant="eyebrow">Colophon</Typography>
+      <Typography variant="h1" class="mb-6">How This Site Is Built</Typography>
+      <div class="max-w-2xl space-y-4">
+        <Typography variant="body" class="text-(--text-muted)">
+          A short reference for what's actually running this site, for anyone curious about the
+          stack behind it.
+        </Typography>
+      </div>
+    </header>
+
+    <section class="mb-16 max-w-3xl">
+      <div class="mb-8">
+        <Typography variant="eyebrow">Stack</Typography>
+        <Typography variant="h2">What It Runs On</Typography>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        {stack.map((item) => <Tag label={item} />)}
+      </div>
+    </section>
+
+    <section class="mb-16 max-w-3xl">
+      <div class="mb-8">
+        <Typography variant="eyebrow">Architecture</Typography>
+        <Typography variant="h2">Content & Structure</Typography>
+      </div>
+      <ul class="list-disc space-y-3 pl-5 text-sm leading-relaxed text-(--text-muted)">
+        <li>
+          Two Zod-validated content collections, <code>projects</code> and <code>writing</code>,
+          power every case study and post through Astro's Content Collections API. No CMS, just
+          Markdown files checked into the repo.
+        </li>
+        <li>
+          Theming uses a <code>data-theme</code> attribute and CSS custom properties, not Tailwind's
+          <code>.dark</code> class. Dark mode is the default; the toggle persists to
+          <code>localStorage</code>.
+        </li>
+        <li>
+          Icons and social-share (OG) images are generated procedurally at build time with
+          node-canvas, not hand-drawn or committed to git.
+        </li>
+        <li>
+          Search is static: Pagefind indexes the built HTML after every build and ships its own
+          small WASM search index, no server or third-party search API involved.
+        </li>
+      </ul>
+    </section>
+
+    <section class="mb-16 max-w-3xl">
+      <div class="mb-8">
+        <Typography variant="eyebrow">Pipeline</Typography>
+        <Typography variant="h2">CI/CD</Typography>
+      </div>
+      <ul class="list-disc space-y-3 pl-5 text-sm leading-relaxed text-(--text-muted)">
+        <li>
+          The repo has two git remotes: a self-hosted OneDev server and GitHub, which is the actual
+          deploy target.
+        </li>
+        <li>
+          Pull requests run linting, format checks, type checking, and a full production build
+          before merge.
+        </li>
+        <li>
+          Pushes to <code>master</code> build the site, run a Lighthouse CI budget check, then deploy
+          to GitHub Pages. A failing budget blocks the deploy.
+        </li>
+        <li>Commit messages are enforced as Conventional Commits via a Git hook.</li>
+      </ul>
+    </section>
+
+    <section class="max-w-3xl">
+      <div class="mb-8">
+        <Typography variant="eyebrow">Typefaces</Typography>
+        <Typography variant="h2">Fonts</Typography>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        {fonts.map((item) => <Tag label={item} />)}
+      </div>
+      <p class="mt-4 text-sm leading-relaxed text-(--text-muted)">
+        All three are SIL OFL licensed and self-hosted as variable fonts, no Google Fonts CDN.
+      </p>
+    </section>
+  </Container>
+</Layout>
