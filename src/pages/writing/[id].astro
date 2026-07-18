@@ -8,6 +8,7 @@ import Button from '../../components/ui/Button.astro';
 import { slugify } from '@lib/slug';
 import { getPublishedPosts } from '@lib/content';
 import { formatDate } from '@lib/formatDate';
+import { getReadingTime } from '@lib/readingTime';
 
 export async function getStaticPaths() {
   const posts = await getPublishedPosts();
@@ -20,6 +21,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const relatedProject = post.data.project ? await getEntry(post.data.project) : undefined;
+const readingTime = getReadingTime(post.body ?? '');
 ---
 
 <Layout title={`${post.data.title} — Writing`} description={post.data.summary}>
@@ -31,7 +33,10 @@ const relatedProject = post.data.project ? await getEntry(post.data.project) : u
             >← Back to Writing</Button
           >
         </div>
-        <Typography variant="eyebrow">{formatDate(post.data.date)}</Typography>
+        <Typography variant="eyebrow">
+          {formatDate(post.data.date)} · {readingTime} min read
+          {post.data.updated && <> · Updated {formatDate(post.data.updated)}</>}
+        </Typography>
         <Typography variant="h1" class="mb-6 max-w-4xl">{post.data.title}</Typography>
         {
           post.data.tags.length > 0 && (

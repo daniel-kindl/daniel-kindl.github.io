@@ -34,6 +34,7 @@ const writing = defineCollection({
     title: z.string().min(1),
     summary: z.string().max(250),
     date: z.coerce.date(),
+    updated: z.coerce.date().optional(),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
     project: reference('projects').optional(),

@@ -54,12 +54,15 @@ delivered`, `## Outcome` as a loose convention, not an enforced structure.
    title: 'Post Title'
    summary: 'One or two sentences, max 250 characters.'
    date: 2026-07-14
+   updated: 2026-07-20 # optional — set only when a published post gets a meaningful revision
    tags: ['C#', '.NET', 'Performance'] # freeform strings, no separate tags collection
    draft: false
    project: directory-sync-tool # optional — id of a matching entry in src/content/projects
    ---
    ```
 
+   - `updated` is optional and manually set — there's no automatic "last modified" tracking. Only
+     add it when a post gets a substantive edit after publishing, not for typo fixes.
    - `tags` are free-form strings, not a controlled vocabulary — each is slugified
      (`src/lib/slug.ts`) on the fly to build `/writing/tags/<slug>` pages
      (`src/pages/writing/tags/[tag].astro`). Reuse existing tag text where it makes sense (check
