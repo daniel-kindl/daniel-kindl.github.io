@@ -103,10 +103,7 @@ function collectEntries(dir) {
     .filter((entry) => entry !== null);
 }
 
-function createEntryOgImage(kind, title, outputPath) {
-  const canvas = createCanvas(OG_WIDTH, OG_HEIGHT);
-  const ctx = canvas.getContext('2d');
-
+function drawOgFrame(ctx) {
   ctx.fillStyle = COLOR_BG;
   ctx.fillRect(0, 0, OG_WIDTH, OG_HEIGHT);
 
@@ -116,7 +113,9 @@ function createEntryOgImage(kind, title, outputPath) {
 
   ctx.textBaseline = 'alphabetic';
   ctx.textAlign = 'left';
+}
 
+function drawOgText(ctx, kind, title) {
   ctx.fillStyle = COLOR_TEXT_ACCENT;
   ctx.font = 'bold 28px monospace';
   ctx.fillText(`[ ${kind.toUpperCase()} ]`, OG_MARGIN, 130);
@@ -133,6 +132,14 @@ function createEntryOgImage(kind, title, outputPath) {
   ctx.fillStyle = COLOR_TEXT_ACCENT;
   ctx.font = 'bold 24px monospace';
   ctx.fillText('DANIEL KINDL', OG_MARGIN, OG_HEIGHT - 80);
+}
+
+function createEntryOgImage(kind, title, outputPath) {
+  const canvas = createCanvas(OG_WIDTH, OG_HEIGHT);
+  const ctx = canvas.getContext('2d');
+
+  drawOgFrame(ctx);
+  drawOgText(ctx, kind, title);
 
   const buffer = canvas.toBuffer('image/png');
   fs.writeFileSync(outputPath, buffer);

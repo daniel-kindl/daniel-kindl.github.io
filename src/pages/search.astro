@@ -70,11 +70,21 @@ import { focusRingStyles } from '@lib/buttonStyles';
 
     async function runSearch(query: string) {
       resultsEl!.innerHTML = '';
+      emptyEl!.textContent = 'No results found.';
       emptyEl!.classList.add('hidden');
       if (!query.trim()) return;
 
-      const search = await pagefind.search(query);
-      const results = await Promise.all(search.results.slice(0, 10).map((r) => r.data()));
+      let results: PagefindResult[];
+      try {
+        const search = await pagefind.search(query);
+        results = await Promise.all(search.results.slice(0, 10).map((r) => r.data()));
+      } catch {
+        // Keeps a failed search (e.g. a corrupt/missing index) from surfacing as a silent
+        // unhandled rejection with no feedback in the UI.
+        emptyEl!.textContent = 'Search failed. Try again.';
+        emptyEl!.classList.remove('hidden');
+        return;
+      }
 
       if (results.length === 0) {
         emptyEl!.classList.remove('hidden');
@@ -93,6 +103,9 @@ import { focusRingStyles } from '@lib/buttonStyles';
 
         const excerpt = document.createElement('p');
         excerpt.className = 'mt-1 text-sm text-(--text-muted)';
+        // Pagefind escapes the indexed text itself and only wraps matched terms in <mark>, and
+        // the index is built from this site's own content, not third-party or visitor input, so
+        // innerHTML here is safe and is what renders the highlight.
         excerpt.innerHTML = result.excerpt;
 
         item.append(title, excerpt);
