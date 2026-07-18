@@ -26,7 +26,10 @@ const relatedPosts = (await getCollection('writing')).filter(
 );
 ---
 
-<Layout title={`${project.data.title} — Case Study`}>
+<Layout
+  title={`${project.data.title} — Case Study`}
+  ogImage={`/assets/meta/og/projects/${project.id}.png`}
+>
   <article>
     <div class="border-b border-(--border-color) bg-(--bg-primary) py-12 md:py-20">
       <Container>

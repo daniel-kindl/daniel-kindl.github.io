@@ -24,7 +24,11 @@ const relatedProject = post.data.project ? await getEntry(post.data.project) : u
 const readingTime = getReadingTime(post.body ?? '');
 ---
 
-<Layout title={`${post.data.title} — Writing`} description={post.data.summary}>
+<Layout
+  title={`${post.data.title} — Writing`}
+  description={post.data.summary}
+  ogImage={`/assets/meta/og/writing/${post.id}.png`}
+>
   <article>
     <div class="border-b border-(--border-color) bg-(--bg-primary) py-12 md:py-20">
       <Container>
