@@ -16,6 +16,11 @@ sudo apt-get install -y libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev lib
 step.) See the [`node-canvas` install guide](https://github.com/Automattic/node-canvas#installation)
 for other platforms.
 
+Icons and OG images (`public/assets/meta/`, `public/apple-touch-icon.png`, `public/icon.svg`) are
+generated, not committed — run `npm run generate-assets` once after cloning before `npm run dev` or
+`npm run build`, otherwise those image requests will 404 locally. CI regenerates them fresh on every
+run, so this is a local-only setup step.
+
 ## Scripts
 
 | Command                   | Purpose                                                 |
