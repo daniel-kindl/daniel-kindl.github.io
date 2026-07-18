@@ -93,5 +93,42 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     </main>
 
     <Footer />
+
+    <script>
+      function initCodeCopyButtons() {
+        const blocks = document.querySelectorAll<HTMLPreElement>('.prose pre');
+
+        blocks.forEach((pre) => {
+          if (pre.querySelector('.copy-code-button')) return;
+
+          pre.classList.add('group', 'relative');
+
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className =
+            'copy-code-button absolute right-2 top-2 border border-(--border-color) bg-(--bg-primary) px-2 py-0.5 font-mono text-[10px] uppercase tracking-tight text-(--text-muted) opacity-0 transition-opacity duration-150 group-hover:opacity-100 hover:border-(--text-primary) hover:text-(--text-primary) focus-visible:opacity-100 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)';
+          button.textContent = '[Copy]';
+          button.setAttribute('aria-label', 'Copy code to clipboard');
+
+          button.addEventListener('click', async () => {
+            const code = pre.querySelector('code')?.textContent ?? '';
+            try {
+              await navigator.clipboard.writeText(code);
+              button.textContent = '[Copied]';
+            } catch {
+              button.textContent = '[Failed]';
+            }
+            setTimeout(() => {
+              button.textContent = '[Copy]';
+            }, 1500);
+          });
+
+          pre.appendChild(button);
+        });
+      }
+
+      initCodeCopyButtons();
+      document.addEventListener('astro:page-load', initCodeCopyButtons);
+    </script>
   </body>
 </html>
