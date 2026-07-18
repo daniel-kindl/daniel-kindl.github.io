@@ -12,13 +12,7 @@ For a long time, I wanted a place where I could experiment with technologies out
 
 Cloud platforms are fantastic, but they abstract away much of the underlying infrastructure. I wanted to understand what actually happens underneath: installing an operating system, securing a server, managing containers, designing backups, and documenting everything well enough that I could rebuild it from scratch.
 
-That's how **Tangolab** started.
-
-Not as a production server.
-
-Not as a replacement for cloud services.
-
-Just as my own laboratory.
+That's how **Tangolab** started: not as a production server or a cloud replacement, but as a personal laboratory I could break without consequence.
 
 ## Starting with what I already had
 
@@ -64,7 +58,7 @@ Current services include:
 
 Everything lives on a dedicated Docker network, application data is separated from the operating system, and backups are created automatically every night.
 
-The server is intentionally private. Nothing is exposed publicly—all remote access happens through Tailscale.
+The server is intentionally private. Nothing is exposed publicly. All remote access happens through Tailscale.
 
 ## Documentation first
 

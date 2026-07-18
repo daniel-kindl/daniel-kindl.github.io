@@ -25,4 +25,4 @@ I needed a production-ready portfolio that could be maintained as a real enginee
 
 ## Outcome
 
-The site serves as both a public portfolio and a maintainable technical baseline for future projects and writing.
+The site is both a public portfolio and a maintainable technical baseline for future projects and writing.

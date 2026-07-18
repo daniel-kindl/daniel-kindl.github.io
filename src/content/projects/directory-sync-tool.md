@@ -15,7 +15,7 @@ weight: 8
 
 ## Context
 
-The initial prototype started as a take-home technical assessment during a job interview process. The problem — reliably mirroring a source directory to a replica — was compelling enough that I continued developing it into a fully-featured, production-quality tool after the interview.
+The initial prototype started as a take-home technical assessment during a job interview process. The problem itself, reliably mirroring a source directory to a replica, was compelling enough that I continued developing it into a fully-featured, production-quality tool after the interview.
 
 ## What I delivered
 

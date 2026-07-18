@@ -2,7 +2,7 @@ export const technicalProfile = {
   name: 'Daniel Kindl',
   role: 'Software Engineer',
   summary:
-    '3+ years of experience building C#/.NET applications across the full lifecycle — desktop UI (Avalonia UI), backend services, databases (SQL Server, PostgreSQL), and containerized CI/CD deployment.',
+    '3+ years of experience building C#/.NET applications across the full lifecycle: desktop UI (Avalonia UI), backend services, databases (SQL Server, PostgreSQL), and containerized CI/CD deployment.',
   skills: {
     languages: ['C#', '.NET', 'JavaScript', 'Delphi'],
     frontend: ['Avalonia UI', 'MVVM', 'HTML/CSS/JS', 'Svelte', 'Astro'],
