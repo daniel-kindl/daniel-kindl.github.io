@@ -19,9 +19,10 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 const relatedProject = post.data.project ? await getEntry(post.data.project) : undefined;
 const readingTime = getReadingTime(post.body ?? '');
+const tocHeadings = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
 ---
 
 <Layout
@@ -55,19 +56,109 @@ const readingTime = getReadingTime(post.body ?? '');
     </div>
 
     <Container class="py-12 md:py-16">
-      <div class="prose max-w-none md:max-w-3xl">
-        <Content />
-      </div>
-      {
-        relatedProject && (
-          <div class="mt-12 max-w-3xl border-t border-(--border-color) pt-8">
-            <p class="mb-3 font-mono text-xs text-(--text-muted) uppercase">Related Project</p>
-            <Button href={`/projects/${relatedProject.id}`} variant="secondary">
-              {relatedProject.data.title} →
-            </Button>
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-12">
+        <div class="md:col-span-8">
+          {
+            tocHeadings.length >= 2 && (
+              <details class="mb-8 max-w-3xl border border-(--border-color) p-4 md:hidden">
+                <summary class="cursor-pointer font-mono text-[10px] text-(--text-muted) uppercase">
+                  [+] On This Page
+                </summary>
+                <ul class="mt-3 space-y-1 font-mono text-xs" data-toc>
+                  {tocHeadings.map((heading) => (
+                    <li class={heading.depth === 3 ? 'pl-4' : ''}>
+                      <a
+                        href={`#${heading.slug}`}
+                        class="text-(--text-muted) underline decoration-(--border-color) underline-offset-2 transition-colors hover:text-(--text-primary) hover:decoration-(--text-primary)"
+                      >
+                        {heading.text}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            )
+          }
+          <div class="prose max-w-none md:max-w-3xl">
+            <Content />
           </div>
-        )
-      }
+          {
+            relatedProject && (
+              <div class="mt-12 max-w-3xl border-t border-(--border-color) pt-8">
+                <p class="mb-3 font-mono text-xs text-(--text-muted) uppercase">Related Project</p>
+                <Button href={`/projects/${relatedProject.id}`} variant="secondary">
+                  {relatedProject.data.title} →
+                </Button>
+              </div>
+            )
+          }
+        </div>
+
+        {
+          tocHeadings.length >= 2 && (
+            <aside
+              aria-label="Table of contents"
+              class="sticky top-6 hidden h-fit space-y-2 border-l border-(--border-color) pl-6 font-mono text-xs md:col-span-4 md:block"
+            >
+              <p class="text-[10px] text-(--text-muted) uppercase">On This Page</p>
+              <ul class="space-y-1" data-toc>
+                {tocHeadings.map((heading) => (
+                  <li class={heading.depth === 3 ? 'pl-4' : ''}>
+                    <a
+                      href={`#${heading.slug}`}
+                      class="block text-(--text-muted) underline decoration-(--border-color) underline-offset-2 transition-colors hover:text-(--text-primary) hover:decoration-(--text-primary)"
+                    >
+                      {heading.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </aside>
+          )
+        }
+      </div>
     </Container>
+
+    <script>
+      function initToc() {
+        const navLists = document.querySelectorAll<HTMLElement>('[data-toc]');
+        if (navLists.length === 0) return;
+
+        const allLinks = Array.from(navLists).flatMap((nav) =>
+          Array.from(nav.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')),
+        );
+        if (allLinks.length === 0) return;
+
+        const headingEls = new Set<HTMLElement>();
+        for (const link of allLinks) {
+          const href = link.getAttribute('href');
+          if (!href) continue;
+          const target = document.getElementById(href.slice(1));
+          if (target) headingEls.add(target);
+        }
+
+        function setActive(id: string) {
+          for (const link of allLinks) {
+            const isActive = link.getAttribute('href') === `#${id}`;
+            link.classList.toggle('text-(--text-primary)', isActive);
+            link.classList.toggle('font-bold', isActive);
+            link.classList.toggle('text-(--text-muted)', !isActive);
+          }
+        }
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const visible = entries.filter((entry) => entry.isIntersecting);
+            if (visible.length > 0) setActive(visible[0].target.id);
+          },
+          { rootMargin: '-10% 0px -70% 0px' },
+        );
+
+        headingEls.forEach((el) => observer.observe(el));
+      }
+
+      initToc();
+      document.addEventListener('astro:page-load', initToc);
+    </script>
   </article>
 </Layout>
