@@ -1,8 +1,11 @@
+import { getYearsOfExperience } from '@lib/experience';
+
+const careerStartDate = new Date('2023-07-01');
+
 export const technicalProfile = {
   name: 'Daniel Kindl',
   role: 'Software Engineer',
-  summary:
-    '3+ years of experience building C#/.NET applications across the full lifecycle: desktop UI (Avalonia UI), backend services, databases (SQL Server, PostgreSQL), and containerized CI/CD deployment.',
+  summary: `${getYearsOfExperience(careerStartDate)}+ years of experience building C#/.NET applications across the full lifecycle: desktop UI (Avalonia UI), backend services, databases (SQL Server, PostgreSQL), and containerized CI/CD deployment.`,
   skills: {
     languages: ['C#', '.NET', 'JavaScript', 'Delphi'],
     frontend: ['Avalonia UI', 'MVVM', 'HTML/CSS/JS', 'Svelte', 'Astro'],
