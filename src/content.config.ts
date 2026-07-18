@@ -18,7 +18,7 @@ const projects = defineCollection({
         release: z.url().optional(),
       })
       .optional(),
-    status: z.enum(['development', 'production', 'archived']),
+    status: z.enum(['development', 'finished', 'maintaining', 'archived']),
     dates: z.object({
       start: z.coerce.date(),
       end: z.coerce.date().nullable(),

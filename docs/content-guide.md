@@ -23,7 +23,7 @@ the offending field — that's the fastest way to check you got a new entry righ
      production: 'https://...' # optional
      repository: 'https://...' # optional
      release: 'https://...' # optional — renders a third "View Release" button
-   status: 'production' # 'development' | 'production' | 'archived'
+   status: 'development' # 'development' | 'finished' | 'maintaining' | 'archived'
    dates:
      start: 2026-01-01
      end: null # null = ongoing/operational; omit end date display

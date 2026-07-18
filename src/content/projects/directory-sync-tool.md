@@ -6,7 +6,7 @@ stack: ['C#', '.NET 10', 'xUnit', 'GitHub Actions']
 links:
   repository: 'https://github.com/daniel-kindl/directory-sync'
   release: 'https://github.com/daniel-kindl/directory-sync/releases/tag/v1.0.0'
-status: 'production'
+status: 'finished'
 dates:
   start: 2025-09-12
   end: 2025-12-21

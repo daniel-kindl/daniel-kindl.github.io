@@ -6,7 +6,7 @@ stack: ['Astro 7', 'TypeScript', 'Svelte 5', 'Tailwind CSS 4', 'GitHub Actions']
 links:
   production: 'https://daniel-kindl.github.io'
   repository: 'https://github.com/daniel-kindl/daniel-kindl.github.io'
-status: 'production'
+status: 'development'
 dates:
   start: 2026-05-01
   end: null
