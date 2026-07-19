@@ -47,8 +47,20 @@
     font-display: swap;
   }
 
+  @font-face {
+    font-family: 'Space Grotesk';
+    src: url('/fonts/SpaceGrotesk-VariableFont_wght.woff2') format('woff2');
+    font-weight: 300 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
   .font-mono {
     font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .font-display {
+    font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
   }
 
   ::view-transition-old(root),

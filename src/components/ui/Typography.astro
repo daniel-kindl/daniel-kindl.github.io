@@ -8,11 +8,11 @@ interface Props {
 const { variant, as, class: className = '' }: Props = Astro.props;
 
 const styles = {
-  h1: 'text-3xl md:text-4xl font-bold uppercase tracking-tight text-[var(--text-primary)]',
-  h2: 'text-xl md:text-2xl font-bold uppercase tracking-tight text-[var(--text-primary)]',
-  h3: 'text-base md:text-lg font-bold uppercase tracking-tight text-[var(--text-primary)]',
+  h1: 'font-display text-3xl md:text-4xl font-bold uppercase tracking-tight text-[var(--text-primary)]',
+  h2: 'font-display text-xl md:text-2xl font-bold uppercase tracking-tight text-[var(--text-primary)]',
+  h3: 'font-display text-base md:text-lg font-bold uppercase tracking-tight text-[var(--text-primary)]',
   body: 'text-base text-[var(--text-primary)] leading-relaxed font-sans',
-  eyebrow: 'font-mono text-xs text-[var(--text-muted)] uppercase tracking-wider block mb-2',
+  eyebrow: 'font-display text-xs text-[var(--text-muted)] uppercase tracking-wider block mb-2',
   mono: 'font-mono text-sm text-[var(--text-primary)]',
 };
 
