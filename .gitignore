@@ -54,6 +54,9 @@ ehthumbs.db
 .eslintcache
 .cache/
 
+# Impeccable design skill local session/tooling state
+.impeccable/
+
 # IDE/Editor local settings (allow the shared, checked-in ones below)
 .vscode/*
 !.vscode/extensions.json
