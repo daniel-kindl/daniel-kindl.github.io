@@ -24,6 +24,16 @@ const projectDate = project.data.dates?.start || project.data.dates;
 const relatedPosts = (await getCollection('writing')).filter(
   (post) => (!post.data.draft || import.meta.env.DEV) && post.data.project?.id === project.id,
 );
+
+// The primary CTA follows evidentiary weight, not field order: prefer a live
+// production link, then a repository (verifiable code/CI), then a release.
+const primaryLinkKey = project.data.links?.production
+  ? 'production'
+  : project.data.links?.repository
+    ? 'repository'
+    : project.data.links?.release
+      ? 'release'
+      : null;
 ---
 
 <Layout
@@ -48,21 +58,30 @@ const relatedPosts = (await getCollection('writing')).filter(
         <div class="flex gap-3">
           {
             project.data.links?.repository && (
-              <ExternalLink href={project.data.links.repository} variant="secondary">
+              <ExternalLink
+                href={project.data.links.repository}
+                variant={primaryLinkKey === 'repository' ? 'primary' : 'secondary'}
+              >
                 View Repository
               </ExternalLink>
             )
           }
           {
             project.data.links?.production && (
-              <ExternalLink href={project.data.links.production} variant="primary">
+              <ExternalLink
+                href={project.data.links.production}
+                variant={primaryLinkKey === 'production' ? 'primary' : 'secondary'}
+              >
                 View Live
               </ExternalLink>
             )
           }
           {
             project.data.links?.release && (
-              <ExternalLink href={project.data.links.release} variant="secondary">
+              <ExternalLink
+                href={project.data.links.release}
+                variant={primaryLinkKey === 'release' ? 'primary' : 'secondary'}
+              >
                 View Release
               </ExternalLink>
             )
