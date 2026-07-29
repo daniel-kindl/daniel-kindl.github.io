@@ -35,6 +35,12 @@ typography:
     fontWeight: 400
     lineHeight: 1.4
     letterSpacing: '-0.025em'
+  meta:
+    fontFamily: 'JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace'
+    fontSize: '0.625rem'
+    fontWeight: 400
+    lineHeight: 1.4
+    letterSpacing: '-0.025em'
 rounded:
   none: '0px'
   dot: '9999px'
