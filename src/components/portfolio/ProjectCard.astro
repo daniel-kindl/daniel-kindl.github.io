@@ -18,6 +18,8 @@ const { project, index, headingLevel = 'h2', class: className = '' }: Props = As
 const isEven = index % 2 === 0;
 
 const timelineLabel = getProjectTimelineLabel(project.data.dates);
+const visibleStack = project.data.stack.slice(0, 4);
+const hiddenStackCount = project.data.stack.length - visibleStack.length;
 ---
 
 <article
@@ -35,7 +37,8 @@ const timelineLabel = getProjectTimelineLabel(project.data.dates);
       {project.data.summary}
     </Typography>
     <div class="mb-6 flex flex-wrap gap-2">
-      {project.data.stack.map((tech: string) => <Tag label={tech} />)}
+      {visibleStack.map((tech: string) => <Tag label={tech} />)}
+      {hiddenStackCount > 0 && <Tag label={`+${hiddenStackCount} more`} />}
     </div>
     <div class="flex gap-3">
       <Button href={`/projects/${project.id}`} variant="primary"> Read Case Study → </Button>
