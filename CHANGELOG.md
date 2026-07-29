@@ -1,3 +1,9 @@
+## [1.2.1](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.2.0...v1.2.1) (2026-07-29)
+
+### Bug Fixes
+
+* exclude generated CHANGELOG.md from prettier format:check ([67edf07](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/67edf07efeec4be4d4330f625258bcac2cae29ec))
+
 ## [1.2.0](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.1.1...v1.2.0) (2026-07-29)
 
 ### Features
