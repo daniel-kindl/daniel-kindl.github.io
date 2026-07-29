@@ -185,3 +185,58 @@ just an unacknowledged peer range.
 
 **Consequences:** Re-attempt this bump by running `npm run typecheck` after upgrading — if it
 still crashes, the toolchain isn't ready yet. Don't bump `typescript` alone without re-verifying.
+
+---
+
+## 11. Release automation: `semantic-release`, not release-please
+
+**Status:** Accepted — 2026-07-29
+
+**Context:** The homegrown bump logic in `deploy.yml` only inspected `github.event.head_commit.message`
+(a single commit, not the full set of commits in a push), never created a git tag, and had no
+changelog. ADR #6 anticipated commit discipline eventually supporting "automated changelog
+generation." `googleapis/release-please` was evaluated first, but its core mechanism is a
+standing "release PR" that a human must merge — this conflicts with the requirement for zero
+manual intervention on every release (no PR to click through). `semantic-release` releases
+directly on push instead, with no PR step.
+
+**Decision:** `semantic-release` runs as a step inside `.github/workflows/deploy.yml`'s existing
+`deploy` job, positioned after `npm ci` and before `npm run build` (not a separate workflow —
+`src/lib/buildInfo.ts` embeds `pkg.version` and the current commit hash into every page at build
+time, so the version bump must land before the build step, in the same job). On each push to
+`master` it uses `@semantic-release/commit-analyzer` + `@semantic-release/release-notes-generator`
+(both with the `conventionalcommits` preset, correctly handling `!` and `BREAKING CHANGE:`
+footers) to compute the next version from all commits since the last `vX.Y.Z` tag, then
+`@semantic-release/changelog`, `@semantic-release/npm` (`npmPublish: false`), and
+`@semantic-release/git` update `CHANGELOG.md`/`package.json`/`package-lock.json`, commit
+(`chore(release): X.Y.Z [skip ci]`), tag, and push, and `@semantic-release/github` creates the
+GitHub Release. `chore`-type commits (Dependabot's style) are visible in `CHANGELOG.md` under a
+"Chores & Dependencies" section but don't trigger a release by themselves — this is the library's
+default behavior, not a special-cased override. Nine annotated tags (`v0.0.2`-`v1.1.1`) were
+backfilled onto their historical commits and `CHANGELOG.md` was bootstrapped once with a small
+local script (`scripts/changelog-bootstrap.mjs`) before automated releases took over.
+`scripts/sync-mirror.ps1` now also mirrors tags from `hosting` (GitHub) to `origin` (OneDev),
+one-way and non-destructively, same as the branch.
+
+**Consequences:** No release PR ever exists to forget to merge — every push to `master` that
+contains a `feat`/`fix`/`perf`/breaking commit releases immediately and automatically. The
+tradeoff versus release-please is less visibility/review before a release ships (no PR diff to
+eyeball CHANGELOG output before it's live), acceptable for a solo portfolio project. Husky's
+`commit-msg`/`pre-commit` hooks are disabled for this one step via `HUSKY=0`, since
+`@semantic-release/git`'s commit is not run with `--no-verify` and would otherwise be subject to
+hooks meant for human contributors. A chore-only stretch (e.g. several weeks of only Dependabot
+bumps) produces no release/tag/changelog entry on its own; those commits ride along and appear in
+the changelog the next time a `feat`/`fix` does land.
+
+`conventional-changelog-conventionalcommits` is pinned to `^9.3.1`, not the latest `10.x`, found
+during dry-run verification: v10 rewrote its templates from Handlebars strings to plain functions
+using `@conventional-changelog/template`'s composable helpers, which is a different rendering
+contract than `conventional-changelog-writer@8.x`'s Handlebars-partial-registration pipeline that
+`@semantic-release/release-notes-generator` still relies on. With v10, `headerPartial` happens to
+render correctly (Handlebars calls partial functions with the root context as the first argument,
+which coincidentally matches what a top-level partial expects), but `commitPartial` receives
+`(commitObject, handlebarsOptions)` where the function expects `(rootContext, commit)` — the
+arguments are effectively swapped, so every commit line silently renders as an empty string and
+the changelog body is dropped entirely with no error. `.github/dependabot.yml` ignores major-version
+updates for this package for the same reason ADR #10 ignores TypeScript majors — verify
+`commitPartial` output manually (`npx semantic-release --dry-run --no-ci`) before ever bumping it.

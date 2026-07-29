@@ -2,6 +2,7 @@
   "name": "daniel-kindl-portfolio",
   "type": "module",
   "version": "1.1.1",
+  "private": true,
   "engines": {
     "node": ">=24.0.0"
   },
@@ -17,7 +18,8 @@
     "format:check": "prettier --check .",
     "typecheck": "astro check",
     "prepare": "husky",
-    "generate-assets": "node generate-assets.js"
+    "generate-assets": "node generate-assets.js",
+    "release": "semantic-release"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
@@ -35,6 +37,13 @@
     "@commitlint/cli": "^21.2.1",
     "@commitlint/config-conventional": "^21.2.0",
     "@eslint/js": "^10.0.1",
+    "@semantic-release/changelog": "^7.0.0",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^11.0.1",
+    "@semantic-release/github": "^12.0.9",
+    "@semantic-release/npm": "^13.1.5",
+    "@semantic-release/release-notes-generator": "^14.1.1",
+    "conventional-changelog-conventionalcommits": "^9.3.1",
     "eslint": "^10.7.0",
     "eslint-plugin-astro": "^3.0.1",
     "eslint-plugin-svelte": "^3.22.0",
@@ -46,6 +55,7 @@
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-svelte": "^4.1.1",
     "prettier-plugin-tailwindcss": "^0.8.1",
+    "semantic-release": "^25.0.8",
     "typescript-eslint": "^8.65.0"
   }
 }

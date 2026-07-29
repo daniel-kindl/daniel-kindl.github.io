@@ -15,6 +15,12 @@ updates:
       - dependency-name: 'typescript'
         update-types:
           - 'version-update:semver-major'
+      # v10 rewrote its templates to a function-based API that's incompatible with
+      # @semantic-release/release-notes-generator's Handlebars-partial rendering pipeline
+      # (silently produces empty changelog bodies). See ADR #11.
+      - dependency-name: 'conventional-changelog-conventionalcommits'
+        update-types:
+          - 'version-update:semver-major'
 
   - package-ecosystem: 'github-actions'
     directory: '/'
