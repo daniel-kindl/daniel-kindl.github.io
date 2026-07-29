@@ -1,3 +1,47 @@
+## [1.2.0](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.1.1...v1.2.0) (2026-07-29)
+
+### Features
+
+* add a primary contact CTA to the homepage ([a3e7875](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/a3e78756fe72805bd4064e124aaf29b08f42c677))
+* automate semver releases with semantic-release ([acb8fae](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/acb8fae2b9536631d2277427d54cf36c7a4f7764))
+* give project metadata band the readout-rail treatment and real link evidence ([1f193c0](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/1f193c07f0a1a1d218d3f11b26482ba4616af0fa))
+* surface promotion continuity between same-company CV entries ([a8753a3](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/a8753a354b9fe6deb6268ac09ef7b2c7cc19e9ab))
+* surface real project/write-up counts in hero ([d3b2378](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/d3b23784b0748cdc427dc33db21945d0a8c74e1c))
+
+### Bug Fixes
+
+* add focus-visible ring and larger tap target to Tag links ([2aa135a](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/2aa135ab0e61e76f943c6d163012839ec791866c))
+* align project metadata band font size with documented mono step ([5063f9e](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/5063f9ee71ac78dcc083e6354ad620cc5646f28e))
+* allow project CTA row to wrap on narrow viewports ([f89ac8f](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/f89ac8f65c1ce3f17871fccbe902abac044c2379))
+* always render a closing element on writing posts ([dee10b6](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/dee10b6363d6f76f75b35f07ec120ac2b22df6fe))
+* assign project primary CTA by evidentiary weight, not field order ([8a10996](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/8a1099635453618284ae8a174afe565e7944fb8a))
+* collapse writing-post grid to full width when there is no ToC ([d16fb03](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/d16fb0360722966ff62483a89892f3a3aadeb72e))
+* give Timeline explicit list semantics for assistive tech ([7b5fe37](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/7b5fe37f784c794994c5ffcac885e480a2be660c))
+* keep code-copy button visible on touch devices ([5232952](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/52329523e6a03271e0f88b91d1e7ba0297ad60e6))
+* lead About page with Experience ahead of Skills ([24421c4](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/24421c468aa45bda657002517e599117c0a0549d))
+* map project status enum to considered display labels ([c05c5b8](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/c05c5b88134e39aa239d21202d7514cf0c25e0f3))
+* pluralize stack technology count correctly ([9bf5de8](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/9bf5de87e1d7e51f99bfe9b5ae3cb946085b24a2))
+* reduce homepage decision overload (dedupe CTA, cap tags, group footer links) ([e0f67b9](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/e0f67b9e63f18e6f3205d81eb82b7c4b7e447339))
+* remove brackets from permanent hero eyebrow label ([7a1f986](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/7a1f98666eeda5d97e849785e35ffc3a7f8ee93d))
+* restore documented type contract in article prose ([af653c7](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/af653c7813551cd770eeb47eb7ea47dcee3bd386))
+* show project summary and related writing on mobile ([5a36302](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/5a363026a402922831df9cc37d79a2e164530992))
+* split oversized Frontend skill group into Desktop UI and Frontend ([8520b8a](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/8520b8ae31beb7cf3d9cb585f4bc89d9cadf755c))
+* use project role instead of raw slug in case-study eyebrow ([7fde3ec](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/7fde3ec8ea03549801bb0419393219bdcb40d4bd))
+
+### Documentation
+
+* add PRODUCT.md and DESIGN.md, ignore Impeccable local state ([758d228](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/758d228f60ecb1ee3ae2555d8f6f1a8319355bb3))
+* document the 10px mono/meta type step already used sitewide ([f289c0f](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/f289c0f9465cde5e3b69bfac24b3d1b89d96f312))
+
+### Chores & Dependencies
+
+* bump astro from 7.0.9 to 7.1.3 ([3826f16](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/3826f1620c155649fd319625fc33bd2f373084d9))
+* bump fast-uri from 3.1.3 to 3.1.4 ([ed3566c](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/ed3566c661a0c08aa10b90177c2072eccd24f85b))
+* bump fast-xml-parser from 5.10.0 to 5.10.1 ([b62c97e](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/b62c97efcc20e6413d7b237d409b2169a70ff6e4))
+* bump svgo from 4.0.1 to 4.0.2 ([96c476c](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/96c476c7acec861025cc0801fe9de765c1d5fb3d))
+* bump the npm-minor-patch group with 8 updates ([074c0ee](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/074c0ee10328a62cb6a5e366d6bdcf111c9d578e))
+* bump treosh/lighthouse-ci-action ([d75f0c7](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/d75f0c7041bb6ef3a13da30584872417308312f2))
+
 # Changelog
 
 All notable changes to this project are documented here.
