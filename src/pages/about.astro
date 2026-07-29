@@ -22,7 +22,7 @@ const skillGroups = [
   { label: 'Frontend', items: skills.frontend },
   { label: 'Backend', items: skills.backend },
   { label: 'Databases', items: skills.databases },
-  { label: 'DevOps', items: skills.devops },
+  { label: 'DevOps', items: skills.devops, wide: true },
 ];
 ---
 
@@ -69,8 +69,8 @@ const skillGroups = [
       </div>
       <div class="grid gap-8 md:grid-cols-2">
         {
-          skillGroups.map((group, index) => (
-            <div class={index === skillGroups.length - 1 ? 'md:col-span-2' : undefined}>
+          skillGroups.map((group) => (
+            <div class={group.wide ? 'md:col-span-2' : undefined}>
               <h3 class="mb-3 font-mono text-xs text-(--text-muted) uppercase">{group.label}</h3>
               <div class="flex flex-wrap gap-2">
                 {group.items.map((item) => (
