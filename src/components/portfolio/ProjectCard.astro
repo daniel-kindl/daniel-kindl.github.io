@@ -58,7 +58,10 @@ const hiddenStackCount = project.data.stack.length - visibleStack.length;
     <div class="space-y-1">
       <div>Status: {getProjectStatusLabel(project.data.status)}</div>
       <div>Timeline: {timelineLabel}</div>
-      <div>Stack: {project.data.stack.length} technologies</div>
+      <div>
+        Stack: {project.data.stack.length}
+        {project.data.stack.length === 1 ? 'technology' : 'technologies'}
+      </div>
     </div>
   </div>
 </article>
