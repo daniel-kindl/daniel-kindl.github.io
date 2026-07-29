@@ -4,9 +4,10 @@ import Typography from './Typography.astro';
 interface Props {
   title: string;
   time: string;
+  promotedFrom?: string;
 }
 
-const { title, time }: Props = Astro.props;
+const { title, time, promotedFrom }: Props = Astro.props;
 ---
 
 <div class="relative">
@@ -22,6 +23,13 @@ const { title, time }: Props = Astro.props;
       >{time}</span
     >
   </div>
+  {
+    promotedFrom && (
+      <div class="mt-1 font-mono text-[10px] tracking-wider text-(--text-muted) uppercase">
+        [Promoted from {promotedFrom}]
+      </div>
+    )
+  }
   <div class="mt-2">
     <slot />
   </div>

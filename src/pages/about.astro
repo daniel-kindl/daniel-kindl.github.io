@@ -9,6 +9,14 @@ import { technicalProfile } from '../data/cv';
 
 const { name, role, summary, skills, experience } = technicalProfile;
 
+// Entries are ordered most-recent-first; flag a promotion when consecutive
+// entries share an employer so the timeline reads as one continuous tenure.
+const experienceWithContinuity = experience.map((item, index) => {
+  const previous = experience[index + 1];
+  const promotedFrom = previous && previous.company === item.company ? previous.role : undefined;
+  return { ...item, promotedFrom };
+});
+
 const skillGroups = [
   { label: 'Languages', items: skills.languages },
   { label: 'Frontend', items: skills.frontend },
@@ -58,8 +66,12 @@ const skillGroups = [
 
       <Timeline>
         {
-          experience.map((item) => (
-            <TimelineEvent title={`${item.role} — ${item.company}`} time={item.period}>
+          experienceWithContinuity.map((item) => (
+            <TimelineEvent
+              title={`${item.role} — ${item.company}`}
+              time={item.period}
+              promotedFrom={item.promotedFrom}
+            >
               <ul class="mt-2 list-disc space-y-1 pl-5 text-sm leading-relaxed text-(--text-muted)">
                 {item.achievements.map((achievement) => (
                   <li>{achievement}</li>
