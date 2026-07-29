@@ -82,16 +82,24 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2 || heading.
           <div class="prose max-w-none md:max-w-3xl">
             <Content />
           </div>
-          {
-            relatedProject && (
-              <div class="mt-12 max-w-3xl border-t border-(--border-color) pt-8">
-                <p class="mb-3 font-mono text-xs text-(--text-muted) uppercase">Related Project</p>
-                <Button href={`/projects/${relatedProject.id}`} variant="secondary">
-                  {relatedProject.data.title} →
+          <div class="mt-12 max-w-3xl border-t border-(--border-color) pt-8">
+            {
+              relatedProject ? (
+                <>
+                  <p class="mb-3 font-mono text-xs text-(--text-muted) uppercase">
+                    Related Project
+                  </p>
+                  <Button href={`/projects/${relatedProject.id}`} variant="secondary">
+                    {relatedProject.data.title} →
+                  </Button>
+                </>
+              ) : (
+                <Button href="/writing" variant="secondary">
+                  More Writing →
                 </Button>
-              </div>
-            )
-          }
+              )
+            }
+          </div>
         </div>
 
         {
