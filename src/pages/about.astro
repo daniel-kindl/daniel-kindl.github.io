@@ -37,28 +37,7 @@ const skillGroups = [
       </div>
     </header>
 
-    <section class="mb-16 max-w-4xl">
-      <div class="mb-8">
-        <Typography variant="eyebrow">Skills</Typography>
-        <Typography variant="h2">Core Technical Stack</Typography>
-      </div>
-      <div class="grid gap-8 md:grid-cols-2">
-        {
-          skillGroups.map((group, index) => (
-            <div class={index === skillGroups.length - 1 ? 'md:col-span-2' : undefined}>
-              <h3 class="mb-3 font-mono text-xs text-(--text-muted) uppercase">{group.label}</h3>
-              <div class="flex flex-wrap gap-2">
-                {group.items.map((item) => (
-                  <Tag label={item} />
-                ))}
-              </div>
-            </div>
-          ))
-        }
-      </div>
-    </section>
-
-    <section class="max-w-3xl">
+    <section class="mb-16 max-w-3xl">
       <div class="mb-8">
         <Typography variant="eyebrow">Work History</Typography>
         <Typography variant="h2">Experience</Typography>
@@ -81,6 +60,27 @@ const skillGroups = [
           ))
         }
       </Timeline>
+    </section>
+
+    <section class="max-w-4xl">
+      <div class="mb-8">
+        <Typography variant="eyebrow">Skills</Typography>
+        <Typography variant="h2">Core Technical Stack</Typography>
+      </div>
+      <div class="grid gap-8 md:grid-cols-2">
+        {
+          skillGroups.map((group, index) => (
+            <div class={index === skillGroups.length - 1 ? 'md:col-span-2' : undefined}>
+              <h3 class="mb-3 font-mono text-xs text-(--text-muted) uppercase">{group.label}</h3>
+              <div class="flex flex-wrap gap-2">
+                {group.items.map((item) => (
+                  <Tag label={item} />
+                ))}
+              </div>
+            </div>
+          ))
+        }
+      </div>
     </section>
   </Container>
 </Layout>
