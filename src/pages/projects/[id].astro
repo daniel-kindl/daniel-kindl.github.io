@@ -64,7 +64,7 @@ const linkLabels = [
         <div class="mb-6 flex flex-wrap gap-2">
           {project.data.stack.map((tech: string) => <Tag label={tech} />)}
         </div>
-        <div class="flex gap-3">
+        <div class="flex flex-wrap gap-3">
           {
             project.data.links?.repository && (
               <ExternalLink
