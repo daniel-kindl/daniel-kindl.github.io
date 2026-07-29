@@ -19,10 +19,11 @@ const experienceWithContinuity = experience.map((item, index) => {
 
 const skillGroups = [
   { label: 'Languages', items: skills.languages },
+  { label: 'Desktop UI', items: skills.desktopUI },
   { label: 'Frontend', items: skills.frontend },
   { label: 'Backend', items: skills.backend },
   { label: 'Databases', items: skills.databases },
-  { label: 'DevOps', items: skills.devops, wide: true },
+  { label: 'DevOps', items: skills.devops },
 ];
 ---
 
@@ -70,7 +71,7 @@ const skillGroups = [
       <div class="grid gap-8 md:grid-cols-2">
         {
           skillGroups.map((group) => (
-            <div class={group.wide ? 'md:col-span-2' : undefined}>
+            <div>
               <h3 class="mb-3 font-mono text-xs text-(--text-muted) uppercase">{group.label}</h3>
               <div class="flex flex-wrap gap-2">
                 {group.items.map((item) => (
