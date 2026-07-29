@@ -4,6 +4,7 @@ import Typography from '../ui/Typography.astro';
 import Tag from '../ui/Tag.astro';
 import Button from '../ui/Button.astro';
 import ExternalLink from '../ui/ExternalLink.astro';
+import { getProjectTimelineLabel } from '@lib/projectTimeline';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -15,13 +16,7 @@ interface Props {
 const { project, index, headingLevel = 'h2', class: className = '' }: Props = Astro.props;
 const isEven = index % 2 === 0;
 
-const startYear = project.data.dates.start.getFullYear();
-const endYear = project.data.dates.end?.getFullYear();
-const timelineLabel = !project.data.dates.end
-  ? `${startYear}–Present`
-  : endYear === startYear
-    ? `${startYear}`
-    : `${startYear}–${endYear}`;
+const timelineLabel = getProjectTimelineLabel(project.data.dates);
 ---
 
 <article
