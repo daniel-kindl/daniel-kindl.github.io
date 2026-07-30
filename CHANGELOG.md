@@ -1,3 +1,16 @@
+## [1.3.0](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.2.2...v1.3.0) (2026-07-30)
+
+### Features
+
+* add DK Timer project case study ([5839e79](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/5839e79a573a0846688f38ca1508a2536cfeadaa))
+* cite Lighthouse CI budget with a passing run link in the portfolio case study ([b138ae1](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/b138ae10807ee7d18fed44381f8d616cbec9d8f1))
+
+### Bug Fixes
+
+* announce search results and empty state to screen readers ([8462f97](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/8462f975acac4a318238878d41d18f3724dfd775))
+* darken copy-code focus ring for WCAG 3:1 contrast in light mode ([37363d5](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/37363d5890230ab94438a4cd8a30cf854b2f1c1c))
+* fill Timeline anchor dot with text-primary for visible contrast ([3c9c03c](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/3c9c03c804c46ca18d037e12b439dc33d64e83b3))
+
 ## [1.2.2](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.2.1...v1.2.2) (2026-07-30)
 
 ### Bug Fixes
