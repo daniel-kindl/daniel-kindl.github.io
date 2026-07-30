@@ -1,3 +1,13 @@
+## [1.2.2](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.2.1...v1.2.2) (2026-07-30)
+
+### Bug Fixes
+
+* correct CI shield badge showing no status in README ([d3efab1](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/d3efab140ccd9de95e18ce3c116f87d76b98dd40))
+
+### Chores & Dependencies
+
+* bump the npm-minor-patch group across 1 directory with 6 updates ([#14](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/14)) ([16bb9f7](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/16bb9f7be6207d37997b33ea7cf61f7293b86e87))
+
 ## [1.2.1](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.2.0...v1.2.1) (2026-07-29)
 
 ### Bug Fixes
