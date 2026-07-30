@@ -22,6 +22,7 @@ I needed a production-ready portfolio that could be maintained as a real enginee
 - Implemented a typed content architecture with Astro Content Collections for projects and writing.
 - Built a reusable UI system and responsive page layouts optimized for static-first rendering.
 - Added CI/CD automation and deployment workflows for GitHub Pages, including SEO and sitemap support.
+- Enforced a Lighthouse CI performance budget (90+ performance, 95+ accessibility/best-practices/SEO) as a hard gate on every deploy — a failing score blocks the release; see a [passing production run](https://github.com/daniel-kindl/daniel-kindl.github.io/actions/runs/30526223284).
 
 ## Outcome
 
