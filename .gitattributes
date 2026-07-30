@@ -1,0 +1,6 @@
+# Normalize line endings to LF regardless of platform/core.autocrlf,
+# so tools like `prettier --check` don't flag CRLF-vs-LF as formatting drift.
+* text=auto eol=lf
+
+*.ico binary
+*.woff2 binary
