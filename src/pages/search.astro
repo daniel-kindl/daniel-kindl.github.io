@@ -17,8 +17,10 @@ import { focusRingStyles } from '@lib/buttonStyles';
         placeholder="Search projects and writing..."
         class={`w-full border border-(--border-color) bg-(--bg-primary) px-4 py-3 font-mono text-sm text-(--text-primary) placeholder:text-(--text-muted) ${focusRingStyles}`}
       />
-      <div id="search-results" class="mt-8 space-y-6"></div>
-      <p id="search-empty" class="mt-8 hidden text-sm text-(--text-muted)">No results found.</p>
+      <div id="search-results" class="mt-8 space-y-6" aria-live="polite"></div>
+      <p id="search-empty" class="mt-8 hidden text-sm text-(--text-muted)" aria-live="polite">
+        No results found.
+      </p>
       <p id="search-unavailable" class="mt-8 hidden text-sm text-(--text-muted)">
         Search isn't available in this environment — it only works on the deployed site, or after
         running a production build.
