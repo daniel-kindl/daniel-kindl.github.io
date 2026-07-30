@@ -1,6 +1,6 @@
 # Daniel Kindl Portfolio
 
-[![CI](https://img.shields.io/github/actions/workflow/status/daniel-kindl/daniel-kindl.github.io/ci.yml?branch=master&label=CI&logo=githubactions&logoColor=white)](https://github.com/daniel-kindl/daniel-kindl.github.io/actions/workflows/ci.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/daniel-kindl/daniel-kindl.github.io/ci.yml?event=pull_request&label=CI&logo=githubactions&logoColor=white)](https://github.com/daniel-kindl/daniel-kindl.github.io/actions/workflows/ci.yml)
 [![Deploy](https://img.shields.io/github/actions/workflow/status/daniel-kindl/daniel-kindl.github.io/deploy.yml?branch=master&label=Deploy&logo=githubactions&logoColor=white)](https://github.com/daniel-kindl/daniel-kindl.github.io/actions/workflows/deploy.yml)
 [![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)](https://astro.build)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
