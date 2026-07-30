@@ -1,3 +1,14 @@
+## [1.3.1](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.3.0...v1.3.1) (2026-07-30)
+
+### Bug Fixes
+
+* bump postcss to patch path traversal vulnerability (Dependabot [#5](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/5)) ([9c5c017](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/9c5c017734885ead1f3b13b6171876723859cc45))
+
+### Chores & Dependencies
+
+* add .gitattributes to normalize line endings to LF ([3802aea](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/3802aeae3764c1b90becd0c2b57537e3ec847f2c))
+* merge upstream release commit from GitHub ([7b03851](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/7b03851e446cee137dc4dde452349e920ee8ae8f))
+
 ## [1.3.0](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.2.2...v1.3.0) (2026-07-30)
 
 ### Features
