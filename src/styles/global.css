@@ -7,6 +7,9 @@
     --text-muted: #666666;
     --border-color: #e5e5e5;
     --accent: #10b981;
+    /* Darker than --accent: #10b981 on --bg-primary is ~2.4:1, below the 3:1
+       minimum for non-text focus indicators (WCAG 1.4.11). */
+    --accent-focus: #047857;
 
     /* Shiki Light/Dark Variable Tokens mapped directly to custom variables */
     --shiki-light: var(--text-primary);
@@ -20,6 +23,9 @@
     --text-primary: #f5f5f5;
     --text-muted: #a0a0a0;
     --border-color: #262626;
+    /* --accent already clears 3:1 against the dark background, so the focus
+       ring can use it directly instead of the light-mode-only darker shade. */
+    --accent-focus: #10b981;
   }
 
   html {
