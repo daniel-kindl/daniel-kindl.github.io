@@ -164,7 +164,10 @@ primary`/`ink`, body additionally uses `leading-relaxed` for long-form readabili
 - **Eyebrow / Label** (400, `0.75rem`, `tracking-wider`, uppercase, `graphite`/muted): the small
   category tag above every section and card ("Project 01 · Role", "Selected Work").
 - **Mono / Meta** (400, `0.75rem`–`0.625rem`, `tracking-tight`, uppercase where used): buttons
-  (0.75rem), tags (0.625rem/10px), nav, footer, timeline dates (`tabular-nums`).
+  (0.75rem), tags (0.625rem/10px), nav, footer, timeline dates (`tabular-nums`). `0.625rem`/10px is
+  reserved for short labels/values (tags, dates, metadata-rail entries) — any run of prose long
+  enough to read as a sentence steps up to `text-sm` (0.875rem) regardless of its surrounding
+  metadata block, so it never renders below a comfortable reading size on mobile.
 
 All heading variants (H1–H3) are uppercase with tight tracking by construction — there is no
 sentence-case heading anywhere in the system.
