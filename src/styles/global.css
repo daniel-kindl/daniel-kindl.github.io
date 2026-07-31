@@ -1,5 +1,11 @@
 @import 'tailwindcss';
 
+@theme {
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+}
+
 @layer base {
   :root {
     --bg-primary: #faf9f6;
@@ -31,7 +37,7 @@
   html {
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    font-family: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-sans);
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
   }
@@ -66,14 +72,6 @@
     font-weight: 300 700;
     font-style: normal;
     font-display: swap;
-  }
-
-  .font-mono {
-    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  }
-
-  .font-display {
-    font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
   }
 
   ::view-transition-old(root),
