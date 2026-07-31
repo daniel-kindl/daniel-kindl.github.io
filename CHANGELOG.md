@@ -1,3 +1,30 @@
+## [1.3.2](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.3.1...v1.3.2) (2026-07-31)
+
+### Bug Fixes
+
+* add active: press feedback to match every hover: state (DA-6) ([ee0126d](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/ee0126d9d041db2f9ba669448154e3b1bc7b72f9))
+* bump search input to 16px on mobile to prevent iOS auto-zoom ([3c44c4c](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/3c44c4c756f507f3944ed169d273f1f6adc6f562))
+* give mobile TOC toggle a real 44px touch target ([56d944a](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/56d944af7308b921a32295a6d6060776e6b4048c))
+* give phones a compact project status line (DA-7) ([4aa8d5f](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/4aa8d5f4fca32a5eb534edb8ceed44ced020057c))
+* harden .prose against ol, h4-h6, table, img and long tokens ([9d00297](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/9d00297f89986e1f5e5a9194110994d07416ec36))
+* make Container the single owner of horizontal inset (DA-4) ([a788062](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/a78806222590c42d6a22b514630ccf9cc6a45216))
+* move font families into Tailwind 4 theme so utilities resolve correctly ([989cda9](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/989cda9ffd06957dd5b930eeaf9455893cf267ea))
+* pin code copy button to a non-scrolling wrapper and bump to 44px ([a40398e](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/a40398eae0a03add3332d6483494fd95388727f9))
+* prevent footer link row from overflowing at 320px viewport ([7dc6821](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/7dc6821519c3ed31fbd3dfed1e6b53ac1a4f6103))
+* prevent header nav overflow from forcing mobile page zoom-out ([daa2cb1](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/daa2cb16647ef2f66262bc0e705ecf71295172c8))
+* promote project summary paragraph off 10px metadata size (DA-2) ([9518ce2](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/9518ce2aa7869e6ab9e9820e7d4e9b3c8f4fb9be))
+* remove duplicate nested main landmark on 6 pages ([9b036d7](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/9b036d79b651aa969622178224ba665a0e6dcb12))
+* replace tag hit-area expansion with real 44x44 touch target ([6b79f52](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/6b79f52a8272719732a1d3e805c01cd6c16f169e))
+* scope hero H1 leading-none to sm: and up (DA-1) ([3426430](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/34264308e298f770a69b4d3d58062598b3df3b7c))
+* stack homepage section headers below sm to prevent collision ([936282c](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/936282ca6ebb32beb2fc8ec94275859c649eba8e))
+* theme-aware theme-color meta, wrap 404 in Container, swap vh for dvh ([558b698](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/558b69818c5eaad94a764756e2793cdbfed01eb4))
+* touch-target sweep for ExternalLink plain variant and TOC links ([b62637c](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/b62637c016a0cdf1411145cdcbd705530f457031))
+
+### Chores & Dependencies
+
+* exclude .remember/ plugin data from lint and format checks ([1be44a3](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/1be44a360b3a9ee460ab076bb2d12d0c3e88edf0))
+* tighten Lighthouse CI budget with measured perf/resource assertions ([cdc1816](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/cdc1816162c4a7ff203f79be1a885d03b940b992))
+
 ## [1.3.1](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.3.0...v1.3.1) (2026-07-30)
 
 ### Bug Fixes
