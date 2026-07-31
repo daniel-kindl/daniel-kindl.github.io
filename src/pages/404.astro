@@ -1,10 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Container from '../components/ui/Container.astro';
 import Button from '../components/ui/Button.astro';
 ---
 
 <Layout title="404 — Route Not Found">
-  <div class="flex min-h-[50vh] flex-col items-start justify-center font-mono">
+  <Container class="flex min-h-[50dvh] flex-col items-start justify-center font-mono">
     <span class="mb-2 text-sm text-(--text-muted)">[ERROR_CODE: 404]</span>
     <h1 class="mb-4 text-2xl font-bold tracking-tight text-(--text-primary) uppercase">
       Requested Resource Missing
@@ -13,5 +14,5 @@ import Button from '../components/ui/Button.astro';
       No route matches this path. It may have moved or never existed.
     </p>
     <Button href="/" variant="primary">Return to Index System</Button>
-  </div>
+  </Container>
 </Layout>
