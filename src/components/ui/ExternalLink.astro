@@ -17,7 +17,10 @@ const {
   ...rest
 }: Props = Astro.props;
 
-const variantClass = variant === 'plain' ? '' : `${buttonBaseStyles} ${buttonVariants[variant]}`;
+const variantClass =
+  variant === 'plain'
+    ? 'min-h-[44px] min-w-[44px]'
+    : `${buttonBaseStyles} ${buttonVariants[variant]}`;
 const combinedClass = ['inline-flex items-center gap-1', variantClass, className]
   .filter(Boolean)
   .join(' ');

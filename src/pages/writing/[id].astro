@@ -9,6 +9,7 @@ import { slugify } from '@lib/slug';
 import { getPublishedPosts } from '@lib/content';
 import { formatDate } from '@lib/formatDate';
 import { getReadingTime } from '@lib/readingTime';
+import { focusRingStyles } from '@lib/buttonStyles';
 
 export async function getStaticPaths() {
   const posts = await getPublishedPosts();
@@ -70,7 +71,7 @@ const hasToc = tocHeadings.length >= 2;
                     <li class={heading.depth === 3 ? 'pl-4' : ''}>
                       <a
                         href={`#${heading.slug}`}
-                        class="block py-2 text-(--text-muted) underline decoration-(--border-color) underline-offset-2 transition-colors hover:text-(--text-primary) hover:decoration-(--text-primary)"
+                        class={`block py-2 text-(--text-muted) underline decoration-(--border-color) underline-offset-2 transition-colors hover:text-(--text-primary) hover:decoration-(--text-primary) ${focusRingStyles}`}
                       >
                         {heading.text}
                       </a>
@@ -115,7 +116,7 @@ const hasToc = tocHeadings.length >= 2;
                   <li class={heading.depth === 3 ? 'pl-4' : ''}>
                     <a
                       href={`#${heading.slug}`}
-                      class="block text-(--text-muted) underline decoration-(--border-color) underline-offset-2 transition-colors hover:text-(--text-primary) hover:decoration-(--text-primary)"
+                      class={`block py-1 text-(--text-muted) underline decoration-(--border-color) underline-offset-2 transition-colors hover:text-(--text-primary) hover:decoration-(--text-primary) ${focusRingStyles}`}
                     >
                       {heading.text}
                     </a>
