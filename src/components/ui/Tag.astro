@@ -7,19 +7,23 @@ interface Props {
 }
 const { label, href }: Props = Astro.props;
 
-const classes =
-  'inline-flex min-h-[24px] items-center border border-(--text-muted) bg-(--bg-primary) px-2.5 py-1 font-mono text-[10px] tracking-tight text-(--text-muted) uppercase select-none';
+const chipClasses =
+  'inline-flex min-h-[24px] items-center border border-(--text-muted) bg-(--bg-primary) px-2.5 py-1 font-mono text-[10px] tracking-tight text-(--text-muted) uppercase select-none transition-colors';
 ---
 
 {
   href ? (
     <a
       href={href}
-      class={`relative ${classes} ${focusRingStyles} transition-colors before:absolute before:inset-x-0 before:-inset-y-2.5 before:content-[''] hover:border-(--text-primary) hover:text-(--text-primary)`}
+      class={`group inline-flex min-h-[44px] min-w-[44px] items-center justify-center ${focusRingStyles}`}
     >
-      {label}
+      <span
+        class={`${chipClasses} group-hover:border-(--text-primary) group-hover:text-(--text-primary)`}
+      >
+        {label}
+      </span>
     </a>
   ) : (
-    <span class={classes}>{label}</span>
+    <span class={chipClasses}>{label}</span>
   )
 }
