@@ -7,7 +7,7 @@ export const buttonBaseStyles = `inline-flex items-center justify-center font-mo
 
 export const buttonVariants: Record<ButtonVariant, string> = {
   primary:
-    'border border-[var(--text-muted)] text-[var(--text-primary)] bg-[var(--bg-primary)] hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)]',
+    'border border-[var(--text-muted)] text-[var(--text-primary)] bg-[var(--bg-primary)] hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] active:bg-[var(--text-primary)] active:text-[var(--bg-primary)]',
   secondary:
-    'text-[var(--text-muted)] hover:text-[var(--text-primary)] underline underline-offset-4 decoration-[var(--border-color)] hover:decoration-[var(--text-primary)]',
+    'text-[var(--text-muted)] hover:text-[var(--text-primary)] underline underline-offset-4 decoration-[var(--border-color)] hover:decoration-[var(--text-primary)] active:text-[var(--text-primary)] active:decoration-[var(--text-primary)]',
 };

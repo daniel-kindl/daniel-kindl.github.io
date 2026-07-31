@@ -20,7 +20,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
   >
     <a
       href="/"
-      class={`inline-flex min-h-[44px] items-center font-bold tracking-normal text-(--text-primary) uppercase transition-colors hover:underline ${focusRingStyles}`}
+      class={`inline-flex min-h-[44px] items-center font-bold tracking-normal text-(--text-primary) uppercase transition-colors hover:underline active:underline ${focusRingStyles}`}
       >Daniel Kindl</a
     >
 
@@ -34,7 +34,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
               class={`inline-flex min-h-[44px] items-center px-1 uppercase transition-colors sm:px-3 ${focusRingStyles} ${
                 isActive(item.href)
                   ? 'text-(--text-primary) underline decoration-(--text-primary) underline-offset-4'
-                  : 'text-(--text-muted) hover:text-(--text-primary)'
+                  : 'text-(--text-muted) hover:text-(--text-primary) active:text-(--text-primary)'
               }`}
             >
               {item.label}
@@ -47,7 +47,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
 
       <button
         id="theme-toggle"
-        class={`inline-flex min-h-[44px] cursor-pointer items-center px-1 text-(--text-muted) uppercase transition-colors hover:text-(--text-primary) sm:px-3 ${focusRingStyles}`}
+        class={`inline-flex min-h-[44px] cursor-pointer items-center px-1 text-(--text-muted) uppercase transition-colors hover:text-(--text-primary) active:text-(--text-primary) sm:px-3 ${focusRingStyles}`}
         aria-label="Toggle color theme"
         aria-pressed="false"
       >

@@ -233,6 +233,10 @@ all the communicative work.
   `ink`, offset `4px` (the general control focus ring); a small number of high-visibility controls
   (the skip link, the copy-code button) use the rare `terminal-green` accent for their focus
   treatment instead — see the Rare Accent Rule.
+- **Press feedback:** Every control that defines a `hover:` state defines the matching `active:`
+  state too, using the same treatment (inverted fill for primary, un-muted text/underline for
+  secondary and tags). Touch devices never see `:hover`, so `:active` is what actually gives a
+  phone visitor feedback that a tap registered.
 
 ### Chips / Tags
 
