@@ -106,14 +106,20 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         const blocks = document.querySelectorAll<HTMLPreElement>('.prose pre');
 
         blocks.forEach((pre) => {
-          if (pre.querySelector('.copy-code-button')) return;
+          if (pre.closest('.code-block-wrapper')) return;
 
-          pre.classList.add('group', 'relative');
+          // The button must anchor to a non-scrolling wrapper, not to `pre`
+          // itself — `pre` is the horizontally-scrolling element, so a button
+          // absolutely positioned against it scrolls away with the code.
+          const wrapper = document.createElement('div');
+          wrapper.className = 'code-block-wrapper group relative';
+          pre.replaceWith(wrapper);
+          wrapper.appendChild(pre);
 
           const button = document.createElement('button');
           button.type = 'button';
           button.className =
-            'copy-code-button absolute right-2 top-2 border border-(--border-color) bg-(--bg-primary) px-2 py-0.5 font-mono text-[10px] uppercase tracking-tight text-(--text-muted) opacity-0 transition-opacity duration-150 group-hover:opacity-100 hover:border-(--text-primary) hover:text-(--text-primary) focus-visible:opacity-100 [@media(hover:none)]:opacity-100 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent-focus)';
+            'copy-code-button absolute right-2 top-2 flex min-h-[44px] min-w-[44px] items-center justify-center border border-(--border-color) bg-(--bg-primary) px-2 font-mono text-[10px] uppercase tracking-tight text-(--text-muted) opacity-0 transition-opacity duration-150 group-hover:opacity-100 hover:border-(--text-primary) hover:text-(--text-primary) focus-visible:opacity-100 [@media(hover:none)]:opacity-100 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent-focus)';
           button.textContent = '[Copy]';
           button.setAttribute('aria-label', 'Copy code to clipboard');
 
@@ -130,7 +136,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
             }, 1500);
           });
 
-          pre.appendChild(button);
+          wrapper.appendChild(button);
         });
       }
 
