@@ -159,6 +159,8 @@ reserved for actual reading — paragraph body copy only.
 - **Title / H2** (700, `1.25rem→1.5rem` i.e. text-xl→text-2xl): section headings.
 - **Subtitle / H3** (700, `1rem→1.125rem` i.e. text-base→text-lg; `0.875rem` on Timeline events):
   card and sub-section headings.
+- **Sub-subtitle / H4–H6** (700, `0.875rem`, tight tracking): the rare markdown post that nests a
+  heading below H3 — reuses the Timeline-event `0.875rem` step rather than introducing a new size.
 - **Body** (400, `1rem`, line-height 1.625): paragraph copy; all headings and body share `text-
 primary`/`ink`, body additionally uses `leading-relaxed` for long-form readability.
 - **Eyebrow / Label** (400, `0.75rem`, `tracking-wider`, uppercase, `graphite`/muted): the small
