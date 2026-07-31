@@ -50,6 +50,9 @@ const hiddenStackCount = project.data.stack.length - visibleStack.length;
         )
       }
     </div>
+    <div class="mt-4 font-mono text-[10px] text-(--text-muted) uppercase md:hidden">
+      Status: {getProjectStatusLabel(project.data.status)} · Timeline: {timelineLabel}
+    </div>
   </div>
 
   <div

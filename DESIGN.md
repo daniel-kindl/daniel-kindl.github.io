@@ -257,7 +257,9 @@ all the communicative work.
 - **Signature behavior:** desktop splits into a 7/5 grid — case-study content on one side, a
   mono-type metadata "readout" (Status / Timeline / Stack count) behind a `border-l` rail on the
   other — and alternates which side each is on by index (zig-zag), so the row never repeats the
-  same layout twice in a row.
+  same layout twice in a row. The rail itself is a desktop-only signature; below `md:`, a plain
+  mono-type "Status: … · Timeline: …" line (no rail, no grid) carries the same information so
+  mobile visitors aren't left without it.
 
 ### Writing Post Card
 
