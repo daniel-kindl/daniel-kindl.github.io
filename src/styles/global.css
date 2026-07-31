@@ -36,6 +36,13 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* Backstop: no unwrapped flex/grid row should ever be able to force the
+     browser to zoom the whole page out to fit it (see DESIGN.md mobile nav
+     rule). This clips the overflow instead of scaling content down. */
+  body {
+    overflow-x: clip;
+  }
+
   /* Local font faces with swap to avoid FOIT */
   @font-face {
     font-family: 'IBM Plex Sans';

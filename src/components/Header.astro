@@ -22,14 +22,14 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
       >Daniel Kindl</a
     >
 
-    <div class="flex items-center gap-2">
-      <nav class="flex items-center gap-2">
+    <div class="flex flex-wrap items-center gap-2">
+      <nav class="flex flex-wrap items-center gap-2">
         {
           navItems.map((item) => (
             <a
               href={item.href}
               aria-current={isActive(item.href) ? 'page' : undefined}
-              class={`inline-flex min-h-[44px] items-center px-3 uppercase transition-colors ${focusRingStyles} ${
+              class={`inline-flex min-h-[44px] items-center px-1 uppercase transition-colors sm:px-3 ${focusRingStyles} ${
                 isActive(item.href)
                   ? 'text-(--text-primary) underline decoration-(--text-primary) underline-offset-4'
                   : 'text-(--text-muted) hover:text-(--text-primary)'
@@ -45,7 +45,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
 
       <button
         id="theme-toggle"
-        class={`inline-flex min-h-[44px] cursor-pointer items-center px-3 text-(--text-muted) uppercase transition-colors hover:text-(--text-primary) ${focusRingStyles}`}
+        class={`inline-flex min-h-[44px] cursor-pointer items-center px-1 text-(--text-muted) uppercase transition-colors hover:text-(--text-primary) sm:px-3 ${focusRingStyles}`}
         aria-label="Toggle color theme"
         aria-pressed="false"
       >
