@@ -153,8 +153,11 @@ reserved for actual reading — paragraph body copy only.
 
 ### Hierarchy
 
-- **Display / Hero H1** (700, `clamp(2.25rem, 6vw, 3.75rem)` i.e. text-4xl→text-6xl, leading-none):
-  the homepage hero headline only; the single largest, boldest moment on the site.
+- **Display / Hero H1** (700, `clamp(2.25rem, 6vw, 3.75rem)` i.e. text-4xl→text-6xl, `leading-tight`
+  below `sm:` stepping up to `leading-none` at `sm:` and above): the homepage hero headline only;
+  the single largest, boldest moment on the site. `leading-none` reads as confident at desktop
+  sizes but collides across the 3-line wrap the headline takes on narrow phones — `leading-tight`
+  below `sm:` keeps that legible without weakening the desktop treatment.
 - **Headline / H1** (700, `1.875rem→2.25rem` i.e. text-3xl→text-4xl, tight leading): page titles.
 - **Title / H2** (700, `1.25rem→1.5rem` i.e. text-xl→text-2xl): section headings.
 - **Subtitle / H3** (700, `1rem→1.125rem` i.e. text-base→text-lg; `0.875rem` on Timeline events):
