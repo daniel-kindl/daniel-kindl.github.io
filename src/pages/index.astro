@@ -35,12 +35,16 @@ const recentPosts = allPosts.slice(0, 2);
   </div>
 
   <Container as="section" class="border-b border-(--border-color) py-20">
-    <header class="reveal mb-12 flex items-baseline justify-between">
+    <header
+      class="reveal mb-12 flex flex-col gap-4 sm:flex-row sm:items-baseline sm:justify-between"
+    >
       <div>
         <Typography variant="eyebrow">Selected Work</Typography>
         <Typography variant="h2">Recent Project Highlights</Typography>
       </div>
-      <Button href="/projects" variant="secondary">All Projects →</Button>
+      <Button href="/projects" variant="secondary" class="self-start sm:self-auto">
+        All Projects →
+      </Button>
     </header>
 
     <div class="space-y-12">
@@ -58,12 +62,16 @@ const recentPosts = allPosts.slice(0, 2);
   </Container>
 
   <Container as="section" class="border-b border-(--border-color) py-20">
-    <header class="reveal mb-12 flex items-baseline justify-between">
+    <header
+      class="reveal mb-12 flex flex-col gap-4 sm:flex-row sm:items-baseline sm:justify-between"
+    >
       <div>
         <Typography variant="eyebrow">Latest Writing</Typography>
         <Typography variant="h2">Recent Write-Ups</Typography>
       </div>
-      <Button href="/writing" variant="secondary">All Writing →</Button>
+      <Button href="/writing" variant="secondary" class="self-start sm:self-auto">
+        All Writing →
+      </Button>
     </header>
 
     <div class="space-y-12">
