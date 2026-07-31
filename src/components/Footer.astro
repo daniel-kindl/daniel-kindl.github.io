@@ -19,7 +19,7 @@ const currentYear = new Date().getFullYear();
         > · v{buildInfo.version}{buildInfo.commit && <> · {buildInfo.commit}</>}</span
       >
     </div>
-    <div class="flex items-center gap-2 uppercase">
+    <div class="flex flex-wrap items-center gap-2 uppercase">
       <ExternalLink
         href="https://github.com/daniel-kindl"
         class={`min-h-[44px] min-w-[44px] justify-center transition-colors hover:text-(--text-primary) ${focusRingStyles}`}
@@ -43,7 +43,7 @@ const currentYear = new Date().getFullYear();
       >
       <a
         href="/colophon"
-        class={`inline-flex min-h-[44px] items-center justify-center px-1 transition-colors hover:text-(--text-primary) ${focusRingStyles}`}
+        class={`inline-flex min-h-[44px] min-w-[44px] items-center justify-center px-1 transition-colors hover:text-(--text-primary) ${focusRingStyles}`}
         >Colophon</a
       >
     </div>
