@@ -8,7 +8,7 @@ import globals from 'globals';
 
 export default defineConfig(
   {
-    ignores: ['dist/', '.astro/', 'node_modules/'],
+    ignores: ['dist/', '.astro/', 'node_modules/', '.remember/'],
   },
   {
     files: ['**/*.{js,mjs,cjs,ts,astro,svelte}'],
