@@ -1,5 +1,6 @@
 ---
 import { focusRingStyles } from '@lib/buttonStyles';
+import Container from '@components/ui/Container.astro';
 
 const navItems = [
   { href: '/projects', label: 'Projects' },
@@ -13,8 +14,9 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
 ---
 
 <header class="mb-12 w-full border-b border-(--border-color) py-4">
-  <div
-    class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-4 gap-y-3 px-4 font-mono text-xs tracking-tight"
+  <Container
+    as="div"
+    class="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 font-mono text-xs tracking-tight"
   >
     <a
       href="/"
@@ -52,7 +54,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
         [<span class="theme-label-light">Light</span><span class="theme-label-dark">Dark</span>]
       </button>
     </div>
-  </div>
+  </Container>
 </header>
 
 <script>

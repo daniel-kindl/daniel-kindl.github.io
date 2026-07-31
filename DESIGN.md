@@ -180,9 +180,11 @@ body copy never take brackets.
 ## Layout
 
 Single-column vertical rhythm: the whole site is a stack of full-bleed horizontal bands, each
-separated by a hairline `border-b`, never a grid of floating cards. Content within a band sits in
-a centered container — `max-w-5xl` for header, footer, and most page content, with the outer
-`<main>` capped at `max-w-7xl` and `px-4`/`md:px-8` side padding.
+separated by a hairline `border-b`, never a grid of floating cards. `Container` (`max-w-5xl`,
+`px-4`/`md:px-8`) is the single owner of horizontal inset — `Header`, `Footer`, and page content all
+render through it, so chrome and content always share the same left/right edge. The outer `<main>`
+itself carries no width cap or padding of its own; it exists purely as the landmark and flex-grow
+element.
 
 Section rhythm is generous and consistent: `py-20` for major homepage/page sections, `py-12`–`py-
 20` for page headers. The one deliberate exception to single-column stacking is the project case-
