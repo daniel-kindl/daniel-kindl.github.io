@@ -61,16 +61,16 @@ const hasToc = tocHeadings.length >= 2;
         <div class={hasToc ? 'md:col-span-8' : 'md:col-span-12'}>
           {
             hasToc && (
-              <details class="mb-8 max-w-3xl border border-(--border-color) p-4 md:hidden">
-                <summary class="cursor-pointer font-mono text-[10px] text-(--text-muted) uppercase">
+              <details class="mb-8 max-w-3xl border border-(--border-color) md:hidden">
+                <summary class="flex min-h-[44px] cursor-pointer items-center p-4 font-mono text-xs text-(--text-muted) uppercase">
                   [+] On This Page
                 </summary>
-                <ul class="mt-3 space-y-1 font-mono text-xs" data-toc>
+                <ul class="space-y-1 px-4 pb-4 font-mono text-xs" data-toc>
                   {tocHeadings.map((heading) => (
                     <li class={heading.depth === 3 ? 'pl-4' : ''}>
                       <a
                         href={`#${heading.slug}`}
-                        class="text-(--text-muted) underline decoration-(--border-color) underline-offset-2 transition-colors hover:text-(--text-primary) hover:decoration-(--text-primary)"
+                        class="block py-2 text-(--text-muted) underline decoration-(--border-color) underline-offset-2 transition-colors hover:text-(--text-primary) hover:decoration-(--text-primary)"
                       >
                         {heading.text}
                       </a>
