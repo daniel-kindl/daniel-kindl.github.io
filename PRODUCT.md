@@ -30,11 +30,13 @@ rigor without actually doing the work.
 
 ## Operating Context
 
-- Static Astro 7 site, deployed to GitHub Pages, content-driven via Zod-validated `projects` and
-  `writing` collections.
-- Two case-study projects on hand: a solo-built C#/.NET CLI tool (directory-sync, dirsync) with 42
-  unit tests, multi-platform CI/CD, and CodeQL scanning; and this portfolio site itself, positioned
-  as a maintained engineering project (typed content architecture, CI/CD, SEO).
+- Static Astro 7 site, served from GitHub Pages at `danielkindl.dev`, content-driven via
+  Zod-validated `projects` and `writing` collections authored in MDX.
+- Three case-study projects on hand: a solo-built C#/.NET CLI tool (directory-sync, dirsync) with
+  42 unit tests, multi-platform CI/CD, and CodeQL scanning; Ocho, a Kotlin/Compose Android interval
+  timer with nine tagged releases, a documented design system, and a self-updating release channel;
+  and this portfolio site itself, positioned as a maintained engineering project (typed content
+  architecture, CI/CD, SEO).
 - Writing posts cover engineering practice topics: AI-assisted development workflow, spec
   traceability with TDD, a homelab writeup, and a tiered comparison behind the directory-sync tool
   — these serve as secondary evidence of technical depth and communication ability.
@@ -47,7 +49,7 @@ rigor without actually doing the work.
 - Currently employed; the site should read as professionally available for conversation, not as an
   urgent or desperate job search. No aggressive "hire me now" framing.
 - No fabricated evidence: no client testimonials, customer logos, usage metrics, or case studies
-  beyond the two real projects and the CV facts already on record. Undecided or unavailable facts
+  beyond the three real projects and the CV facts already on record. Undecided or unavailable facts
   stay absent rather than invented.
 - Content is data-driven through Astro content collections; new project/writing entries follow
   `docs/content-guide.md`, not ad hoc page edits.
@@ -60,11 +62,14 @@ an existing commitment, not open for reinterpretation without the user's sign-of
 
 ## Evidence on Hand
 
-- `src/content/projects/directory-sync-tool.md` — dirsync CLI tool, solo developer, released
+- `src/content/projects/directory-sync-tool.mdx` — dirsync CLI tool, solo developer, released
   v1.0.0, real repo and release links.
-- `src/content/projects/production-portfolio-system.md` — this site, lead engineer, real
+- `src/content/projects/ocho.mdx` — Ocho Android interval timer, solo developer, actively
+  maintained, real repo and release links; the phase-color table is sourced from the app's own
+  `PhaseColors.kt`.
+- `src/content/projects/production-portfolio-system.mdx` — this site, lead engineer, real
   production and repo links.
-- `src/content/writing/*.md` — four real posts (AI-assisted development workflow, spec
+- `src/content/writing/*.mdx` — four real posts (AI-assisted development workflow, spec
   traceability with TDD, homelab, tiered comparison for directory-sync).
 - `src/data/cv.ts` — real employment history and skills at SPS software s.r.o.
 - No testimonials, client logos, press mentions, or usage metrics exist; future work must not

@@ -14,9 +14,10 @@ Astro 7, TypeScript (strict), Tailwind CSS 4, and Svelte 5 islands for interacti
 ## Features
 
 - Static, content-driven project and writing pages backed by Zod-validated Astro content
-  collections
-- Light/dark theme toggle with no flash on load
-- RSS feed, tag-based browsing, and reading-time estimates for writing posts
+  collections, authored in MDX
+- Light/dark theme toggle with no flash on load, following system preference until you choose
+- RSS feed, tag-based browsing, and reading-time estimates on posts and case studies
+- Sticky table of contents with scrollspy on any entry with two or more headings
 - Full-text site search powered by [Pagefind](https://pagefind.app)
 - Per-entry social share (OG) images generated at build time, not hand-drawn or committed
 
@@ -70,4 +71,9 @@ Commits are enforced via Husky + commitlint using
 ## Documentation
 
 - [`docs/tech-decisions.md`](docs/tech-decisions.md): ADR log for stack/tooling choices.
-- [`docs/content-guide.md`](docs/content-guide.md): how to add `projects`/`writing` content entries.
+- [`docs/content-guide.md`](docs/content-guide.md): how to add `projects`/`writing` content entries,
+  including media and in-content components.
+- [`DESIGN.md`](DESIGN.md): the design system, with the named rules that govern color, typography,
+  separation, and figures.
+- [`CLAUDE.md`](CLAUDE.md): architecture and conventions, written for Claude Code but accurate for
+  anyone.

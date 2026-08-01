@@ -271,3 +271,31 @@ built-in parser; no plugin needed. The cost is that MDX is stricter than Markdow
 and unescaped `{` and `<` outside code fences, which is the usual cause when an entry fails to
 build. `generate-assets.js` filters content files by extension independently of the loader, so its
 filter has to track this glob or an entry silently ships without an OG image.
+
+---
+
+## 13. Canonical origin: `danielkindl.dev`, not the `github.io` subdomain
+
+**Status:** Accepted — 2026-08-01
+
+**Context:** The site was published at `daniel-kindl.github.io`, a hostname owned by the platform
+rather than by me. Hosting stays on GitHub Pages, but a project's public address shouldn't be
+something a hosting change would invalidate, and `github.io` reads as a staging URL on a CV.
+
+**Decision:** Serve the site from `danielkindl.dev`, configured as the GitHub Pages custom domain
+with HTTPS enforced. The domain is the canonical origin everywhere it's stated: `site` in
+`astro.config.mjs` (which is what `@astrojs/sitemap`, `@astrojs/rss`, and every absolute canonical
+and OG URL in `Layout.astro` derive from), `Host`/`Sitemap` in `public/robots.txt`, the README, and
+the `links.production` field of the portfolio case study. Repository URLs still point at
+`github.com/daniel-kindl/daniel-kindl.github.io`, because that's the repository's actual name.
+
+**Consequences:** `site` in `astro.config.mjs` is the single value that has to change if the domain
+ever moves again; everything else derives from it, so getting it wrong silently publishes a sitemap
+and OG tags advertising the wrong origin. The old `github.io` URLs keep working, since GitHub Pages
+redirects them to the custom domain, so previously indexed links don't break. The custom domain
+lives in the repository's Pages settings rather than a committed `public/CNAME` file; adding the
+file would make it survive a settings reset, at the cost of a second place to keep in sync.
+
+This entry also supersedes one detail in ADR #11: `src/lib/buildInfo.ts` no longer embeds the
+commit hash, only `pkg.version`. The hash was noise for visitors, and dropping it removed a
+`git rev-parse` shell-out from the build.

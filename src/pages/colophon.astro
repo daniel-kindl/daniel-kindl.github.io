@@ -42,13 +42,13 @@ const fonts = ['Space Grotesk', 'JetBrains Mono', 'IBM Plex Sans'];
       <ul class="list-disc space-y-3 pl-5 text-sm leading-relaxed text-(--text-muted)">
         <li>
           Two Zod-validated content collections, <code>projects</code> and <code>writing</code>,
-          power every case study and post through Astro's Content Collections API. No CMS, just
-          Markdown files checked into the repo.
+          power every case study and post through Astro's Content Collections API. No CMS, just MDX
+          files checked into the repo.
         </li>
         <li>
           Theming uses a <code>data-theme</code> attribute and CSS custom properties, not Tailwind's
-          <code>.dark</code> class. Dark mode is the default; the toggle persists to
-          <code>localStorage</code>.
+          <code>.dark</code> class. The first visit follows your system preference; after that the toggle
+          persists to <code>localStorage</code>.
         </li>
         <li>
           Icons and social-share (OG) images are generated procedurally at build time with
@@ -69,7 +69,7 @@ const fonts = ['Space Grotesk', 'JetBrains Mono', 'IBM Plex Sans'];
       <ul class="list-disc space-y-3 pl-5 text-sm leading-relaxed text-(--text-muted)">
         <li>
           The repo has two git remotes: a self-hosted OneDev server and GitHub, which is the actual
-          deploy target.
+          deploy target. The site is served from GitHub Pages on a custom domain.
         </li>
         <li>
           Pull requests run linting, format checks, type checking, and a full production build

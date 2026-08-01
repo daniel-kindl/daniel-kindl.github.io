@@ -36,9 +36,13 @@ the offending field — that's the fastest way to check you got a new entry righ
    the top 2 by weight, `/projects` (`src/pages/projects.astro`) shows all of them in the same
    order.
 
-3. Write the body in Markdown below the frontmatter — it renders into the case-study page's prose
-   column (`src/pages/projects/[id].astro`). Existing entries use `## Context`, `## What I
-delivered`, `## Outcome` as a loose convention, not an enforced structure.
+3. Write the body below the frontmatter — it renders into the case-study page's prose column
+   (`src/pages/projects/[id].astro`). Entries open with `## Context` and close with `## Outcome`;
+   in between, use one `##` per substantial topic (the mechanism, the hard call, the verification)
+   rather than a single "What I delivered" bullet dump. Two or more headings turn on the table of
+   contents, so section titles double as the page's navigation and are worth naming concretely.
+   A `## Trade-offs` section, where there's a real one to describe, tends to carry more signal than
+   another feature list.
 4. No registration step needed elsewhere — `getStaticPaths()` in
    `src/pages/projects/[id].astro` picks up every entry in the collection automatically, and it
    appears on `/projects` and (if `weight` is high enough) the homepage.

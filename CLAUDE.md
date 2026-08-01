@@ -75,8 +75,9 @@ from `src/content/{projects,writing}/*.{md,mdx}`:
 
 - `projects`: title, summary, role, stack, links (production/repository/release, all optional
   URLs — `release` renders as a third "View Release" button on the case-study page when present),
-  status (`development | production | archived`), dates (start/end), `weight` (int, controls
-  homepage feature ordering — higher sorts first).
+  status (`development | finished | maintaining | archived`, rendered via
+  `src/lib/projectStatus.ts` as "In Development" / "Shipped" / "Actively Maintained" / "Archived"),
+  dates (start/end), `weight` (int, controls homepage feature ordering — higher sorts first).
 - `writing`: title, summary, date, tags (string array), draft (bool — draft posts are excluded from
   builds and RSS except in `import.meta.env.DEV`).
 
@@ -117,11 +118,13 @@ earlier `.dark`-class-based token file (`tokens.css`) and a `ThemeToggle.svelte`
 it were dead code and have been removed — see ADR-9 in `docs/tech-decisions.md` if you find
 references to either in history.
 
-**Svelte islands directories are currently empty.** `src/components/islands/` and
-`src/components/playground/` exist as the intended home for interactive "playground" pieces (per
-ADR-3) but hold no components right now — prior placeholders were unused dead code and were
-removed. New interactive components should use Svelte 5 runes (`$state`, etc.), not the legacy
-`export let` API, and should only hydrate via explicit `client:*` directives.
+**There are no Svelte islands, and no directory for them.** The `@astrojs/svelte` integration is
+installed and ADR-3 still holds, but `src/components/islands/` and `src/components/playground/`
+no longer exist — earlier placeholders were unused dead code and were removed along with the empty
+directories. Create the directory when there's a real component to put in it. New interactive
+components should use Svelte 5 runes (`$state`, etc.), not the legacy `export let` API, and should
+only hydrate via explicit `client:*` directives. The Lighthouse script budget (30 KB) is the
+practical ceiling on how much any island can ship.
 
 **Global layout**: `src/layouts/Layout.astro` is the single page shell (meta/OG/Twitter tags,
 font preloads, `ThemeScript`, `ClientRouter` for View Transitions, skip-to-content link, `Header` +
