@@ -17,11 +17,17 @@ The naive answer is to hash both files and compare. It's also the slowest possib
 
 The approach I used in `dirsync` is a tiered comparison: check the cheap signals first, and only fall back to the expensive one when the cheap signals are ambiguous.
 
-**Tier 1: file size.** If the source and replica file sizes differ, the file changed. Full stop. No further checks needed. This alone eliminates the vast majority of unchanged files in a typical sync, at the cost of a filesystem stat call.
+### Tier 1: file size
 
-**Tier 2: last-write timestamp.** If sizes match, compare `LastWriteTimeUtc` within a tolerance window (2 seconds by default, to accommodate filesystems like FAT32 that don't store sub-second precision). If the timestamp is unchanged, the file is treated as unchanged.
+If the source and replica file sizes differ, the file changed. Full stop. No further checks needed. This alone eliminates the vast majority of unchanged files in a typical sync, at the cost of a filesystem stat call.
 
-**Tier 3: SHA-256 hash.** Only when size and timestamp both fail to rule out a change does the tool fall back to hashing. This is the expensive, but authoritative, check.
+### Tier 2: last-write timestamp
+
+If sizes match, compare `LastWriteTimeUtc` within a tolerance window (2 seconds by default, to accommodate filesystems like FAT32 that don't store sub-second precision). If the timestamp is unchanged, the file is treated as unchanged.
+
+### Tier 3: SHA-256 hash
+
+Only when size and timestamp both fail to rule out a change does the tool fall back to hashing. This is the expensive, but authoritative, check.
 
 Roughly:
 

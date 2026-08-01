@@ -1,0 +1,82 @@
+---
+title: 'Building Tangolab: Why I Finally Started a Homelab'
+summary: 'Turning an old office PC into a self-hosted development lab for learning Linux, Docker, networking, backups, and infrastructure engineering.'
+date: 2026-07-10
+tags: ['Homelab', 'Linux', 'Docker', 'Self-Hosting', 'Infrastructure']
+draft: false
+---
+
+## Why build a homelab?
+
+For a long time, I wanted a place where I could experiment with technologies outside my day-to-day work without worrying about breaking anything important.
+
+Cloud platforms are good at what they do, but they abstract away much of the underlying infrastructure. I wanted to understand what actually happens underneath: installing an operating system, securing a server, managing containers, designing backups, and documenting everything well enough that I could rebuild it from scratch.
+
+That's how Tangolab started. It isn't a production server or a cloud replacement, it's a personal laboratory I can break without consequence.
+
+## Starting with what I already had
+
+Rather than buying dedicated server hardware, I reused an old office PC that had been collecting dust under my desk.
+
+| Component | Spec               |
+| --------- | ------------------ |
+| CPU       | Intel Core i3-3220 |
+| Memory    | 8 GB DDR3          |
+| Storage   | 500 GB HDD         |
+| Network   | Gigabit Ethernet   |
+
+By modern standards that's modest, and the constraint is intentional. Limited resources force better decisions. Every running service has to justify the CPU time, memory, and storage it consumes, so instead of installing dozens of containers because I can, I have to think about what actually earns its place.
+
+## Design philosophy
+
+Before installing anything, I wrote down a few principles I wanted to follow.
+
+- Prefer free and open-source software.
+- Keep the system lightweight.
+- Expose nothing to the public Internet.
+- Document every significant decision.
+- Design for future hardware migration.
+- Build something I can recover after a complete disk failure.
+
+Those principles have influenced nearly every technical decision since.
+
+## Current architecture
+
+Tangolab runs Debian 13 directly on the hardware, with Docker Compose managing the application stack.
+
+| Service     | Role                   |
+| ----------- | ---------------------- |
+| PostgreSQL  | Shared database        |
+| OneDev      | Git hosting and CI     |
+| Wiki.js     | Internal documentation |
+| Uptime Kuma | Service monitoring     |
+| Glances     | Host metrics           |
+| Restic      | Nightly backups        |
+| Tailscale   | Private remote access  |
+
+Everything lives on a dedicated Docker network, application data is separated from the operating system, and backups run automatically every night. Nothing is exposed publicly, and all remote access goes through Tailscale.
+
+## Documentation first
+
+One goal I set from the beginning was to treat documentation as part of the project rather than something I'd write afterwards.
+
+Every architectural decision, hardware change, backup procedure, security finding, and future improvement is documented inside the homelab itself using Wiki.js. If the machine dies tomorrow, I don't want to rely on memory. I want enough documentation to rebuild the environment from scratch.
+
+## More educational than expected
+
+The part I expected to learn from was getting everything running. Reviewing every configuration afterwards taught me considerably more.
+
+During a security audit I found several problems I had introduced myself: weak backup credentials, incorrect file ownership, missing firewall rules, and permission problems that were silently preventing offsite backups from working. None of them were hard to fix. Finding them taught me much more than following installation guides ever could, mostly because each one was a gap between what I thought I had configured and what was actually running.
+
+## What's next?
+
+Tangolab is still very much version 1. The next improvements I have planned:
+
+- testing backup restores end-to-end
+- adding a reverse proxy
+- upgrading the storage
+- increasing available memory
+- improving monitoring
+- eventually migrating everything to newer hardware
+
+Because the project is built around documentation and reproducibility, those upgrades should be evolutionary rather than requiring a complete rebuild.

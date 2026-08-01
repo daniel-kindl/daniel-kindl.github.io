@@ -1,0 +1,48 @@
+---
+title: 'Production Portfolio Website'
+summary: 'Astro-based portfolio platform focused on performance, maintainable content architecture, and streamlined deployment to GitHub Pages.'
+role: 'Lead Engineer'
+stack: ['Astro 7', 'TypeScript', 'Svelte 5', 'Tailwind CSS 4', 'GitHub Actions']
+links:
+  production: 'https://danielkindl.dev'
+  repository: 'https://github.com/daniel-kindl/daniel-kindl.github.io'
+status: 'maintaining'
+dates:
+  start: 2026-05-01
+  end: null
+weight: 10
+---
+
+## Context
+
+I needed a production-ready portfolio that could be maintained as a real engineering project, not a one-off static site. The site you're reading is the artifact, so every claim it makes about engineering discipline is checkable against the repository it ships from.
+
+## Content architecture
+
+Projects and writing are Zod-validated Astro Content Collections rather than hand-authored pages. Invalid frontmatter fails the type check and the build, so a malformed entry can't reach production. Case-study pages, post pages, tag pages, and the RSS feed are all generated from those two collections, which means adding content is writing one Markdown file and nothing else.
+
+## Performance as a gate, not a goal
+
+The deploy runs a Lighthouse CI budget before publishing, and a failing score blocks the release rather than filing a warning somewhere:
+
+| Assertion                | Budget    |
+| ------------------------ | --------- |
+| Performance              | ≥ 90      |
+| Accessibility            | ≥ 95      |
+| Best practices           | ≥ 95      |
+| SEO                      | ≥ 95      |
+| Largest Contentful Paint | ≤ 2500 ms |
+| Cumulative Layout Shift  | ≤ 0.05    |
+| Total Blocking Time      | ≤ 200 ms  |
+| Script payload           | ≤ 30 KB   |
+| Font payload             | ≤ 96 KB   |
+
+See a [passing production run](https://github.com/daniel-kindl/daniel-kindl.github.io/actions/runs/30526223284). The script budget is the one that shapes decisions most: it rules out shipping a framework to render text, which is why interactivity here stays in explicit islands.
+
+## Delivery
+
+Pull requests run asset generation, lint, format check, type check, and a full production build. Pushes to `master` add semantic-release, which computes the version from Conventional Commits, updates the changelog, tags, and publishes to GitHub Pages with no release PR to approve.
+
+## Outcome
+
+The site is both a public portfolio and a maintainable technical baseline for future projects and writing.

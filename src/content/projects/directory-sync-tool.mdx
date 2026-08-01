@@ -1,0 +1,48 @@
+---
+title: 'Directory Synchronization Tool (dirsync)'
+summary: 'Cross-platform CLI utility in C#/.NET for one-way directory synchronization, with SHA-256 change detection, atomic file operations, and safety rails against path traversal and data loss.'
+role: 'Solo Developer'
+stack: ['C#', '.NET 10', 'xUnit', 'GitHub Actions']
+links:
+  repository: 'https://github.com/daniel-kindl/directory-sync'
+  release: 'https://github.com/daniel-kindl/directory-sync/releases/tag/v1.0.0'
+status: 'finished'
+dates:
+  start: 2025-09-12
+  end: 2025-12-21
+weight: 8
+---
+
+## Context
+
+The initial prototype started as a take-home technical assessment during a job interview process. The problem itself, reliably mirroring a source directory to a replica, was compelling enough that I continued developing it into a fully-featured, production-quality tool after the interview.
+
+## Change detection
+
+Mirroring means answering one question for every file, over and over: has this changed? Hashing both sides answers it correctly, and it is also the slowest way to do it, since it reads every byte of every file on every run.
+
+So the comparison is tiered. Cheap signals go first, and the expensive one only runs when the cheap signals can't rule a change out.
+
+| Tier | Check              | Cost              | Verdict                                            |
+| ---- | ------------------ | ----------------- | -------------------------------------------------- |
+| 1    | File size          | One `stat` call   | A different size means changed. Stop here.         |
+| 2    | `LastWriteTimeUtc` | One `stat` call   | Unchanged within a 2-second tolerance means skip.  |
+| 3    | SHA-256 hash       | Full read of both | Authoritative, and the only tier that reads bytes. |
+
+The tolerance on tier 2 is there for filesystems like FAT32 that don't store sub-second precision. The `verify` command skips the fast tiers and always hashes, because being certain is the entire point of that command. Different commands get different tradeoffs; the comparison logic underneath stays the same.
+
+## Safety rails
+
+Knowing a file changed is half the problem. Writing it without making things worse is the other half. If a sync is killed mid-copy, a half-written file in the replica is worse than no file at all, because the replica now looks current when it isn't.
+
+Every copy goes to a temporary file alongside the destination and then moves into place. A move within one volume is atomic at the filesystem level, so the replica holds either the old file or the complete new one, never something in between. Retries use exponential backoff so a transient lock doesn't abort a whole run.
+
+Before anything destructive happens, the tool rejects path traversal, refuses to follow symbolic links, and checks that the disk has room.
+
+## Verification
+
+42 unit tests, CI across Ubuntu, Windows, and macOS, and CodeQL security scanning on every push. Releases ship as single-file binaries for four platforms.
+
+## Outcome
+
+Released as v1.0.0 with global .NET tool installation support (`dotnet tool install --global DirectorySync.Cli`) and pre-built binaries for Windows, Linux, and macOS.
