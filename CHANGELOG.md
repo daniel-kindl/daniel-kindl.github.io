@@ -1,3 +1,22 @@
+## [1.4.0](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.3.2...v1.4.0) (2026-08-01)
+
+### Features
+
+* add MDX support and figure/swatch content components ([65c23e5](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/65c23e585bd2aea8d1fb3b996322bfdf16831dd5))
+* give case studies a table of contents and reading time ([124c8c8](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/124c8c81fa7ec16755e3fa2c2fa661efa7294e2e))
+* restructure the Ocho case study with a phase palette spec table ([9b1685b](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/9b1685bb6b012f77e43d5919938c10533d2d560f))
+
+### Documentation
+
+* record MDX as the format for all content entries ([7dd3a44](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/7dd3a4461cacc7a040eee24120270cbc12a9c56d))
+* record media, figure, and MDX conventions across design and content guides ([cc45c54](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/cc45c542b5c1fca5f6214d2d5d965cc56bc53442))
+
+### Chores & Dependencies
+
+* drop the commit hash from the footer build stamp ([8e9598a](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/8e9598a0004d48f22a404697bcb3b1de2d6ff543))
+* point the site at the danielkindl.dev custom domain ([7390e1a](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/7390e1aec135a5217198d7b6b45b39c6c26273f5))
+* rebrand the DK Timer case study to Ocho ([3363143](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/33631434fa81d55d74f388020504891226a0a364))
+
 ## [1.3.2](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.3.1...v1.3.2) (2026-07-31)
 
 ### Bug Fixes
