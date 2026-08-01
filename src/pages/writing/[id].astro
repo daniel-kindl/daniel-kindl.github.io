@@ -5,11 +5,12 @@ import Container from '../../components/ui/Container.astro';
 import Typography from '../../components/ui/Typography.astro';
 import Tag from '../../components/ui/Tag.astro';
 import Button from '../../components/ui/Button.astro';
+import TableOfContents from '../../components/ui/TableOfContents.astro';
 import { slugify } from '@lib/slug';
 import { getPublishedPosts } from '@lib/content';
 import { formatDate } from '@lib/formatDate';
 import { getReadingTime } from '@lib/readingTime';
-import { focusRingStyles } from '@lib/buttonStyles';
+import { getTocHeadings, hasToc as hasTocEntries } from '@lib/toc';
 
 export async function getStaticPaths() {
   const posts = await getPublishedPosts();
@@ -23,8 +24,8 @@ const { post } = Astro.props;
 const { Content, headings } = await render(post);
 const relatedProject = post.data.project ? await getEntry(post.data.project) : undefined;
 const readingTime = getReadingTime(post.body ?? '');
-const tocHeadings = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
-const hasToc = tocHeadings.length >= 2;
+const tocHeadings = getTocHeadings(headings);
+const hasToc = hasTocEntries(tocHeadings);
 ---
 
 <Layout
@@ -60,27 +61,7 @@ const hasToc = tocHeadings.length >= 2;
     <Container class="py-12 md:py-16">
       <div class="grid grid-cols-1 gap-8 md:grid-cols-12">
         <div class={hasToc ? 'md:col-span-8' : 'md:col-span-12'}>
-          {
-            hasToc && (
-              <details class="mb-8 max-w-3xl border border-(--border-color) md:hidden">
-                <summary class="flex min-h-[44px] cursor-pointer items-center p-4 font-mono text-xs text-(--text-muted) uppercase">
-                  [+] On This Page
-                </summary>
-                <ul class="space-y-1 px-4 pb-4 font-mono text-xs" data-toc>
-                  {tocHeadings.map((heading) => (
-                    <li class={heading.depth === 3 ? 'pl-4' : ''}>
-                      <a
-                        href={`#${heading.slug}`}
-                        class={`block py-2 text-(--text-muted) underline decoration-(--border-color) underline-offset-2 transition-colors hover:text-(--text-primary) hover:decoration-(--text-primary) ${focusRingStyles}`}
-                      >
-                        {heading.text}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            )
-          }
+          {hasToc && <TableOfContents headings={tocHeadings} variant="mobile" />}
           <div class="prose max-w-none md:max-w-3xl">
             <Content />
           </div>
@@ -106,69 +87,12 @@ const hasToc = tocHeadings.length >= 2;
 
         {
           hasToc && (
-            <aside
-              aria-label="Table of contents"
-              class="sticky top-6 hidden h-fit space-y-2 border-l border-(--border-color) pl-6 font-mono text-xs md:col-span-4 md:block"
-            >
-              <p class="text-[10px] text-(--text-muted) uppercase">On This Page</p>
-              <ul class="space-y-1" data-toc>
-                {tocHeadings.map((heading) => (
-                  <li class={heading.depth === 3 ? 'pl-4' : ''}>
-                    <a
-                      href={`#${heading.slug}`}
-                      class={`block py-1 text-(--text-muted) underline decoration-(--border-color) underline-offset-2 transition-colors hover:text-(--text-primary) hover:decoration-(--text-primary) ${focusRingStyles}`}
-                    >
-                      {heading.text}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </aside>
+            <div class="sticky top-6 hidden h-fit border-l border-(--border-color) pl-6 md:col-span-4 md:block">
+              <TableOfContents headings={tocHeadings} variant="desktop" />
+            </div>
           )
         }
       </div>
     </Container>
-
-    <script>
-      function initToc() {
-        const navLists = document.querySelectorAll<HTMLElement>('[data-toc]');
-        if (navLists.length === 0) return;
-
-        const allLinks = Array.from(navLists).flatMap((nav) =>
-          Array.from(nav.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')),
-        );
-        if (allLinks.length === 0) return;
-
-        const headingEls = new Set<HTMLElement>();
-        for (const link of allLinks) {
-          const href = link.getAttribute('href');
-          if (!href) continue;
-          const target = document.getElementById(href.slice(1));
-          if (target) headingEls.add(target);
-        }
-
-        function setActive(id: string) {
-          for (const link of allLinks) {
-            const isActive = link.getAttribute('href') === `#${id}`;
-            link.classList.toggle('text-(--text-primary)', isActive);
-            link.classList.toggle('font-bold', isActive);
-            link.classList.toggle('text-(--text-muted)', !isActive);
-          }
-        }
-
-        const observer = new IntersectionObserver(
-          (entries) => {
-            const visible = entries.filter((entry) => entry.isIntersecting);
-            if (visible.length > 0) setActive(visible[0].target.id);
-          },
-          { rootMargin: '-10% 0px -70% 0px' },
-        );
-
-        headingEls.forEach((el) => observer.observe(el));
-      }
-
-      initToc();
-      document.addEventListener('astro:page-load', initToc);
-    </script>
   </article>
 </Layout>

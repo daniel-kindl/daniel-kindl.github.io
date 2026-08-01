@@ -1,0 +1,90 @@
+---
+import type { MarkdownHeading } from 'astro';
+import { focusRingStyles } from '@lib/buttonStyles';
+
+// Owns the heading list and the scrollspy; the consumer owns placement. The
+// desktop variant is deliberately unpositioned so it can sit in a page's own
+// aside (case studies stack it above the Summary block) instead of demanding
+// its own grid column.
+interface Props {
+  headings: MarkdownHeading[];
+  variant: 'mobile' | 'desktop';
+}
+const { headings, variant }: Props = Astro.props;
+
+const linkClasses = `block text-(--text-muted) underline decoration-(--border-color) underline-offset-2 transition-colors hover:text-(--text-primary) hover:decoration-(--text-primary) ${focusRingStyles}`;
+---
+
+{
+  variant === 'mobile' ? (
+    <details class="mb-8 max-w-3xl border border-(--border-color) md:hidden">
+      <summary class="flex min-h-[44px] cursor-pointer items-center p-4 font-mono text-xs text-(--text-muted) uppercase">
+        [+] On This Page
+      </summary>
+      <ul class="space-y-1 px-4 pb-4 font-mono text-xs" data-toc>
+        {headings.map((heading) => (
+          <li class={heading.depth === 3 ? 'pl-4' : ''}>
+            <a href={`#${heading.slug}`} class={`py-2 ${linkClasses}`}>
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </details>
+  ) : (
+    <nav aria-label="Table of contents" class="space-y-2">
+      <p class="font-mono text-[10px] text-(--text-muted) uppercase">On This Page</p>
+      <ul class="space-y-1 font-mono text-xs" data-toc>
+        {headings.map((heading) => (
+          <li class={heading.depth === 3 ? 'pl-4' : ''}>
+            <a href={`#${heading.slug}`} class={`py-1 ${linkClasses}`}>
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+<script>
+  function initToc() {
+    const navLists = document.querySelectorAll<HTMLElement>('[data-toc]');
+    if (navLists.length === 0) return;
+
+    const allLinks = Array.from(navLists).flatMap((nav) =>
+      Array.from(nav.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')),
+    );
+    if (allLinks.length === 0) return;
+
+    const headingEls = new Set<HTMLElement>();
+    for (const link of allLinks) {
+      const href = link.getAttribute('href');
+      if (!href) continue;
+      const target = document.getElementById(href.slice(1));
+      if (target) headingEls.add(target);
+    }
+
+    function setActive(id: string) {
+      for (const link of allLinks) {
+        const isActive = link.getAttribute('href') === `#${id}`;
+        link.classList.toggle('text-(--text-primary)', isActive);
+        link.classList.toggle('font-bold', isActive);
+        link.classList.toggle('text-(--text-muted)', !isActive);
+      }
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting);
+        if (visible.length > 0) setActive(visible[0].target.id);
+      },
+      { rootMargin: '-10% 0px -70% 0px' },
+    );
+
+    headingEls.forEach((el) => observer.observe(el));
+  }
+
+  initToc();
+  document.addEventListener('astro:page-load', initToc);
+</script>
