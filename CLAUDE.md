@@ -71,7 +71,7 @@ schema from `src/content.config.ts`.
 ## Architecture
 
 **Content is data-driven via two Zod-validated collections** (`src/content.config.ts`), loaded
-from `src/content/{projects,writing}/*.md`:
+from `src/content/{projects,writing}/*.{md,mdx}`:
 
 - `projects`: title, summary, role, stack, links (production/repository/release, all optional
   URLs — `release` renders as a third "View Release" button on the case-study page when present),
@@ -95,8 +95,17 @@ use relative imports instead (established before the aliases existed); newer cod
 page-level layouts — `Container`, `Typography` (h1/h2/h3/body/eyebrow/mono variants), `Button` /
 `ExternalLink` (share variant classes from `src/lib/buttonStyles.ts`; `ExternalLink` always sets
 `target="_blank" rel="noopener noreferrer"` and appends a screen-reader "(opens in new tab)" label
-plus an optional icon), `Tag`, `Timeline`/`TimelineEvent`. `src/components/portfolio/` holds
-content-specific composites (`ProjectCard`, `WritingPostCard`).
+plus an optional icon), `Tag`, `Timeline`/`TimelineEvent`, `TableOfContents` (shared by
+`writing/[id]` and `projects/[id]`; owns the scrollspy, the consuming page owns placement).
+`src/components/portfolio/` holds content-specific composites (`ProjectCard`, `WritingPostCard`).
+
+**Components referenced from content** live in `src/components/content/` (`Figure`, `Swatch`),
+kept separate from `ui/` so it's clear which are safe to import from a `.mdx` entry. Entries stay
+`.md` unless they need a component — only `src/content/projects/ocho.mdx` is MDX today. See
+`docs/content-guide.md` § Adding media, ADR #12 in `docs/tech-decisions.md`, and `DESIGN.md`
+§ Media & Figures (a figure is evidence, never atmosphere; no GIFs — the Lighthouse budget gates
+the deploy). `generate-assets.js` has its own `{md,mdx}` extension filter that must track the
+content loader's glob.
 
 **Theming uses a `data-theme` attribute, not Tailwind's `.dark` class.** `ThemeScript.astro`
 (inlined in `<head>` before paint, to avoid FOUC) and the inline script in `Header.astro` read/write

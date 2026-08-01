@@ -219,6 +219,29 @@ marking each Timeline event (`rounded-full`), which exists purely as a point-anc
 evidence of a rounded-corner language. Borders are always `1px` solid in the hairline token; they
 serve double duty as dividers (`border-b`) and structural rails (`border-l`).
 
+## Media & Figures
+
+The system was text-only until case studies needed to show things. The rule that keeps imagery from
+turning "The Build Log" into a brochure: **a figure is evidence, never atmosphere.** If an image
+can't be captioned with what it proves, it doesn't belong on the page — no hero shots, no stock
+photography, no illustration, no decorative screenshots of a UI already described in the prose.
+
+- **Frame:** a `1px` hairline border around the media itself, zero radius, no shadow — the same
+  treatment every other bounded region gets. The figure never becomes a lifted card.
+- **Caption:** required, in mono at `0.75rem`/`graphite`, below the media. It behaves like the
+  metadata rails elsewhere in the system: a system readout describing the artifact above it.
+- **Motion:** MP4/WebM only, `muted playsinline loop preload="metadata"` with a poster frame.
+  **Never a GIF** — a few seconds of UI motion runs 2–5 MB as GIF, can't be optimized by `sharp`,
+  and the deploy's Lighthouse budget (LCP ≤ 2500ms, perf ≥ 0.9) won't absorb it.
+- **Images** go through `astro:assets` so dimensions are intrinsic and CLS stays at zero. Raw
+  `<img>` in content is not the pattern.
+- **Swatches** are the preferred way to show a color spec: a fixed 16×16 hairline-bordered chip next
+  to its hex value in mono. It carries a palette as evidence at zero image weight, and it reads as a
+  spec readout rather than a design showcase — see the phase-color table in the Ocho case study.
+
+Both are implemented in `src/components/content/` (`Figure.astro`, `Swatch.astro`) and styled under
+`.prose` in `src/styles/global.css`.
+
 ## Components
 
 Component philosophy: **utilitarian and inevitable.** No control softens itself with rounding or
@@ -283,6 +306,17 @@ all the communicative work.
 - A `border-l` vertical rail with one small filled circle (`rounded-full`, the system's only
   rounded shape) per event, title left / date right (mono, `tabular-nums`, uppercase, wide
   tracking) on desktop, stacked on mobile.
+
+### Table of Contents (long-form writing and case studies)
+
+- Mono `text-xs` links in a `<nav>`, appearing only when an entry has two or more H2/H3 headings.
+- **Desktop:** unpositioned by the component itself — the consuming page places it. Writing posts
+  give it its own sticky `border-l` column; case studies stack it inside the existing metadata
+  aside, above Summary, so it shares that rail rather than competing for a second one.
+- **Mobile:** a bordered `<details>` disclosure labelled `[+] On This Page`, following the Bracket
+  Label Rule.
+- The active entry un-mutes to `ink` and goes bold via an `IntersectionObserver` scrollspy — the
+  same "current state" vocabulary the header's `aria-current` underline uses.
 
 ## Do's and Don'ts
 

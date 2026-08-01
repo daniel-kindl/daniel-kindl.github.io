@@ -43,6 +43,53 @@ delivered`, `## Outcome` as a loose convention, not an enforced structure.
    `src/pages/projects/[id].astro` picks up every entry in the collection automatically, and it
    appears on `/projects` and (if `weight` is high enough) the homepage.
 
+## Adding media or components to an entry
+
+Entries are plain `.md` by default. Rename to `.mdx` only when the entry actually needs a
+component — the filename minus extension is still the `id`, so `ocho.md` → `ocho.mdx` keeps the
+same URL and OG image. Both collections' loaders already glob `{md,mdx}`; nothing else changes.
+(See ADR #12 in `docs/tech-decisions.md` for why MDX is opt-in rather than the default.)
+
+Components meant for content live in `src/components/content/` and are imported below the
+frontmatter:
+
+```mdx
+---
+title: 'Project Title'
+# ...rest of frontmatter
+---
+
+import Figure from '@components/content/Figure.astro';
+import Swatch from '@components/content/Swatch.astro';
+import phaseScreen from '@assets/projects/ocho-phase-screen.png';
+
+<Figure
+  src={phaseScreen}
+  alt="Session screen showing the red work plate"
+  caption="Work phase — full-bleed red-500, white on-plate text."
+/>
+
+| Phase  | Light plate                | On-plate |
+| ------ | -------------------------- | -------- |
+| `WORK` | <Swatch color="#E5484D" /> | White    |
+```
+
+- **`Figure`** takes either an imported image (`src`) or a path to a video under `public/`
+  (`video`), never both. `caption` is always required and `alt` is required for images — the
+  component throws at build time otherwise, so a missing caption fails CI rather than shipping.
+- **Images** go in `src/assets/` and must be imported, not referenced by URL string — that's what
+  routes them through `astro:assets` for AVIF/WebP conversion and intrinsic dimensions.
+- **No GIFs.** Use MP4/WebM via `Figure`'s `video` prop with a `poster`. A GIF of UI motion will
+  fail the Lighthouse budget that gates deploys (`lighthouserc.json`).
+- **`Swatch`** renders a hex chip inline, including inside markdown table cells. Use it for color
+  specs instead of describing colors in prose.
+
+`DESIGN.md` § Media & Figures has the rule these components encode: a figure is evidence, never
+atmosphere. If you can't caption what it proves, leave it out.
+
+MDX is stricter than Markdown about raw `{` and `<` outside code fences — if a build fails on an
+`.mdx` file with a parse error, that's usually why.
+
 ## Adding a new writing post
 
 1. Create `src/content/writing/<slug>.md`. The filename becomes the entry `id`, used both for the
