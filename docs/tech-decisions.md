@@ -258,16 +258,16 @@ not at the point in the argument where the evidence belongs. MDX allows componen
 exact position they're being cited.
 
 **Decision:** Install `@astrojs/mdx` and register it in `astro.config.mjs`. Both collections in
-`src/content.config.ts` already glob `**/[^_]*.{md,mdx}`, so no schema or loader change was needed
-— the loader had anticipated MDX from the start. Entries stay `.md` by default and are promoted to
-`.mdx` only when they actually need a component; at time of writing only
-`src/content/projects/ocho.mdx` is MDX. Components intended for content live in
+`src/content.config.ts` already glob `**/[^_]*.{md,mdx}`, so no schema or loader change was needed;
+the loader had anticipated MDX from the start. `.mdx` is the format for all entries in both
+collections rather than a per-entry opt-in, so there is one authoring path to learn and no
+judgment call about when an entry has earned the upgrade. Components intended for content live in
 `src/components/content/` (`Figure.astro`, `Swatch.astro`), separate from `src/components/ui/`
 primitives, so it's clear which are safe to reference from an entry.
 
 **Consequences:** MDX compiles at build time and ships no client JS, so the Lighthouse
 `resource-summary:script:size` budget (30 KB) is unaffected. Prettier formats `.mdx` with its
-built-in parser; no plugin needed. The cost is a second content format to keep in mind — an `.mdx`
-file will silently not render components if the integration is ever removed, and MDX is stricter
-than Markdown about raw HTML and unescaped `{`/`<`. Keep entries on `.md` unless a component earns
-the upgrade.
+built-in parser; no plugin needed. The cost is that MDX is stricter than Markdown about raw HTML
+and unescaped `{` and `<` outside code fences, which is the usual cause when an entry fails to
+build. `generate-assets.js` filters content files by extension independently of the loader, so its
+filter has to track this glob or an entry silently ships without an OG image.

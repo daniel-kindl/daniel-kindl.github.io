@@ -9,7 +9,7 @@ the offending field — that's the fastest way to check you got a new entry righ
 
 ## Adding a new project
 
-1. Create `src/content/projects/<slug>.md`. The filename (minus extension) becomes the entry
+1. Create `src/content/projects/<slug>.mdx`. The filename (minus extension) becomes the entry
    `id`, which becomes the URL: `/projects/<slug>`. Use kebab-case.
 2. Fill in frontmatter:
 
@@ -45,10 +45,8 @@ delivered`, `## Outcome` as a loose convention, not an enforced structure.
 
 ## Adding media or components to an entry
 
-Entries are plain `.md` by default. Rename to `.mdx` only when the entry actually needs a
-component — the filename minus extension is still the `id`, so `ocho.md` → `ocho.mdx` keeps the
-same URL and OG image. Both collections' loaders already glob `{md,mdx}`; nothing else changes.
-(See ADR #12 in `docs/tech-decisions.md` for why MDX is opt-in rather than the default.)
+Every entry in both collections is `.mdx`. The filename minus extension is still the `id`, so the
+URL and OG image path are unaffected by the extension. (See ADR #12 in `docs/tech-decisions.md`.)
 
 Components meant for content live in `src/components/content/` and are imported below the
 frontmatter:
@@ -92,7 +90,7 @@ MDX is stricter than Markdown about raw `{` and `<` outside code fences — if a
 
 ## Adding a new writing post
 
-1. Create `src/content/writing/<slug>.md`. The filename becomes the entry `id`, used both for the
+1. Create `src/content/writing/<slug>.mdx`. The filename becomes the entry `id`, used both for the
    URL (`/writing/<slug>`) and in `src/pages/rss.xml.js`.
 2. Fill in frontmatter:
 
