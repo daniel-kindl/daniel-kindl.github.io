@@ -8,7 +8,7 @@
 [![Svelte](https://img.shields.io/badge/Svelte-5-FF3E00?logo=svelte&logoColor=white)](https://svelte.dev)
 [![Node](https://img.shields.io/badge/node-%3E%3D24-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 
-Production portfolio site at [daniel-kindl.github.io](https://daniel-kindl.github.io), built with
+Production portfolio site at [danielkindl.dev](https://danielkindl.dev), built with
 Astro 7, TypeScript (strict), Tailwind CSS 4, and Svelte 5 islands for interactive pieces.
 
 ## Features
