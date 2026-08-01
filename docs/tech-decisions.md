@@ -240,3 +240,34 @@ arguments are effectively swapped, so every commit line silently renders as an e
 the changelog body is dropped entirely with no error. `.github/dependabot.yml` ignores major-version
 updates for this package for the same reason ADR #10 ignores TypeScript majors — verify
 `commitPartial` output manually (`npx semantic-release --dry-run --no-ci`) before ever bumping it.
+
+---
+
+## 12. Content authoring: `@astrojs/mdx` alongside plain Markdown
+
+**Status:** Accepted — 2026-08-01
+
+**Context:** Case studies had outgrown plain prose. The Ocho entry described a four-state color
+system entirely in words — the one kind of content that should be shown rather than told — and
+there was no way to put a color swatch, a captioned figure, or any component into a content
+entry. Three options were considered. Raw HTML inside `.md` works today but puts inline styles and
+unscoped class names into content files, where Tailwind's scanner can't see them and no type
+checking applies. A frontmatter-driven media array (schema-validated, rendered by
+`src/pages/projects/[id].astro`) keeps content clean but can only place figures around the prose,
+not at the point in the argument where the evidence belongs. MDX allows components inline at the
+exact position they're being cited.
+
+**Decision:** Install `@astrojs/mdx` and register it in `astro.config.mjs`. Both collections in
+`src/content.config.ts` already glob `**/[^_]*.{md,mdx}`, so no schema or loader change was needed
+— the loader had anticipated MDX from the start. Entries stay `.md` by default and are promoted to
+`.mdx` only when they actually need a component; at time of writing only
+`src/content/projects/ocho.mdx` is MDX. Components intended for content live in
+`src/components/content/` (`Figure.astro`, `Swatch.astro`), separate from `src/components/ui/`
+primitives, so it's clear which are safe to reference from an entry.
+
+**Consequences:** MDX compiles at build time and ships no client JS, so the Lighthouse
+`resource-summary:script:size` budget (30 KB) is unaffected. Prettier formats `.mdx` with its
+built-in parser; no plugin needed. The cost is a second content format to keep in mind — an `.mdx`
+file will silently not render components if the integration is ever removed, and MDX is stricter
+than Markdown about raw HTML and unescaped `{`/`<`. Keep entries on `.md` unless a component earns
+the upgrade.

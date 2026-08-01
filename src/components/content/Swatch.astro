@@ -1,0 +1,19 @@
+---
+// Inline color chip for spec tables in case-study content. The chip is the
+// evidence — the hex label next to it is what makes the value quotable.
+interface Props {
+  /** Any CSS color; rendered literally so the value on screen is the value shipped. */
+  color: string;
+  /** Overrides the label when the raw value isn't the useful thing to read. */
+  label?: string;
+}
+const { color, label }: Props = Astro.props;
+---
+
+<span class="inline-flex items-center gap-2 align-middle whitespace-nowrap">
+  <span
+    class="inline-block h-4 w-4 shrink-0 border border-(--border-color)"
+    style={`background-color: ${color}`}
+    aria-hidden="true"></span>
+  <code class="font-mono text-[10px] tracking-tight uppercase">{label ?? color}</code>
+</span>

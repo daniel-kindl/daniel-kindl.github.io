@@ -1,0 +1,54 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+// The single media primitive for case-study content. Figures are evidence, not
+// decoration (see DESIGN.md § Media & Figures), so `caption` is required — a
+// figure that can't say what it proves doesn't belong on the page.
+//
+// Images go through astro:assets for AVIF/WebP and intrinsic dimensions; video
+// is the answer for motion, never GIF, which the Lighthouse budget can't absorb.
+interface Props {
+  /** Imported image asset. Mutually exclusive with `video`. */
+  src?: ImageMetadata;
+  /** Path to an MP4/WebM under public/. Mutually exclusive with `src`. */
+  video?: string;
+  /** Poster frame for `video`, so the first paint isn't an empty box. */
+  poster?: string;
+  /** Required for images; video is decorative-by-default and describes itself via the caption. */
+  alt?: string;
+  caption: string;
+  /** Constrains a tall portrait asset (e.g. a phone screenshot) so it doesn't dominate the column. */
+  maxWidth?: string;
+}
+const { src, video, poster, alt, caption, maxWidth }: Props = Astro.props;
+
+if (!src && !video) {
+  throw new Error('Figure requires either `src` (image) or `video`.');
+}
+if (src && video) {
+  throw new Error('Figure takes `src` or `video`, not both.');
+}
+if (src && alt === undefined) {
+  throw new Error('Figure with an image requires `alt`.');
+}
+---
+
+<figure style={maxWidth ? `max-width: ${maxWidth}` : undefined}>
+  {src && <Image src={src} alt={alt!} loading="lazy" decoding="async" />}
+  {
+    video && (
+      <video
+        src={video}
+        poster={poster}
+        muted
+        playsinline
+        loop
+        controls
+        preload="metadata"
+        aria-label={caption}
+      />
+    )
+  }
+  <figcaption>{caption}</figcaption>
+</figure>

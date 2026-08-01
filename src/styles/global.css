@@ -259,6 +259,28 @@
     height: auto;
   }
 
+  /* Figures are evidence, not decoration: a hairline frame, never a card or shadow. */
+  .prose figure {
+    margin: 1.5rem 0;
+  }
+
+  .prose figure img,
+  .prose figure video {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-primary);
+  }
+
+  .prose figcaption {
+    margin-top: 0.5rem;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+
   .prose p,
   .prose li,
   .prose h2,
