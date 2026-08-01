@@ -1,0 +1,80 @@
+---
+title: 'Ocho'
+summary: 'Minimal, drift-free EMOM and Tabata interval timer for Android, with full-screen phase colors legible mid-effort and self-updating release channels outside Google Play.'
+role: 'Solo Developer'
+stack: ['Kotlin', 'Jetpack Compose', 'Hilt', 'Android', 'GitHub Actions']
+links:
+  repository: 'https://github.com/daniel-kindl/ocho'
+  release: 'https://github.com/daniel-kindl/ocho/releases/latest'
+status: 'maintaining'
+dates:
+  start: 2026-05-05
+  end: null
+weight: 9
+---
+
+import Swatch from '@components/content/Swatch.astro';
+
+## Context
+
+Built for reliability during physical exercise: a minimal, single-purpose workout interval timer for EMOM and Tabata sessions, rather than a general-purpose fitness app with a timer bolted on. The constraint driving every design decision is that you are mid-effort and usually not looking at the screen.
+
+The name fits the same brief. An _ocho_ is a figure-eight step in tango, and it is Spanish for _eight_ — the round count of a classic Tabata.
+
+## Architecture
+
+Kotlin and Jetpack Compose on Material 3, with Hilt for dependency injection and a clean-architecture split across `domain`, `data`, and `ui`. The domain layer carries no `android.*` imports, which is what makes the timing logic testable without an emulator — the engines, the config models, and the version comparison all run as plain JVM unit tests.
+
+## Drift-free timing
+
+Every interval boundary is an absolute timestamp anchored to `startTime + N × intervalMillis` and recalculated on each tick, rather than a sum of `delay()` calls. A late or missed tick self-corrects instead of compounding; over a twenty-minute session that is the difference between finishing on the minute and finishing several seconds late.
+
+Pause works the same way, accumulating total paused duration and subtracting it:
+
+```
+effectiveElapsed = now - startTime - totalPausedMs
+```
+
+The anchoring survives any number of pauses, because nothing is ever accumulated forward.
+
+## The phase color system
+
+The session screen's background is the primary information channel, not decoration. Four states, each owning one full-bleed plate:
+
+| Phase      | Light plate                | Dark plate                 | On-plate text |
+| ---------- | -------------------------- | -------------------------- | ------------- |
+| `PREPARE`  | <Swatch color="#E8A317" /> | <Swatch color="#A8720A" /> | Ink / White   |
+| `WORK`     | <Swatch color="#E5484D" /> | <Swatch color="#B3282D" /> | White         |
+| `REST`     | <Swatch color="#B0D8BE" /> | <Swatch color="#5CA47C" /> | Ink           |
+| `COMPLETE` | <Swatch color="#7C6CF0" /> | <Swatch color="#5645C4" /> | White         |
+
+Rest is a light plate deliberately, and it is the one phase that does not drop to a 700 step in dark theme. Red-500 and green-500 sit at nearly the same lightness, so under deuteranopia — roughly 8% of men, in a category that skews male — work and rest converge into two similar mid-tones and the primary information channel fails outright. Separating them by lightness as well as hue keeps them distinct with no color vision at all, and the on-plate text flips from white to ink as a second, redundant signal.
+
+```kotlin
+fun phaseTheme(phase: Phase, dark: Boolean): PhaseTheme = when (phase) {
+    Phase.PREPARE  -> if (dark) PhaseTheme(Amber700, Paper) else PhaseTheme(Amber500, Ink)
+    Phase.WORK     -> if (dark) PhaseTheme(Red700, Paper)   else PhaseTheme(Red500, Paper)
+    Phase.REST     -> if (dark) PhaseTheme(Green400, Ink)   else PhaseTheme(Green200, Ink)
+    Phase.COMPLETE -> if (dark) PhaseTheme(Violet700, Paper) else PhaseTheme(Violet500, Paper)
+}
+```
+
+Phase is never carried by color alone — the plate, the uppercase label, the audio tone, and the haptic all say the same thing. Because all four signal colors are spent on phases, errors cannot be red-on-red: they render as a tinted plate inside the layout instead, and an error raised mid-session waits for the next rest interval rather than covering the running clock.
+
+## Distribution outside Google Play
+
+An in-app checker queries the GitHub Releases API and installs through `DownloadManager` and `PackageInstaller`, so the app updates itself without a store. Stable and dev channels ship as separate `applicationId`s with separate data — a dev build installs alongside the stable one, and neither offers the other's updates. Dev prereleases are cut on every push to `dev`, stable builds on every tag off `main`.
+
+## Build discipline
+
+Kotlin, detekt, and Android Lint all run with warnings-as-errors, and every public declaration in `src/main` requires KDoc. Unit tests and static analysis gate CI on both branches. Presets are DataStore-backed per timer type; sound feedback plays on the alarm stream so silent mode cannot mute a workout cue, and vibration is independently toggleable.
+
+## Trade-offs
+
+- **No Play Store.** Distribution costs discovery and forces users through the "install unknown apps" prompt. In exchange, a release reaches devices the moment CI tags it, with no review queue, and the in-app updater closes the loop.
+- **Material You off.** Rejecting dynamic color gives up personalization that Android users reasonably expect. A timer that encodes meaning in color cannot delegate its palette to a wallpaper — work has to be red on every device.
+- **Warnings-as-errors and mandatory KDoc.** Small changes cost more up front. The payoff is that the domain layer stayed dependency-free long enough to be worth testing, rather than eroding one convenient import at a time.
+
+## Outcome
+
+Nine tagged releases so far, from `v1.0.0` through `v3.0.0` — the last of which carried the rebrand from DK Timer to Ocho, a documented design system, and GPL-3.0 licensing with a dual-licensing provision. I still actively develop and maintain it.

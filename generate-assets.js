@@ -93,14 +93,18 @@ function extractTitle(markdown) {
 
 function collectEntries(dir) {
   if (!fs.existsSync(dir)) return [];
-  return fs
-    .readdirSync(dir)
-    .filter((file) => file.endsWith('.md'))
-    .map((file) => {
-      const title = extractTitle(fs.readFileSync(path.join(dir, file), 'utf-8'));
-      return title ? { slug: file.replace(/\.md$/, ''), title } : null;
-    })
-    .filter((entry) => entry !== null);
+  return (
+    fs
+      .readdirSync(dir)
+      // Must track the content loader's glob in src/content.config.ts (`{md,mdx}`) —
+      // an entry missed here silently ships a case study with a 404 OG image.
+      .filter((file) => file.endsWith('.md') || file.endsWith('.mdx'))
+      .map((file) => {
+        const title = extractTitle(fs.readFileSync(path.join(dir, file), 'utf-8'));
+        return title ? { slug: file.replace(/\.mdx?$/, ''), title } : null;
+      })
+      .filter((entry) => entry !== null)
+  );
 }
 
 function drawOgFrame(ctx) {
