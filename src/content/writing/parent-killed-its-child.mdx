@@ -1,0 +1,62 @@
+---
+title: 'The Parent Killed Its Child: Programming Terminology Read Literally'
+summary: 'Developers spend all day saying things that would alarm anyone outside the room. A short tour of where the vocabulary actually came from, and why every bit of it is reasonable in context.'
+date: 2026-08-02
+tags: ['Terminology', 'Humor', 'Linux', 'Processes']
+draft: false
+---
+
+## One line of Android code
+
+I was reading through some Android code recently and stopped on this:
+
+```kotlin
+val vibrator = context.getSystemService(VibratorManager::class.java).defaultVibrator
+vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE))
+```
+
+There is nothing wrong with it. `Vibrator` is the system service that drives the haptic motor, and `vibrate()` makes it vibrate for 200 milliseconds. Every identifier in those two lines is named as well as it could be.
+
+It was also the first time I had read the sentence "the vibrator vibrates" in a professional context and heard it as a sentence. That got me looking at the rest of the vocabulary I use every day without flinching, and a lot of it does not survive being read out loud.
+
+## The process table is a family tragedy
+
+Unix process management is the worst offender. A process creates another process by calling `fork()`, which duplicates it. The original is the _parent_, the copy is the _child_. So "we spawned three children" is a normal thing to put in a commit message, and "the parent is waiting on its children" is a normal thing to say in a status meeting.
+
+If the parent exits first, the child keeps running with no parent. The kernel hands it to PID 1, or to the nearest ancestor that called `prctl(PR_SET_CHILD_SUBREAPER)` to volunteer for the job. The term for a process in that state is _orphan_, and that isn't my word for it. It's the word in the `prctl(2)` manual page.
+
+The other direction is worse. When a child exits, it doesn't disappear right away. Its entry stays in the process table holding its exit status, waiting for the parent to collect it. Until then it runs no code and occupies a slot, and it is called a _zombie_. The parent clears it by calling `wait()`, and the verb for that is _reaping_, which is where the subreaper flag above got its name.
+
+So: the parent reaps its zombie children. I'm not embellishing. That sentence is four consecutive pieces of correct technical vocabulary, and if you say it at work nobody looks up.
+
+## Nobody here is actually dying
+
+The violent-sounding half of this is mostly a misreading, which I find funnier than the alternative.
+
+`kill` doesn't kill anything. It sends a signal, and the process mostly gets to decide what that means. `kill -HUP` on a daemon conventionally means "reload your configuration," which is closer to a tap on the shoulder. `kill -STOP` pauses the process until you send `kill -CONT`. The command is named after its most common use, not its actual job. Exactly two signals can't be caught, blocked, or ignored: SIGKILL and SIGSTOP. That's why `kill -9` is the one people reach for when something has stopped responding.
+
+"We killed the thread" is usually a lie too. You mostly can't kill a thread safely, because you have no idea which locks it holds at the moment you stop it. Java shipped `Thread.stop()` for exactly this purpose, deprecated it in 1998, and finally made it throw an exception outright in Java 20. What actually happens is that you set a flag, or call `interrupt()`, and hope the thread checks it.
+
+A _daemon_, meanwhile, is just a background process with no controlling terminal. The name comes from Maxwell's demon, the thought experiment, not from anything with horns. And losing a service's _heartbeat_ means its keepalive messages stopped arriving. "The heartbeat stopped, so we killed it and spawned a replacement" is an ordinary sentence about a container restarting.
+
+## The server is listening
+
+A server that is _listening_ isn't eavesdropping on anything. `listen(2)` marks a socket as passive and sets the size of a queue. Incoming connections pile up in that queue until the program calls `accept(2)` to take one off it. Listening is the opposite of active: a socket sitting there doing nothing, which is the least sinister state available to it.
+
+The rest of the network vocabulary has the same problem: it makes machines sound like they have moods. "The server refused the connection" is a closed port sending a TCP reset. "The handshake failed" is usually two TLS implementations that couldn't agree on parameters. Nobody was offended.
+
+## Mount it, and unmount it before you remove it
+
+Filesystems get _mounted_, meaning attached to the directory tree at a _mount point_ so their contents appear at a path. Nothing is physically attached to anything. It's a naming decision from a period when storage genuinely did get mounted, onto a tape drive, by hand.
+
+"Unmount it before you remove it" is the one that sounds like superstition and isn't. Writes to a mounted filesystem sit in the page cache before they reach the device, so pulling the drive before that flush completes loses whatever hadn't been written yet, and can leave the filesystem metadata inconsistent. Unmounting forces the flush and marks the filesystem clean.
+
+The detail I enjoy most here: the command is `umount`, not `unmount`. Somebody dropped a letter in the early seventies and every Unix since has kept it.
+
+## Takeaway
+
+The joke only works in one direction, because every one of these terms is doing its job well. A process tree has parents and children because processes really do create other processes, and the relationship really is hierarchical. A filesystem gets attached at a point. A socket waits. Whoever named these things needed a short word for a specific relationship and picked one that already described that shape, which is what naming is supposed to do. The alternative was inventing vocabulary nobody could remember, and there is plenty of that already.
+
+The comedy lives entirely in the register. These are precise technical terms that happen to be spelled the same as ordinary English words with far more dramatic meanings, and the gap only opens up when somebody outside the room hears one.
+
+Which brings it back to `vibrator.vibrate()`. There is nothing wrong with that line. It's just true.
