@@ -4,7 +4,7 @@ import { buttonBaseStyles, buttonVariants, type ButtonVariant } from '@lib/butto
 
 interface Props extends Omit<HTMLAttributes<'a'>, 'target' | 'rel' | 'href'> {
   href: string;
-  variant?: ButtonVariant | 'plain';
+  variant?: ButtonVariant;
   class?: string;
   showIcon?: boolean;
 }
@@ -18,9 +18,7 @@ const {
 }: Props = Astro.props;
 
 const variantClass =
-  variant === 'plain'
-    ? 'min-h-[44px] min-w-[44px]'
-    : `${buttonBaseStyles} ${buttonVariants[variant]}`;
+  variant === 'plain' ? buttonVariants.plain : `${buttonBaseStyles} ${buttonVariants[variant]}`;
 const combinedClass = ['inline-flex items-center gap-1', variantClass, className]
   .filter(Boolean)
   .join(' ');
