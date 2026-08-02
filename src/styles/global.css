@@ -17,11 +17,20 @@
        minimum for non-text focus indicators (WCAG 1.4.11). */
     --accent-focus: #047857;
 
-    /* Shiki Light/Dark Variable Tokens mapped directly to custom variables */
-    --shiki-light: var(--text-primary);
-    --shiki-dark: var(--text-primary);
-    --shiki-light-bg: transparent;
-    --shiki-dark-bg: transparent;
+    /* Shiki's `css-variables` theme emits --astro-code-*, not --shiki-*. Ratios
+       are against the code background, which is --bg-primary showing through.
+       All clear 4.5:1 (WCAG 1.4.3); the floor is --token-constant at 4.77:1. */
+    --astro-code-background: transparent;
+    --astro-code-foreground: var(--text-primary);
+    --astro-code-token-comment: #666666; /* 5.45:1 */
+    --astro-code-token-punctuation: #666666; /* 5.45:1 */
+    --astro-code-token-keyword: #9333ea; /* 5.11:1 */
+    --astro-code-token-string: #047857; /* 5.21:1 */
+    --astro-code-token-string-expression: #047857; /* 5.21:1 */
+    --astro-code-token-function: #1d4ed8; /* 6.37:1 */
+    --astro-code-token-constant: #b45309; /* 4.77:1 */
+    --astro-code-token-parameter: var(--text-primary);
+    --astro-code-token-link: #047857; /* 5.21:1 */
   }
 
   :root[data-theme='dark'] {
@@ -32,6 +41,16 @@
     /* --accent already clears 3:1 against the dark background, so the focus
        ring can use it directly instead of the light-mode-only darker shade. */
     --accent-focus: #10b981;
+
+    /* Lighter token shades, since these sit on #0a0a0a. Floor is 7.57:1. */
+    --astro-code-token-comment: #a0a0a0; /* 7.57:1 */
+    --astro-code-token-punctuation: #a0a0a0; /* 7.57:1 */
+    --astro-code-token-keyword: #c4b5fd; /* 10.72:1 */
+    --astro-code-token-string: #6ee7b7; /* 12.99:1 */
+    --astro-code-token-string-expression: #6ee7b7; /* 12.99:1 */
+    --astro-code-token-function: #93c5fd; /* 10.98:1 */
+    --astro-code-token-constant: #fcd34d; /* 13.73:1 */
+    --astro-code-token-link: #6ee7b7; /* 12.99:1 */
   }
 
   html {
