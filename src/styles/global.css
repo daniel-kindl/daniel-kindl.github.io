@@ -224,7 +224,8 @@
     font-size: 0.875em;
     background-color: var(--border-color);
     padding: 0.15em 0.4em;
-    border-radius: 3px;
+    /* No radius: the timeline dot is the system's only rounded shape
+       (DESIGN.md — "sharp rectangles only"). */
     color: var(--text-primary);
   }
 
