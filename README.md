@@ -5,11 +5,10 @@
 [![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)](https://astro.build)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-[![Svelte](https://img.shields.io/badge/Svelte-5-FF3E00?logo=svelte&logoColor=white)](https://svelte.dev)
 [![Node](https://img.shields.io/badge/node-%3E%3D24-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 
 Production portfolio site at [danielkindl.dev](https://danielkindl.dev), built with
-Astro 7, TypeScript (strict), Tailwind CSS 4, and Svelte 5 islands for interactive pieces.
+Astro 7, TypeScript (strict) and Tailwind CSS 4. No island framework is installed — see ADR #15.
 
 ## Features
 
@@ -48,6 +47,7 @@ run, so this is a local-only setup step.
 | `npm run build`           | Build static production output                          |
 | `npm run preview`         | Preview built output                                    |
 | `npm run typecheck`       | Run Astro type checks                                   |
+| `npm test`                | Run the `node --test` suite over `src/lib/*.test.ts`    |
 | `npm run lint`            | Run ESLint                                              |
 | `npm run lint:fix`        | Run ESLint with autofix                                 |
 | `npm run format`          | Format files with Prettier                              |
@@ -60,9 +60,11 @@ When using Claude Code, start the dev server with `astro dev --background` and m
 ## CI/CD
 
 Pull requests to `master` run `npm run generate-assets` → `npm run lint` → `npm run format:check` →
-`astro check` → `npm run build` (`.github/workflows/ci.yml`). Pushes to `master` build the site,
-run a Lighthouse CI budget check (`lighthouserc.json`), and deploy to GitHub Pages
-(`.github/workflows/deploy.yml`).
+`astro check` → `npm test` → `npm run build` (`.github/workflows/ci.yml`). Pushes to `master` run
+that same gate set, then a Lighthouse CI budget check (`lighthouserc.json`), then `semantic-release`,
+then a second build so the footer carries the newly released version, and finally deploy to GitHub
+Pages (`.github/workflows/deploy.yml`). Releasing after the gates rather than before means a failed
+build can't leave a tag behind for a version that never shipped.
 
 Commits are enforced via Husky + commitlint using
 [Conventional Commits](https://www.conventionalcommits.org/) (`type: description`, e.g. `feat:`,

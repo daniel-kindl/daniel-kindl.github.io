@@ -5,8 +5,8 @@ this file) and `docs/tech-decisions.md` for the ADR log behind these choices.
 
 ## Project
 
-Daniel Kindl's portfolio site: Astro 7 + TypeScript (strict) + Tailwind CSS 4, with Svelte 5 islands
-for interactive "playground" pieces. Static output, deployed to GitHub Pages.
+Daniel Kindl's portfolio site: Astro 7 + TypeScript (strict) + Tailwind CSS 4. No island framework
+is installed — the site ships zero client-side components. Static output, deployed to GitHub Pages.
 
 ## Commands
 
@@ -15,14 +15,17 @@ npm run dev             # astro dev — foreground. See below for background mod
 npm run build            # astro build — static output to dist/
 npm run preview          # preview built output
 npm run typecheck        # astro check
-npm run lint             # eslint .
-npm run lint:fix         # eslint . --fix
+npm run lint             # eslint . --max-warnings 0 (warnings fail)
+npm run lint:fix         # eslint . --fix --max-warnings 0
+npm test                 # node --test over src/lib/*.test.ts
 npm run format            # prettier --write .
 npm run format:check     # prettier --check .
 npm run generate-assets  # regenerate public/assets/meta PNGs, apple-touch-icon.png, and icon.svg (uses `canvas`)
 ```
 
-There is no test runner/test script in this repo (`directory-sync-tool` project referenced in
+Tests use Node's built-in runner with native type stripping — no test dependency, no config. They
+cover only the pure helpers in `src/lib/` that have no `astro:content` value imports; `content.ts`
+and `buildInfo.ts` are deliberately out of scope. (The `directory-sync-tool` project referenced in
 content is a separate C#/.NET repo with its own xUnit suite — not this one).
 
 When starting the dev server, use background mode:
@@ -34,10 +37,15 @@ astro dev --background
 Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
 CI (`.github/workflows/ci.yml`) runs on PRs to `master`: `npm run generate-assets` → `npm run lint`
-→ `npm run format:check` → `astro check` → `npm run build`. Deploy (`.github/workflows/deploy.yml`)
-runs on push to `master`: build, then a
-Lighthouse CI budget check (`lighthouserc.json`) before publishing to GitHub Pages. If you change
-anything affecting bundle size, LCP, or accessibility, expect Lighthouse to gate the deploy.
+→ `npm run format:check` → `astro check` → `npm test` → `npm run build`. Deploy
+(`.github/workflows/deploy.yml`) runs on push to `master` (or `workflow_dispatch`) and runs that
+same gate set first, then a Lighthouse CI budget check (`lighthouserc.json`), then
+`semantic-release`, then a **second** `npm run build` — `src/lib/buildInfo.ts` imports
+`package.json`, so the footer would otherwise ship the previous version — before publishing to
+GitHub Pages. Releasing after the gates means a failed build can no longer strand a tag for a
+version that never deployed. If you change anything affecting bundle size, LCP, or accessibility,
+expect Lighthouse to gate the deploy; it measures 5 representative pages listed in
+`lighthouserc.json`, not every route.
 
 Commits are enforced via Husky + commitlint (Conventional Commits: `type: description`,
 e.g. `feat:`, `fix:`, `chore:`). `lint-staged` runs ESLint/Prettier on staged files at commit time.
@@ -72,11 +80,11 @@ dated entries there when making a comparable decision — don't edit existing on
 ## Architecture
 
 **Content is data-driven via two Zod-validated collections** (`src/content.config.ts`), loaded
-from `src/content/{projects,writing}/*.md`:
+from `src/content/{projects,writing}/*.{md,mdx}`:
 
 - `projects`: title, summary, role, stack, links (production/repository/release, all optional
   URLs — `release` renders as a third "View Release" button on the case-study page when present),
-  status (`development | production | archived`), dates (start/end), `weight` (int, controls
+  status (`development | finished | maintaining | archived`), dates (start/end), `weight` (int, controls
   homepage feature ordering — higher sorts first).
 - `writing`: title, summary, date, tags (string array), draft (bool — draft posts are excluded from
   builds and RSS except in `import.meta.env.DEV`).
@@ -110,11 +118,13 @@ earlier `.dark`-class-based token file (`tokens.css`) and a `ThemeToggle.svelte`
 it were dead code and have been removed — see ADR-9 in `docs/tech-decisions.md` if you find
 references to either in history.
 
-**Svelte islands directories are currently empty.** `src/components/islands/` and
-`src/components/playground/` exist as the intended home for interactive "playground" pieces (per
-ADR-3) but hold no components right now — prior placeholders were unused dead code and were
-removed. New interactive components should use Svelte 5 runes (`$state`, etc.), not the legacy
-`export let` API, and should only hydrate via explicit `client:*` directives.
+**There is no island framework installed, and no directory for one.** `@astrojs/svelte` and its
+toolchain were removed once it became clear the repo held zero `.svelte` files — see ADR #15, which
+supersedes ADR-3. `src/components/islands/` and `src/components/playground/` no longer exist either;
+their placeholders were unused dead code. Adding an interactive component starts with
+`npx astro add svelte`, and it should use Svelte 5 runes (`$state`, etc.) rather than the legacy
+`export let` API and hydrate only via explicit `client:*` directives. The Lighthouse script budget
+(30 KB) is the practical ceiling on what any island can ship.
 
 **Global layout**: `src/layouts/Layout.astro` is the single page shell (meta/OG/Twitter tags,
 font preloads, `ThemeScript`, `ClientRouter` for View Transitions, skip-to-content link, `Header` +

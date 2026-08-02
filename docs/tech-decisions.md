@@ -333,3 +333,32 @@ reading this history without `commitlint.config.mjs` sees an unknown type; the f
 benign, since unknown types are ignored rather than misread. Historical `feat:` content commits are
 left as they are, because rewriting published history to correct a convention is not worth the tag
 churn.
+
+## 15. Island framework: removing Svelte, superseding ADR #3
+
+**Status:** Accepted — 2026-08-02 (supersedes #3)
+
+**Context:** ADR #3 chose Svelte 5 via `@astrojs/svelte` for `src/components/islands/`. That
+directory no longer exists, and neither does `src/components/playground/` — both were removed as
+dead code once the placeholder components in them turned out to be unused. The repository contains
+zero `.svelte` files. What remained was four installed packages (`@astrojs/svelte`, `svelte`,
+`eslint-plugin-svelte`, `prettier-plugin-svelte`), a registered integration, a `svelte.config.js`,
+and matching entries in the ESLint, Prettier and lint-staged configs — all serving nothing.
+
+The dependency weight is not the argument. `production-portfolio-system.mdx` states in production
+that "every claim it makes about engineering discipline is checkable against the repository it ships
+from." README, `AGENTS.md` and `colophon.astro` all advertised "Svelte 5 islands." On a site whose
+own case study invites that check, an unbacked stack claim is a content defect, not a docs nit.
+
+**Decision:** Remove the integration and all four packages, delete `svelte.config.js`, drop the
+Svelte cases from `eslint.config.mjs`, `.prettierrc.json` and `.lintstagedrc.json`, and remove Svelte
+from the colophon's stack list. `src/data/cv.ts` keeps Svelte: that is Daniel's personal skill
+inventory, not a claim about this site's build.
+
+ADR #3 is left intact rather than edited — it recorded a decision that was correct when made.
+
+**Consequences:** There is no island framework installed. An interactive component now costs an
+explicit `npx astro add svelte` first, which is a deliberate speed bump rather than a barrier; the
+runes guidance in ADR #3 still applies whenever that happens. Verified by deleting `node_modules`
+and running `npm ci` followed by generate-assets, lint, format:check, typecheck, test and build —
+proving nothing depended on Svelte resolving transitively.
