@@ -85,26 +85,76 @@ function wrapText(ctx, text, maxWidth) {
   return lines;
 }
 
-function extractTitle(markdown) {
-  const frontmatter = markdown.match(/^---\n([\s\S]*?)\n---/);
-  const titleLine = frontmatter?.[1].match(/^title:\s*(.+)$/m);
+function parseFrontmatter(markdown) {
+  return markdown.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? '';
+}
+
+function extractTitle(frontmatter) {
+  const titleLine = frontmatter.match(/^title:\s*(.+)$/m);
   return titleLine?.[1].trim().replace(/^['"]|['"]$/g, '') ?? null;
 }
 
+function isDraft(frontmatter) {
+  return /^draft:\s*true\s*$/m.test(frontmatter);
+}
+
+/** The id pages build their OG path from — lowercase, hyphenated, slash-nested. */
+const CANONICAL_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/;
+
+// Must track the content loader's glob in src/content.config.ts
+// (`**/[^_]*.{md,mdx}`) — an entry missed here silently ships a case study with
+// a 404 OG image, and one generated under the wrong id does the same.
 function collectEntries(dir) {
   if (!fs.existsSync(dir)) return [];
-  return (
-    fs
-      .readdirSync(dir)
-      // Must track the content loader's glob in src/content.config.ts (`{md,mdx}`) —
-      // an entry missed here silently ships a case study with a 404 OG image.
-      .filter((file) => file.endsWith('.md') || file.endsWith('.mdx'))
-      .map((file) => {
-        const title = extractTitle(fs.readFileSync(path.join(dir, file), 'utf-8'));
-        return title ? { slug: file.replace(/\.mdx?$/, ''), title } : null;
-      })
-      .filter((entry) => entry !== null)
-  );
+
+  const entries = [];
+  const problems = [];
+
+  const walk = (current) => {
+    for (const dirent of fs.readdirSync(current, { withFileTypes: true })) {
+      const full = path.join(current, dirent.name);
+
+      if (dirent.isDirectory()) {
+        walk(full);
+        continue;
+      }
+      // `[^_]*` — a leading underscore is the loader's per-file opt-out.
+      if (dirent.name.startsWith('_') || !/\.mdx?$/.test(dirent.name)) continue;
+
+      const id = path
+        .relative(dir, full)
+        .replace(/\.mdx?$/, '')
+        .split(path.sep)
+        .join('/');
+      const frontmatter = parseFrontmatter(fs.readFileSync(full, 'utf-8'));
+
+      if (isDraft(frontmatter)) {
+        console.log(`[ASSET GEN]: Skipped draft ${id}`);
+        continue;
+      }
+
+      const title = extractTitle(frontmatter);
+      if (!title) {
+        problems.push(`${id} — no parseable \`title:\` in frontmatter`);
+        continue;
+      }
+      if (!CANONICAL_ID.test(id)) {
+        problems.push(`${id} — filename does not match the id Astro will derive`);
+        continue;
+      }
+
+      entries.push({ id, title });
+    }
+  };
+
+  walk(dir);
+
+  if (problems.length > 0) {
+    for (const problem of problems) console.error(`[ASSET GEN]: ${problem}`);
+    process.exit(1);
+  }
+
+  return entries;
 }
 
 function drawOgFrame(ctx) {
@@ -159,7 +209,9 @@ for (const [collection, kind] of [
   if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
 
   for (const entry of collectEntries(entriesDir)) {
-    createEntryOgImage(kind, entry.title, path.join(outputDir, `${entry.slug}.png`));
+    const outputPath = path.join(outputDir, `${entry.id}.png`);
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+    createEntryOgImage(kind, entry.title, outputPath);
   }
 }
 
