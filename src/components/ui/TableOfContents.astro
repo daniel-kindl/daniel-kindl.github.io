@@ -80,16 +80,38 @@ const linkClasses = `block text-(--text-muted) underline decoration-(--border-co
       }
     }
 
+    const orderedHeadings = Array.from(headingEls).sort((a, b) =>
+      a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
+    );
+    const intersecting = new Set<Element>();
+
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries.filter((entry) => entry.isIntersecting);
-        if (visible.length > 0) setActive(visible[0].target.id);
+        for (const entry of entries) {
+          if (entry.isIntersecting) intersecting.add(entry.target);
+          else intersecting.delete(entry.target);
+        }
+
+        // Highest heading still in the band wins. Entries arrive in observer
+        // order, not document order, so picking the first reported one made the
+        // highlight depend on which heading happened to cross the edge first.
+        const active = orderedHeadings.find((heading) => intersecting.has(heading));
+        if (active) {
+          setActive(active.id);
+          return;
+        }
+
+        // Nothing in the band: either mid-section or above the first heading.
+        // Falling back to the last heading scrolled past is what lets the
+        // highlight travel back up — before this it simply froze.
+        const passed = orderedHeadings.filter((heading) => heading.getBoundingClientRect().top < 0);
+        setActive((passed.at(-1) ?? orderedHeadings[0]).id);
       },
       { rootMargin: '-10% 0px -70% 0px' },
     );
 
     tocObserver = observer;
-    headingEls.forEach((el) => observer.observe(el));
+    orderedHeadings.forEach((el) => observer.observe(el));
   }
 
   document.addEventListener('astro:before-swap', () => {
