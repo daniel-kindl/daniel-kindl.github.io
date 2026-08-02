@@ -3,6 +3,10 @@ const commitTypes = [
   { type: 'fix', section: 'Bug Fixes' },
   { type: 'perf', section: 'Performance Improvements' },
   { type: 'revert', section: 'Reverts' },
+  // `content` is deliberately absent from commit-analyzer's release rules (feat/fix/perf/breaking),
+  // so publishing a post or case study never moves the version. It still gets its own changelog
+  // section, riding along with the next real release. See ADR #14.
+  { type: 'content', section: 'Content' },
   { type: 'docs', section: 'Documentation' },
   { type: 'chore', section: 'Chores & Dependencies' },
   { type: 'refactor', section: 'Code Refactoring', hidden: true },

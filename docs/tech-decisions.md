@@ -299,3 +299,37 @@ file would make it survive a settings reset, at the cost of a second place to ke
 This entry also supersedes one detail in ADR #11: `src/lib/buildInfo.ts` no longer embeds the
 commit hash, only `pkg.version`. The hash was noise for visitors, and dropping it removed a
 `git rev-parse` shell-out from the build.
+
+---
+
+## 14. Content commits: a repo-specific `content:` type, outside the release rules
+
+**Status:** Accepted — 2026-08-02
+
+**Context:** Every content entry added so far was committed as `feat:` (`feat: add blog post about
+homelab setup`, `feat: publish post on the AI-assisted development workflow behind this site`,
+`feat: add DK Timer project case study`). Since ADR #11, `feat:` means a minor version bump, so
+publishing a blog post moved the version displayed in the footer and cut a GitHub Release. That
+conflates two different things: the version identifies the _site_ — its components, build, and
+tooling — while entries under `src/content/` are what the site publishes. A new post is not a new
+version of the software any more than a new article is a new version of a newspaper's printing
+press.
+
+**Decision:** Add a repo-specific `content` type for anything under `src/content/`. It is registered
+in two places: `commitlint.config.mjs` overrides `type-enum` with `@commitlint/config-conventional`'s
+default list plus `content`, and `release.config.mjs` adds `{ type: 'content', section: 'Content' }`
+to the `release-notes-generator` preset config so it gets its own changelog section.
+`@semantic-release/commit-analyzer` is deliberately left alone: its `conventionalcommits` release
+rules only bump for `feat`, `fix`, `perf`, `revert`, and breaking changes, so an unrecognized type
+produces no release by default. This is the same mechanism ADR #11 already relies on for `chore`,
+not a special-cased override. `feat:`/`fix:` stay reserved for the site itself, including changes to
+the components and schemas that _render_ content.
+
+**Consequences:** Publishing is decoupled from versioning: a stretch of content-only commits
+produces no release, no tag, and no version bump, and those commits ride along in the changelog
+under "Content" the next time a `feat`/`fix` lands (identical to the chore behavior described in
+ADR #11). The cost is that `content:` is not part of the Conventional Commits spec, so any tool
+reading this history without `commitlint.config.mjs` sees an unknown type; the failure mode is
+benign, since unknown types are ignored rather than misread. Historical `feat:` content commits are
+left as they are, because rewriting published history to correct a convention is not worth the tag
+churn.

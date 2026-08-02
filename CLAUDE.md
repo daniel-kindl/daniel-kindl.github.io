@@ -41,6 +41,11 @@ anything affecting bundle size, LCP, or accessibility, expect Lighthouse to gate
 Commits are enforced via Husky + commitlint (Conventional Commits: `type: description`,
 e.g. `feat:`, `fix:`, `chore:`). `lint-staged` runs ESLint/Prettier on staged files at commit time.
 
+**Use `content:` for anything under `src/content/`** — publishing or editing a post or case study.
+It's a repo-specific type (registered in `commitlint.config.mjs` and `release.config.mjs`) that
+semantic-release does not treat as releasable, so adding content never moves the site version.
+Reserve `feat:`/`fix:` for the site itself. See ADR #14 in `docs/tech-decisions.md`.
+
 **Commit message style**: this repo's history is single-line subjects only — no body paragraphs,
 no trailers (e.g. no `Co-Authored-By:`). Match that: `type: short imperative description`, optionally
 suffixed with `(#issueNumber)` when tied to a tracked issue. Don't add explanatory bodies; the diff

@@ -66,7 +66,9 @@ run a Lighthouse CI budget check (`lighthouserc.json`), and deploy to GitHub Pag
 
 Commits are enforced via Husky + commitlint using
 [Conventional Commits](https://www.conventionalcommits.org/) (`type: description`, e.g. `feat:`,
-`fix:`, `chore:`), and `lint-staged` runs ESLint/Prettier on staged files at commit time.
+`fix:`, `chore:`), and `lint-staged` runs ESLint/Prettier on staged files at commit time. Entries
+under `src/content/` use a repo-specific `content:` type, which is excluded from semantic-release's
+release rules so publishing a post or case study doesn't move the site version.
 
 ## Documentation
 
