@@ -41,6 +41,24 @@ typography:
     fontWeight: 400
     lineHeight: 1.4
     letterSpacing: '-0.025em'
+  prose-subtitle:
+    fontFamily: 'Space Grotesk, ui-sans-serif, system-ui, sans-serif'
+    fontSize: '1.05rem'
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: '-0.01em'
+  prose-minor:
+    fontFamily: 'Space Grotesk, ui-sans-serif, system-ui, sans-serif'
+    fontSize: '0.875rem'
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: '-0.01em'
+  prose-code:
+    fontFamily: 'JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace'
+    fontSize: '0.8125rem'
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: '-0.025em'
 rounded:
   none: '0px'
   dot: '9999px'
@@ -176,6 +194,24 @@ primary`/`ink`, body additionally uses `leading-relaxed` for long-form readabili
 
 All heading variants (H1–H3) are uppercase with tight tracking by construction — there is no
 sentence-case heading anywhere in the system.
+
+### The prose register
+
+Long-form markdown (`.prose`) runs on its own small set of steps, because it has needs the
+component scale does not: headings that separate sections without shouting, and code and tables
+that stay legible while sitting visually below body copy. Three steps exist only here.
+
+- **`prose-subtitle`** (`1.05rem`): `.prose h3`. Deliberately just above body rather than on the
+  component H3's `1rem→1.125rem` responsive pair — prose headings do not step up at `md:`, so a
+  fixed value a hair above body copy is what separates them from it.
+- **`prose-minor`** (`0.875rem`): `.prose h4`–`h6` and `.prose table`. Reuses the Timeline-event
+  step rather than introducing a fourth size, per the H4–H6 rule above.
+- **`prose-code`** (`0.8125rem`): `.prose pre`. Sits between `prose-minor` and the `0.75rem` mono
+  step: code blocks are long runs that need more than label size, but reading below body size is
+  what marks them as machine output rather than prose.
+
+These are documented rather than folded into the component ramp because they apply to authored
+content only. Nothing outside `.prose` may use them.
 
 ### Named Rules
 
