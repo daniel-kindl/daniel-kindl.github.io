@@ -4,8 +4,8 @@ interface ProjectDates {
 }
 
 export function getProjectTimelineLabel({ start, end }: ProjectDates): string {
-  const startYear = start.getFullYear();
+  const startYear = start.getUTCFullYear();
   if (!end) return `${startYear}–Present`;
-  const endYear = end.getFullYear();
+  const endYear = end.getUTCFullYear();
   return endYear === startYear ? `${startYear}` : `${startYear}–${endYear}`;
 }
