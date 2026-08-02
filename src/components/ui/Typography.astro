@@ -12,12 +12,12 @@ export type Props = HTMLAttributes<'div'> & {
 const { variant, as, class: className = '', ...rest }: Props = Astro.props;
 
 const styles = {
-  h1: 'font-display text-3xl md:text-4xl font-bold uppercase tracking-tight text-[var(--text-primary)]',
-  h2: 'font-display text-xl md:text-2xl font-bold uppercase tracking-tight text-[var(--text-primary)]',
-  h3: 'font-display text-base md:text-lg font-bold uppercase tracking-tight text-[var(--text-primary)]',
-  body: 'text-base text-[var(--text-primary)] leading-relaxed font-sans',
-  eyebrow: 'font-display text-xs text-[var(--text-muted)] uppercase tracking-wider block mb-2',
-  mono: 'font-mono text-sm text-[var(--text-primary)]',
+  h1: 'font-display text-3xl md:text-4xl font-bold uppercase tracking-tight text-(--text-primary)',
+  h2: 'font-display text-xl md:text-2xl font-bold uppercase tracking-tight text-(--text-primary)',
+  h3: 'font-display text-base md:text-lg font-bold uppercase tracking-tight text-(--text-primary)',
+  body: 'text-base text-(--text-primary) leading-relaxed font-sans',
+  eyebrow: 'font-display text-xs text-(--text-muted) uppercase tracking-wider block mb-2',
+  mono: 'font-mono text-sm text-(--text-primary)',
 };
 
 const HeadingTag =

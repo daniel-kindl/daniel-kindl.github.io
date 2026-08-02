@@ -19,11 +19,11 @@ const sizing: Record<ButtonVariant, string> = {
 };
 
 const underlinedLink =
-  'text-[var(--text-muted)] hover:text-[var(--text-primary)] underline underline-offset-4 decoration-[var(--border-color)] hover:decoration-[var(--text-primary)] active:text-[var(--text-primary)] active:decoration-[var(--text-primary)]';
+  'text-(--text-muted) hover:text-(--text-primary) underline underline-offset-4 decoration-(--border-color) hover:decoration-(--text-primary) active:text-(--text-primary) active:decoration-(--text-primary)';
 
 const appearance: Record<ButtonVariant, string> = {
   primary:
-    'border border-[var(--text-muted)] text-[var(--text-primary)] bg-[var(--bg-primary)] hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] active:bg-[var(--text-primary)] active:text-[var(--bg-primary)]',
+    'border border-(--text-muted) text-(--text-primary) bg-(--bg-primary) hover:bg-(--text-primary) hover:text-(--bg-primary) active:bg-(--text-primary) active:text-(--bg-primary)',
   secondary: underlinedLink,
   link: underlinedLink,
   plain: '',
