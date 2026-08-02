@@ -1,12 +1,15 @@
 ---
-interface Props {
-  as?: 'div' | 'section' | 'main' | 'article' | 'header' | 'footer';
-  class?: string;
-}
+import type { HTMLAttributes } from 'astro/types';
 
-const { as: Tag = 'section', class: className = '' }: Props = Astro.props;
+// Forwards the rest so callers can attach data-* hooks (about.astro marks its
+// container as the pagefind body) without wrapping the page in another div.
+type Props = HTMLAttributes<'div'> & {
+  as?: 'div' | 'section' | 'main' | 'article' | 'header' | 'footer';
+};
+
+const { as: Tag = 'section', class: className = '', ...rest }: Props = Astro.props;
 ---
 
-<Tag class={`max-w-5xl w-full mx-auto px-4 md:px-8 ${className}`}>
+<Tag class={`max-w-5xl w-full mx-auto px-4 md:px-8 ${className}`} {...rest}>
   <slot />
 </Tag>

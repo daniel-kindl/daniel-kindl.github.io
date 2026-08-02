@@ -96,7 +96,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
     <Header />
 
-    <main id="main-content" data-pagefind-body class="grow">
+    <!-- data-pagefind-body belongs on the pages that carry prose, not here: on
+         <main> every route is indexed, so 22 of 32 entries were 8-27 word stubs
+         and a search for a common word could surface the 404 page. -->
+    <main id="main-content" class="grow">
       <slot />
     </main>
 
