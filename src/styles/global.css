@@ -264,11 +264,25 @@
     color: var(--text-primary);
   }
 
-  .prose table {
-    display: block;
+  /* The scroll lives on the wrapper, not the table — see rehypeScrollableTables
+     in astro.config.mjs. `display: block` on the table itself would scroll just
+     the same, but at the cost of its rows and cells being exposed as generic
+     blocks to a screen reader. */
+  .prose .table-scroll {
     overflow-x: auto;
-    width: 100%;
     margin: 1.5rem 0;
+  }
+
+  .prose .table-scroll:focus-visible {
+    outline: 2px solid var(--accent-focus);
+    outline-offset: 2px;
+  }
+
+  .prose table {
+    /* Content-width, but never narrower than the wrapper: a wide table scrolls
+       instead of compressing its columns. */
+    width: max-content;
+    min-width: 100%;
     border-collapse: collapse;
     font-size: 0.875rem;
   }
