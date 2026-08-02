@@ -20,6 +20,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "astro check",
+    "test": "node --test \"src/lib/*.test.ts\"",
     "prepare": "husky",
     "generate-assets": "node generate-assets.js",
     "release": "semantic-release"

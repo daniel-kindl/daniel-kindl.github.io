@@ -52,6 +52,9 @@ jobs:
       - name: Execute Type Verification
         run: npm run typecheck
 
+      - name: Execute Test Suite
+        run: npm test
+
       - name: Compile Production Artifacts
         run: npm run build
 
