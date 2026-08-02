@@ -3,6 +3,7 @@ import ExternalLink from '@components/ui/ExternalLink.astro';
 import Container from '@components/ui/Container.astro';
 import { focusRingStyles } from '@lib/buttonStyles';
 import { buildInfo } from '@lib/buildInfo';
+import { mailto, siteConfig } from '@lib/siteConfig';
 
 const currentYear = new Date().getFullYear();
 ---
@@ -14,7 +15,7 @@ const currentYear = new Date().getFullYear();
   >
     <div>
       <span
-        >© {currentYear} Daniel Kindl | Built with <ExternalLink
+        >{`© ${currentYear} ${siteConfig.name}`} | Built with <ExternalLink
           href="https://astro.build"
           class={`underline decoration-(--border-color) underline-offset-4 transition-colors hover:text-(--text-primary) hover:decoration-(--text-primary) ${focusRingStyles}`}
           >Astro</ExternalLink
@@ -23,17 +24,17 @@ const currentYear = new Date().getFullYear();
     </div>
     <div class="flex flex-wrap items-center gap-2 uppercase">
       <ExternalLink
-        href="https://github.com/daniel-kindl"
+        href={siteConfig.socials.github}
         class={`justify-center transition-colors hover:text-(--text-primary) ${focusRingStyles}`}
         >GitHub</ExternalLink
       >
       <ExternalLink
-        href="https://www.linkedin.com/in/kindldaniel/"
+        href={siteConfig.socials.linkedin}
         class={`justify-center transition-colors hover:text-(--text-primary) ${focusRingStyles}`}
         >LinkedIn</ExternalLink
       >
       <a
-        href="mailto:daniel.kindl@proton.me"
+        href={mailto}
         class={`inline-flex min-h-[44px] min-w-[44px] items-center justify-center transition-colors hover:text-(--text-primary) ${focusRingStyles}`}
         >Email</a
       >

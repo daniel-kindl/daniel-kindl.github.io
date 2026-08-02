@@ -3,13 +3,14 @@ import Layout from '../layouts/Layout.astro';
 import Container from '../components/ui/Container.astro';
 import Typography from '../components/ui/Typography.astro';
 import Tag from '../components/ui/Tag.astro';
+import { pageTitle } from '@lib/siteConfig';
 
 const stack = ['Astro 7', 'TypeScript (strict)', 'Tailwind CSS 4', 'Pagefind'];
 const fonts = ['Space Grotesk', 'JetBrains Mono', 'IBM Plex Sans'];
 ---
 
 <Layout
-  title="Colophon — Daniel Kindl"
+  title={pageTitle('Colophon')}
   description="What this site is actually built with: stack, architecture, and CI/CD pipeline."
 >
   <Container class="py-12 md:py-20">

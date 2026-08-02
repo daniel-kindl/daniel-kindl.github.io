@@ -4,12 +4,13 @@ import Container from '../components/ui/Container.astro';
 import Typography from '../components/ui/Typography.astro';
 import ProjectCard from '../components/portfolio/ProjectCard.astro';
 import { getSortedProjects } from '@lib/content';
+import { pageTitle } from '@lib/siteConfig';
 
 const sortedProjects = await getSortedProjects();
 ---
 
 <Layout
-  title="Projects — Daniel Kindl"
+  title={pageTitle('Projects')}
   description="Selected projects across developer tooling and web development."
 >
   <Container class="py-12 md:py-20">

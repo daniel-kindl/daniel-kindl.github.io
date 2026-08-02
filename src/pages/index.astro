@@ -6,6 +6,7 @@ import Button from '../components/ui/Button.astro';
 import ProjectCard from '../components/portfolio/ProjectCard.astro';
 import WritingPostCard from '../components/portfolio/WritingPostCard.astro';
 import { getPublishedPosts, getSortedProjects } from '@lib/content';
+import { mailto } from '@lib/siteConfig';
 
 const allProjects = await getSortedProjects();
 const allPosts = await getPublishedPosts();
@@ -98,7 +99,7 @@ const recentPosts = allPosts.slice(0, 2);
         My work combines delivery speed with engineering discipline: clear architecture boundaries,
         testable modules, and release pipelines that hold up under real production use.
       </Typography>
-      <Button href="mailto:daniel.kindl@proton.me" variant="primary">Get in Touch</Button>
+      <Button href={mailto} variant="primary">Get in Touch</Button>
     </div>
   </Container>
 </Layout>

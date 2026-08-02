@@ -3,9 +3,10 @@ import Layout from '../layouts/Layout.astro';
 import Container from '../components/ui/Container.astro';
 import Typography from '../components/ui/Typography.astro';
 import { focusRingStyles } from '@lib/buttonStyles';
+import { pageTitle } from '@lib/siteConfig';
 ---
 
-<Layout title="Search — Daniel Kindl" description="Search projects and writing.">
+<Layout title={pageTitle('Search')} description="Search projects and writing.">
   <Container class="py-12 md:py-20">
     <Typography variant="eyebrow">Search</Typography>
     <Typography variant="h1" class="mb-8">Search the Site</Typography>

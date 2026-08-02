@@ -6,6 +6,7 @@ import Timeline from '../components/ui/Timeline.astro';
 import TimelineEvent from '../components/ui/TimelineEvent.astro';
 import Tag from '../components/ui/Tag.astro';
 import { technicalProfile } from '../data/cv';
+import { pageTitle } from '@lib/siteConfig';
 
 const { name, role, summary, skills, experience } = technicalProfile;
 
@@ -27,7 +28,7 @@ const skillGroups = [
 ];
 ---
 
-<Layout title="About & CV — Daniel Kindl" description={summary}>
+<Layout title={pageTitle('About & CV')} description={summary}>
   <Container class="py-12 md:py-20" data-pagefind-body>
     <header class="mb-16 border-b border-(--border-color) pb-12">
       <Typography variant="eyebrow">About</Typography>
