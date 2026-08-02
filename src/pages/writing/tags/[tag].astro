@@ -16,7 +16,10 @@ export async function getStaticPaths() {
     for (const tag of post.data.tags) {
       const slug = slugify(tag);
       const entry = tagMap.get(slug) ?? { label: tag, posts: [] };
-      entry.posts.push(post);
+      // Two tags on the same post can slugify to one value (`.NET` and `net`,
+      // `C#` and `csharp`, `CI/CD` and `ci-cd`), which would list that post
+      // twice on the tag page. Cheaper to make impossible than to police.
+      if (!entry.posts.some((existing) => existing.id === post.id)) entry.posts.push(post);
       tagMap.set(slug, entry);
     }
   }
