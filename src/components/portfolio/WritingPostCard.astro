@@ -1,6 +1,7 @@
 ---
 import Tag from '../ui/Tag.astro';
 import Button from '../ui/Button.astro';
+import Typography from '../ui/Typography.astro';
 import { slugify } from '@lib/slug';
 import { formatDate, toIsoDate } from '@lib/formatDate';
 import { getReadingTime } from '@lib/readingTime';
@@ -12,7 +13,6 @@ interface Props {
   class?: string;
 }
 const { post, headingLevel = 'h2', class: className = '' }: Props = Astro.props;
-const TitleTag = headingLevel;
 const readingTime = getReadingTime(post.body ?? '');
 ---
 
@@ -25,9 +25,9 @@ const readingTime = getReadingTime(post.body ?? '');
       <time datetime={toIsoDate(post.data.date)}>{formatDate(post.data.date)}</time> · {readingTime} min
       read
     </p>
-    <TitleTag class="text-xl font-bold tracking-tight text-(--text-primary) md:text-2xl">
+    <Typography variant="h2" as={headingLevel}>
       {post.data.title}
-    </TitleTag>
+    </Typography>
     <p class="max-w-2xl text-sm leading-relaxed text-(--text-muted)">{post.data.summary}</p>
     {
       post.data.tags.length > 0 && (
