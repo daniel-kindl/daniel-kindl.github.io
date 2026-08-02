@@ -1,7 +1,6 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-import svelte from '@astrojs/svelte';
 import tailwindcss from '@tailwindcss/vite';
 
 /**
@@ -37,7 +36,7 @@ function rehypeScrollableTables() {
 
 export default defineConfig({
   site: 'https://danielkindl.dev',
-  integrations: [mdx(), sitemap(), svelte()],
+  integrations: [mdx(), sitemap()],
   markdown: {
     shikiConfig: { theme: 'css-variables' },
     rehypePlugins: [rehypeScrollableTables],
