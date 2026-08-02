@@ -48,7 +48,13 @@ const linkClasses = `block text-(--text-muted) underline decoration-(--border-co
 }
 
 <script>
+  let tocObserver: IntersectionObserver | null = null;
+
   function initToc() {
+    // astro:page-load fires on the initial load too, and this also runs once
+    // directly below — without the guard every hard load builds two observers.
+    if (tocObserver) return;
+
     const navLists = document.querySelectorAll<HTMLElement>('[data-toc]');
     if (navLists.length === 0) return;
 
@@ -82,8 +88,14 @@ const linkClasses = `block text-(--text-muted) underline decoration-(--border-co
       { rootMargin: '-10% 0px -70% 0px' },
     );
 
+    tocObserver = observer;
     headingEls.forEach((el) => observer.observe(el));
   }
+
+  document.addEventListener('astro:before-swap', () => {
+    tocObserver?.disconnect();
+    tocObserver = null;
+  });
 
   initToc();
   document.addEventListener('astro:page-load', initToc);

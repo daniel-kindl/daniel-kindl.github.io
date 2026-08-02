@@ -41,17 +41,17 @@ import { focusRingStyles } from '@lib/buttonStyles';
   }
 
   async function initSearch() {
-    const existingInput = document.getElementById('search-input') as HTMLInputElement | null;
+    const input = document.getElementById('search-input') as HTMLInputElement | null;
     const resultsEl = document.getElementById('search-results');
     const emptyEl = document.getElementById('search-empty');
     const unavailableEl = document.getElementById('search-unavailable');
-    if (!existingInput || !resultsEl || !emptyEl || !unavailableEl) return;
+    if (!input || !resultsEl || !emptyEl || !unavailableEl) return;
 
     // astro:page-load fires on the initial load too (not just later navigations), and this
-    // function also runs once directly below — clone-and-replace strips any listener from a
-    // previous run so keystrokes never trigger more than one active search.
-    existingInput.replaceWith(existingInput.cloneNode(true));
-    const input = document.getElementById('search-input') as HTMLInputElement;
+    // function also runs once directly below. Marking the input makes the second run a no-op,
+    // so a keystroke never triggers more than one search; a swap brings an unmarked input.
+    if (input.dataset.searchBound === 'true') return;
+    input.dataset.searchBound = 'true';
 
     let pagefind: PagefindModule;
     try {

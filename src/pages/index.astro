@@ -104,7 +104,15 @@ const recentPosts = allPosts.slice(0, 2);
 </Layout>
 
 <script>
+  let revealObserver: IntersectionObserver | null = null;
+
   function initScrollReveal() {
+    // The bare call below is load-bearing: astro:page-load fires on window `load`,
+    // by which point the page has painted, so hiding there would flash the content
+    // in and straight back out. This guard stops that later run from re-hiding
+    // what has already been revealed, and from stacking a second observer.
+    if (revealObserver) return;
+
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const elements = document.querySelectorAll<HTMLElement>('.reveal');
 
@@ -124,8 +132,14 @@ const recentPosts = allPosts.slice(0, 2);
       { threshold: 0.15, rootMargin: '0px 0px -40px 0px' },
     );
 
+    revealObserver = observer;
     elements.forEach((el) => observer.observe(el));
   }
+
+  document.addEventListener('astro:before-swap', () => {
+    revealObserver?.disconnect();
+    revealObserver = null;
+  });
 
   initScrollReveal();
   document.addEventListener('astro:page-load', initScrollReveal);

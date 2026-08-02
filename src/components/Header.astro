@@ -60,22 +60,22 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
 <script>
   function initializeThemeToggle() {
     const toggle = document.getElementById('theme-toggle');
-    if (!toggle) return;
+    // astro:page-load fires on the initial load as well as after a navigation, so
+    // this runs twice on a hard load. Marking the element makes the second run a
+    // no-op — a swap brings an unmarked element, which rebinds correctly.
+    if (!toggle || toggle.dataset.themeToggleBound === 'true') return;
+    toggle.dataset.themeToggleBound = 'true';
 
-    // Remove existing listener if any to avoid stacking duplicates
-    toggle.replaceWith(toggle.cloneNode(true));
-
-    const activeToggle = document.getElementById('theme-toggle');
-    activeToggle?.setAttribute(
+    toggle.setAttribute(
       'aria-pressed',
       String(document.documentElement.getAttribute('data-theme') === 'dark'),
     );
-    activeToggle?.addEventListener('click', () => {
+    toggle.addEventListener('click', () => {
       const current = document.documentElement.getAttribute('data-theme');
       const next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
-      activeToggle.setAttribute('aria-pressed', String(next === 'dark'));
+      toggle.setAttribute('aria-pressed', String(next === 'dark'));
     });
   }
 
