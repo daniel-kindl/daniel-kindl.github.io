@@ -1,3 +1,41 @@
+## [1.4.1](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.4.0...v1.4.1) (2026-08-02)
+
+### Bug Fixes
+
+* dedupe posts whose tags slugify to the same value ([1f5ce01](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/1f5ce01cbfd26be3260983da48b264e561eb5055))
+* define the astro-code token variables shiki actually emits ([e848700](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/e8487005f6393d5938a695e03ab9460daf2e8770))
+* emit machine-readable time elements for post dates ([bcc1dd1](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/bcc1dd1f2854afba5bd742921100b36d9fb04942))
+* exclude code, imports and table markup from reading time ([e7dc431](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/e7dc431cd6b2f8c0c4ead1529dc589c842a9e611))
+* give interactive borders a 3:1 contrast token ([72c84dc](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/72c84dc4bbe838b68e6b8558b826595e6a1a51e3))
+* index only content pages with pagefind ([b5402b3](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/b5402b3817a6a618a5c2bfd9e17bd2448e14817f))
+* initialize page scripts once via astro:page-load ([c44d483](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/c44d4832c0de68e2a619359f900ab6b3d3477d35))
+* keep tables semantic and make scrollable prose regions focusable ([5443754](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/5443754bcf25d5a0eaba695e76e69f48498179c1))
+* make ThemeScript the only writer of the theme ([08a5e2d](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/08a5e2dff8d72ac3e14142982a1c07646c1b2712))
+* name the primary nav and make the skip link focus main ([e5ce1ed](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/e5ce1ed4c601cd48d842afeac00be40cf77a5b53))
+* remove the inline code radius the design system forbids ([e18948b](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/e18948b3db24d1d86aade78c4aa7c954a726153f))
+* render frontmatter dates in UTC ([3ce40e7](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/3ce40e78c40c2dcacf8a6a904b47dccfdf2026e8))
+* restore the missing h2 above the homepage approach section ([4b60b68](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/4b60b6837dddd291e84c418340619b2ebbfbd8ab))
+* skip drafts and mirror the loader glob when generating OG images ([9d96676](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/9d96676f00360eb8368ccadbca3ba463759c9a19))
+* track scroll direction and tear down the table of contents observer ([f9f75a6](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/f9f75a6ccb65e1cc6af57f1ac2bc09cc40faf212))
+
+### Content
+
+* add post on programming terminology read literally ([50ecaf9](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/50ecaf943e45a201da749ff87c7cb4b5763bb3a6))
+
+### Documentation
+
+* correct stale claims across README, CLAUDE, PRODUCT, colophon and ADR log ([91d38aa](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/91d38aa1b6af4083514848d02f789a3a722bb25f))
+* document the prose type register in the design system ([bbf65bd](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/bbf65bdcdab39d1abf4bb92693ea4c56f4a24795))
+* supersede the Svelte ADR and correct the stale stack and schema claims ([a1d6c5b](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/a1d6c5b3b124b3b5c5dfad62193c86577ca35c07))
+
+### Chores & Dependencies
+
+* add a content commit type that doesn't trigger a release ([b8f7f7c](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/b8f7f7c5f19c5513f8e98ea98b86034ae9131721))
+* add a manual deploy trigger and stop cancelling in-flight releases ([8899337](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/8899337218c345902a8055b020c9aec9cf732b83))
+* fail lint on warnings and format staged mdx ([5e5a390](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/5e5a39007fab67f622031251f35a2b17d637961d))
+* measure Lighthouse against representative pages only ([dfe0d36](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/dfe0d3634c041b7e9c959d427bb8d077dbd0169c))
+* remove the unused Svelte integration and toolchain ([21c3bfd](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/21c3bfdbe134e06c40a57a3df95bf17119408401))
+
 ## [1.4.0](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.3.2...v1.4.0) (2026-08-01)
 
 ### Features
