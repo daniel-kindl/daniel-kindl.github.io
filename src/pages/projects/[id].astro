@@ -1,5 +1,5 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Container from '../../components/ui/Container.astro';
 import Typography from '../../components/ui/Typography.astro';
@@ -11,9 +11,10 @@ import { getProjectTimelineLabel } from '@lib/projectTimeline';
 import { getProjectStatusLabel } from '@lib/projectStatus';
 import { getReadingTime } from '@lib/readingTime';
 import { getTocHeadings, hasToc as hasTocEntries } from '@lib/toc';
+import { getRelatedPosts, getSortedProjects } from '@lib/content';
 
 export async function getStaticPaths() {
-  const projects = await getCollection('projects');
+  const projects = await getSortedProjects();
   return projects.map((project) => ({
     params: { id: project.id },
     props: { project },
@@ -28,9 +29,7 @@ const readingTime = getReadingTime(project.body ?? '');
 const tocHeadings = getTocHeadings(headings);
 const hasToc = hasTocEntries(tocHeadings);
 
-const relatedPosts = (await getCollection('writing')).filter(
-  (post) => (!post.data.draft || import.meta.env.DEV) && post.data.project?.id === project.id,
-);
+const relatedPosts = await getRelatedPosts(project.id);
 
 // The primary CTA follows evidentiary weight, not field order: prefer a live
 // production link, then a repository (verifiable code/CI), then a release.
