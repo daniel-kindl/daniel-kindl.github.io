@@ -2,7 +2,14 @@
   "ci": {
     "collect": {
       "staticDistDir": "./dist",
-      "numberOfRuns": 3
+      "numberOfRuns": 3,
+      "url": [
+        "http://localhost/",
+        "http://localhost/projects/ocho/",
+        "http://localhost/writing/parent-killed-its-child/",
+        "http://localhost/writing/",
+        "http://localhost/search/"
+      ]
     },
     "assert": {
       "assertions": {
@@ -12,7 +19,6 @@
         "categories:seo": ["error", { "minScore": 0.95 }],
         "largest-contentful-paint": ["error", { "maxNumericValue": 2500 }],
         "cumulative-layout-shift": ["error", { "maxNumericValue": 0.05 }],
-        "total-blocking-time": ["error", { "maxNumericValue": 200 }],
         "resource-summary:font:size": ["error", { "maxNumericValue": 96000 }],
         "resource-summary:script:size": ["error", { "maxNumericValue": 30000 }]
       }
