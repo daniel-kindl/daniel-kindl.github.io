@@ -99,7 +99,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <!-- data-pagefind-body belongs on the pages that carry prose, not here: on
          <main> every route is indexed, so 22 of 32 entries were 8-27 word stubs
          and a search for a common word could surface the 404 page. -->
-    <main id="main-content" class="grow">
+    <!-- tabindex="-1" so the skip link moves focus here rather than only
+         scrolling; without it the next Tab returns to the header. -->
+    <main id="main-content" tabindex="-1" class="grow">
       <slot />
     </main>
 
