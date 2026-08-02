@@ -49,7 +49,6 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
         id="theme-toggle"
         class={`inline-flex min-h-[44px] cursor-pointer items-center px-1 text-(--text-muted) uppercase transition-colors hover:text-(--text-primary) active:text-(--text-primary) sm:px-3 ${focusRingStyles}`}
         aria-label="Toggle color theme"
-        aria-pressed="false"
       >
         [<span class="theme-label-light">Light</span><span class="theme-label-dark">Dark</span>]
       </button>
@@ -66,16 +65,21 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
     if (!toggle || toggle.dataset.themeToggleBound === 'true') return;
     toggle.dataset.themeToggleBound = 'true';
 
-    toggle.setAttribute(
-      'aria-pressed',
-      String(document.documentElement.getAttribute('data-theme') === 'dark'),
-    );
+    // ThemeScript owns the write, so persistence and <meta name="theme-color">
+    // stay on one code path instead of being reconciled after the fact.
+    const setTheme = (window as Window & { __setTheme?: (theme: string) => void }).__setTheme;
+
+    const syncPressed = () =>
+      toggle.setAttribute(
+        'aria-pressed',
+        String(document.documentElement.getAttribute('data-theme') === 'dark'),
+      );
+
+    syncPressed();
     toggle.addEventListener('click', () => {
       const current = document.documentElement.getAttribute('data-theme');
-      const next = current === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
-      toggle.setAttribute('aria-pressed', String(next === 'dark'));
+      setTheme?.(current === 'dark' ? 'light' : 'dark');
+      syncPressed();
     });
   }
 

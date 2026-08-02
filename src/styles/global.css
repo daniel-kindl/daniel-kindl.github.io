@@ -8,6 +8,10 @@
 
 @layer base {
   :root {
+    /* Without this the UA paints scrollbars and native form controls light in
+       dark mode — notably the clear button inside the search input. */
+    color-scheme: light;
+
     --bg-primary: #faf9f6;
     --text-primary: #1a1a1a;
     --text-muted: #666666;
@@ -34,6 +38,8 @@
   }
 
   :root[data-theme='dark'] {
+    color-scheme: dark;
+
     --bg-primary: #0a0a0a;
     --text-primary: #f5f5f5;
     --text-muted: #a0a0a0;
