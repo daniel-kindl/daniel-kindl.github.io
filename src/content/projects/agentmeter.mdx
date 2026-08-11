@@ -1,0 +1,54 @@
+---
+title: 'Agentmeter'
+summary: 'Local-first usage meter for Claude Code and Codex sessions, with SQLite storage, token and cost history, and a private browser dashboard.'
+role: 'Solo Developer'
+stack: ['Go', 'SQLite', 'CLI', 'Browser dashboard', 'GitHub Actions']
+links:
+  repository: 'https://github.com/daniel-kindl/agentmeter'
+status: 'development'
+dates:
+  start: 2026-08-05
+  end: null
+weight: 8
+---
+
+## Context
+
+AI coding sessions leave useful usage data behind, but the logs are local, provider-specific, and
+awkward to compare over time. Agentmeter turns Claude Code and Codex session logs into a private
+usage history without introducing a hosted telemetry service.
+
+## One local data path
+
+The `scan` command reads the standard session directories, normalizes events, and stores them in a
+versioned SQLite database. `serve` then exposes a private browser dashboard with token and
+estimated-cost history, while the CLI can also emit machine-readable JSON for other tools.
+
+The first working version reconciles its totals against independent reference calculations. That
+makes the dashboard more than a log viewer: imported usage is checked before it becomes a number a
+user might rely on.
+
+## Storage and pricing correctness
+
+The database uses transactional migrations and idempotent batch insertion, so rescanning the same
+logs does not duplicate usage events. Unknown models remain visible, but their costs are marked
+incomplete rather than silently treated as free. A bundled pricing snapshot handles known models
+while keeping the accounting honest when a model is not recognized.
+
+## Privacy boundary
+
+Session logs can contain source code, file contents, and prompts. Agentmeter keeps the data path
+local and explicitly forbids real session data in the repository; test fixtures are synthetic and
+hand-authored. That boundary is part of the product rather than an afterthought in the README.
+
+## Verification and delivery
+
+The repository's `make check` gate runs formatting, `go vet`, linting, and race-enabled tests. The
+same project can produce CGO-free binaries for Windows and Linux, keeping deployment as a single
+executable with no runtime service to install.
+
+## Outcome
+
+Agentmeter has moved beyond scaffolding into a working development version with scanning, local
+reporting, SQLite persistence, and a browser dashboard. The repository remains actively developed
+as the supported session formats and reporting surface mature.
