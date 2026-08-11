@@ -1,0 +1,120 @@
+---
+title: 'The Most Useful Part of a README Is What the Project Refuses to Do'
+summary: 'Feature lists describe ambition. Non-goals describe software you can actually build, test, and keep understandable.'
+date: 2026-08-11
+tags: ['Software Design', 'Documentation', 'Side Projects']
+draft: false
+---
+
+## The feature list is easy
+
+A new project usually starts with an attractive sentence.
+
+> A private fitness platform you host yourself.
+
+> One command that updates everything on your machine.
+
+> A tool that lets one conversation coordinate several coding agents.
+
+Those sentences are useful because they create momentum. They give the project a name and make the
+first repository feel like the beginning of something real.
+
+The trouble starts when the feature list becomes the product definition. Features are cheap to
+write down. Every new idea sounds harmless before it has to coexist with the others. A command-line
+tool becomes a daemon, then a cloud service, then a package manager, then a desktop application.
+The original idea is still somewhere in there, but it has to share a room with everything else.
+
+The list says what the project might become. It does not say what it is allowed to become.
+
+## The boundary is the product
+
+The most valuable paragraphs in my recent project READMEs are the ones that start with _not_.
+
+`upall` is not a package manager. It drives the package managers already installed on a machine.
+It is not configuration management, so it does not maintain a desired state or converge a fleet.
+It has no daemon, scheduling, or remote-host support.
+
+Those exclusions are not defensive writing. They determine the design. There is no inventory model
+because the tool does not own machine state. There is no rollback abstraction because the providers
+have incompatible rollback semantics. There is no scheduler because another tool already owns that
+problem.
+
+The project becomes smaller, but it also becomes more precise. When a feature request arrives, the
+question is no longer "could this be useful?" It is "does this belong to the thing we said we were
+building?"
+
+## Non-goals turn into tests
+
+A good boundary should be observable in the code. Otherwise it is only a preference written in a
+document.
+
+Kinon's most important constraint is that the phone remains useful with zero server connectivity.
+That is stronger than saying the app supports offline mode. A server outage must not prevent a
+workout from starting, and the local record must be able to survive until synchronization is
+available again. The constraint reaches the architecture, the data model, and the test plan.
+
+Shunt has a different kind of boundary: nothing lands without explicit human approval. That means
+the worker can create a branch, write a report, and prepare a pull request, but the orchestrator
+cannot quietly merge its own work. The rule is not a sentence for the README alone. It is a guard
+around the command that changes the user's project, and a refusal is part of the expected behavior.
+
+This is the useful transformation:
+
+```text
+non-goal → invariant → test or guard
+```
+
+"No remote hosts" becomes an interface that has no remote-host concept. "Works offline" becomes a
+test that disconnects the server. "Nothing lands automatically" becomes a command that refuses to
+proceed without approval.
+
+If a non-goal cannot produce an invariant, it may not be a non-goal yet. It may just be a sentence
+that sounds responsible.
+
+## Boundaries make future decisions cheaper
+
+Most architecture decisions do not arrive as clean, isolated questions. They arrive as small
+requests that appear to have no cost.
+
+Could we add a hosted dashboard? Could we let the server be required for the first screen? Could we
+automatically merge a worker branch when all checks pass? Could we add a general plugin system while
+we are here?
+
+Each request has a reasonable argument behind it. The problem is the second-order effect. A hosted
+dashboard changes the privacy model. A server-required first screen changes the offline promise. An
+automatic merge changes the approval boundary. A plugin system creates an extension contract before
+the core behavior is stable.
+
+A written boundary gives the decision somewhere to land. It does not make every answer obvious, but
+it makes the trade-off visible. The person proposing the feature has to explain which promise is
+being changed instead of smuggling the change in as a convenience.
+
+That is especially useful on side projects, where enthusiasm is usually the scarce resource and
+scope is usually the thing that escapes first.
+
+## What I write before the code
+
+I do not try to specify an entire product before creating the first commit. That would just move
+the feature-list problem into a larger document. I want a smaller set of decisions:
+
+1. What is the one sentence someone should use to explain this project?
+2. What is it explicitly not?
+3. Which constraints are promises to the user rather than implementation preferences?
+4. What is the smallest vertical slice that can prove the idea?
+5. What would make the project healthy enough to stop adding features for a while?
+
+The answers do not need to be permanent. A boundary can change, but changing it should feel like a
+product decision, not an accidental consequence of the latest pull request.
+
+The point is not to predict every future requirement. It is to make the first wrong assumption
+cheap to discover.
+
+## Takeaway
+
+A feature list tells people why a project is exciting. A boundary tells them why it might survive.
+
+The strongest small projects are not the ones with the most planned features. They are the ones
+where the constraints are clear enough that the implementation has somewhere to stop. That makes
+the README more than an introduction and the roadmap more than a wish list.
+
+The most useful sentence in a project may be the one that says: _this is deliberately not that_.
