@@ -95,9 +95,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <!-- data-pagefind-body belongs on the pages that carry prose, not here: on
          <main> every route is indexed, so 22 of 32 entries were 8-27 word stubs
          and a search for a common word could surface the 404 page. -->
-    <!-- tabindex="-1" so the skip link moves focus here rather than only
-         scrolling; without it the next Tab returns to the header. -->
-    <main id="main-content" tabindex="-1" class="grow">
+    <main class="grow">
+      <!-- A hidden anchor provides a valid focus target for the skip link without
+           adding tabindex to the semantic <main> element. -->
+      <a id="main-content" href="#main-content" tabindex="-1" class="sr-only">Main content</a>
       <slot />
     </main>
 
