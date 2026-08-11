@@ -9,12 +9,14 @@
  */
 export const siteConfig = {
   name: 'Daniel Kindl',
-  email: 'daniel.kindl@proton.me',
+  email: 'hello@danielkindl.dev',
   feedTitle: 'Daniel Kindl — Writing',
   feedDescription: 'Technical notes and articles on software engineering.',
   socials: {
     github: 'https://github.com/daniel-kindl',
     linkedin: 'https://www.linkedin.com/in/kindldaniel/',
+    bluesky: 'https://bsky.app/profile/danielkindl.dev',
+    x: 'https://x.com/danielkindldev',
   },
 } as const;
 

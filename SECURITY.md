@@ -17,7 +17,7 @@ Please report vulnerabilities privately rather than opening a public issue:
 
 - Preferred: use GitHub's [private vulnerability reporting](https://github.com/daniel-kindl/daniel-kindl.github.io/security/advisories/new)
   for this repository.
-- Alternatively, email daniel.kindl@proton.me with details and reproduction steps.
+- Alternatively, email hello@danielkindl.dev with details and reproduction steps.
 
 I'll acknowledge reports within a few days and aim to fix confirmed issues promptly given this is
 a low-traffic personal site. No bug bounty is offered.
