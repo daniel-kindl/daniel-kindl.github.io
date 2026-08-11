@@ -1,3 +1,20 @@
+## [1.5.0](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.4.1...v1.5.0) (2026-08-11)
+
+### Features
+
+* clarify homepage approach section ([09aae5c](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/09aae5c7a79390f7889b4fdf3d58ce0bc2cf3a9b))
+* expand about technical stack ([0ccd67f](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/0ccd67fab36a1b5928b9a70d151b7f7674cf2671))
+* update contact and social links ([e77738d](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/e77738db2574b06ab259452287025128716722b3))
+
+### Bug Fixes
+
+* correct skip link focus target ([32b80dc](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/32b80dc329075fb0e75b94574d908ad933b86362))
+
+### Content
+
+* add agentmeter project case study ([d1a529a](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/d1a529a4a26f0c8aaccba74f5595b945f4460009))
+* publish README boundaries post ([b93bc0f](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/b93bc0f5e3110312665c37838b928ba90e0afcf5))
+
 ## [1.4.1](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.4.0...v1.4.1) (2026-08-02)
 
 ### Bug Fixes
