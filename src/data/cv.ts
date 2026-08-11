@@ -5,14 +5,17 @@ const careerStartDate = new Date('2023-07-01');
 export const technicalProfile = {
   name: 'Daniel Kindl',
   role: 'Software Engineer',
-  summary: `${getYearsOfExperience(careerStartDate)}+ years of experience building C#/.NET applications across the full lifecycle: desktop UI (Avalonia UI), backend services, databases (SQL Server, PostgreSQL), and containerized CI/CD deployment.`,
+  summary: `${getYearsOfExperience(careerStartDate)}+ years building software with C#/.NET, Kotlin, Go, and TypeScript. Most of my work has been desktop applications and backend services, alongside Android apps, web projects, and developer tools.`,
   skills: {
-    languages: ['C#', '.NET', 'JavaScript', 'Delphi'],
+    languages: ['C#', 'Go', 'TypeScript', 'JavaScript', 'Delphi'],
+    frameworks: ['.NET', 'Android'],
     desktopUI: ['Avalonia UI', 'MVVM'],
-    frontend: ['HTML/CSS/JS', 'Svelte', 'Astro'],
-    backend: ['REST API', 'SignalR'],
+    mobile: ['Kotlin', 'Jetpack Compose', 'Hilt'],
+    frontend: ['HTML/CSS/JS', 'Svelte 5', 'Astro', 'Tailwind CSS'],
+    backend: ['REST API', 'SignalR', 'Go'],
     databases: ['SQL Server', 'PostgreSQL', 'SQLite'],
-    devops: ['Git', 'OneDev', 'CI/CD Pipeline'],
+    testing: ['xUnit'],
+    devops: ['Git', 'GitHub Actions', 'GitHub Pages', 'OneDev', 'Docker', 'CI/CD Pipeline'],
   },
   experience: [
     {
