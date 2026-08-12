@@ -52,6 +52,7 @@ const linkLabels = [
 
 <Layout
   title={`${project.data.title} — Case Study`}
+  description={project.data.summary}
   ogImage={`/assets/meta/og/projects/${project.id}.png`}
 >
   <article data-pagefind-body>
@@ -66,9 +67,6 @@ const linkLabels = [
         <Typography variant="h1" class="mb-6 max-w-4xl">
           {project.data.title}
         </Typography>
-        <div class="mb-6 flex flex-wrap gap-2">
-          {project.data.stack.map((tech: string) => <Tag label={tech} />)}
-        </div>
         <div class="flex flex-wrap gap-3">
           {
             project.data.links?.repository && (
@@ -100,6 +98,10 @@ const linkLabels = [
               </ExternalLink>
             )
           }
+        </div>
+        <div class="mt-6 flex flex-wrap items-center gap-2">
+          <span class="mr-1 font-mono text-[10px] text-(--text-muted) uppercase">Built with</span>
+          {project.data.stack.map((tech: string) => <Tag label={tech} />)}
         </div>
       </Container>
     </div>

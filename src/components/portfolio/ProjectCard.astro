@@ -36,6 +36,9 @@ const hiddenStackCount = project.data.stack.length - visibleStack.length;
     <Typography variant="body" class="mb-6 max-w-xl text-(--text-muted)">
       {project.data.summary}
     </Typography>
+    <div class="mb-4 font-mono text-[10px] text-(--text-muted) uppercase md:hidden">
+      Status: {getProjectStatusLabel(project.data.status)} · Timeline: {timelineLabel}
+    </div>
     <div class="mb-6 flex flex-wrap gap-2">
       {visibleStack.map((tech: string) => <Tag label={tech} />)}
       {hiddenStackCount > 0 && <Tag label={`+${hiddenStackCount} more`} />}
@@ -50,9 +53,6 @@ const hiddenStackCount = project.data.stack.length - visibleStack.length;
         )
       }
     </div>
-    <div class="mt-4 font-mono text-[10px] text-(--text-muted) uppercase md:hidden">
-      Status: {getProjectStatusLabel(project.data.status)} · Timeline: {timelineLabel}
-    </div>
   </div>
 
   <div
@@ -62,7 +62,7 @@ const hiddenStackCount = project.data.stack.length - visibleStack.length;
       <div>Status: {getProjectStatusLabel(project.data.status)}</div>
       <div>Timeline: {timelineLabel}</div>
       <div>
-        Stack: {project.data.stack.length}
+        Stack: {project.data.stack.length}{' '}
         {project.data.stack.length === 1 ? 'technology' : 'technologies'}
       </div>
     </div>
