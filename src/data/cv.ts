@@ -5,7 +5,7 @@ const careerStartDate = new Date('2023-07-01');
 export const technicalProfile = {
   name: 'Daniel Kindl',
   role: 'Software Engineer',
-  summary: `${getYearsOfExperience(careerStartDate)}+ years building software with C#/.NET, Kotlin, Go, and TypeScript. Most of my work has been desktop applications and backend services, alongside Android apps, web projects, and developer tools.`,
+  summary: `Software engineer who likes turning ideas and annoying problems into finished software. ${getYearsOfExperience(careerStartDate)}+ years building software with C#/.NET, Kotlin, Go, and TypeScript. Most of my work has been desktop applications and backend services, alongside Android apps, web projects, and developer tools.`,
   skills: {
     languages: ['C#', 'Go', 'TypeScript', 'JavaScript', 'Delphi'],
     frameworks: ['.NET', 'Android'],
