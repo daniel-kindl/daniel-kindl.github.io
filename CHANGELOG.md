@@ -1,3 +1,15 @@
+## [1.5.1](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.5.0...v1.5.1) (2026-08-12)
+
+### Bug Fixes
+
+* clarify portfolio messaging ([#19](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/19)) ([6a3efff](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/6a3efff6665c29d40de0e9be35e167e5bf4a0237))
+
+### Chores & Dependencies
+
+* bump fast-uri from 3.1.4 to 3.1.5 ([#17](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/17)) ([ba92fa4](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/ba92fa488a0e530fdc8eaf3adf71291c9143be19))
+* bump js-yaml from 4.3.0 to 4.3.1 ([#18](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/18)) ([fa04525](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/fa04525eb3baee9a3885f882e13e9c4f6af76fbd))
+* bump the npm-minor-patch group with 3 updates ([#16](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/16)) ([f87054c](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/f87054c6220c2493f0108c2e71b6a5fc28151d10))
+
 ## [1.5.0](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.4.1...v1.5.0) (2026-08-11)
 
 ### Features
