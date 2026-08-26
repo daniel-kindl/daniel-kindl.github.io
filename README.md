@@ -41,18 +41,18 @@ run, so this is a local-only setup step.
 
 ## Scripts
 
-| Command                   | Purpose                                                        |
-| :------------------------ | :------------------------------------------------------------- |
-| `npm run dev`             | Start local development server                                 |
-| `npm run build`           | Build static production output                                 |
-| `npm run preview`         | Preview built output                                           |
-| `npm run typecheck`       | Run Astro type checks                                          |
-| `npm test`                | Run the Node test suite                                        |
-| `npm run lint`            | Run ESLint                                                     |
-| `npm run lint:fix`        | Run ESLint with autofix                                        |
-| `npm run format`          | Format files with Prettier                                     |
-| `npm run format:check`    | Check formatting with Prettier                                 |
-| `npm run generate-assets` | Regenerate OG images, icons, and `apple-touch-icon.png`        |
+| Command                   | Purpose                                                       |
+| :------------------------ | :------------------------------------------------------------ |
+| `npm run dev`             | Start local development server                                |
+| `npm run build`           | Build static production output                                |
+| `npm run preview`         | Preview built output                                          |
+| `npm run typecheck`       | Run Astro type checks                                         |
+| `npm test`                | Run the Node test suite                                       |
+| `npm run lint`            | Run ESLint                                                    |
+| `npm run lint:fix`        | Run ESLint with autofix                                       |
+| `npm run format`          | Format files with Prettier                                    |
+| `npm run format:check`    | Check formatting with Prettier                                |
+| `npm run generate-assets` | Regenerate OG images, icons, and `apple-touch-icon.png`       |
 | `npm run release`         | Run the dependency-free release automation used by deployment |
 
 When using Claude Code, start the dev server with `astro dev --background` and manage it with
