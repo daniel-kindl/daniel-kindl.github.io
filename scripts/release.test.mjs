@@ -11,7 +11,10 @@ test('parses scoped and breaking conventional commits', () => {
     breaking: true,
   });
 
-  assert.equal(parseCommit('feat: change API\n\nBREAKING CHANGE: old clients are unsupported')?.breaking, true);
+  assert.equal(
+    parseCommit('feat: change API\n\nBREAKING CHANGE: old clients are unsupported')?.breaking,
+    true,
+  );
 });
 
 test('selects the highest release type', () => {

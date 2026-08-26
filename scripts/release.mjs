@@ -43,7 +43,10 @@ export function getReleaseType(commits) {
     else if (parsed.type === 'feat') candidate = 'minor';
     else if (['fix', 'perf', 'revert'].includes(parsed.type)) candidate = 'patch';
 
-    if (candidate && (!releaseType || RELEASE_PRIORITY[candidate] > RELEASE_PRIORITY[releaseType])) {
+    if (
+      candidate &&
+      (!releaseType || RELEASE_PRIORITY[candidate] > RELEASE_PRIORITY[releaseType])
+    ) {
       releaseType = candidate;
     }
   }
@@ -74,7 +77,10 @@ export function bumpVersion(version, releaseType) {
 }
 
 function linkIssueReferences(subject, repositoryUrl) {
-  return subject.replace(/#(\d+)\b/g, (_, number) => `[#${number}](${repositoryUrl}/issues/${number})`);
+  return subject.replace(
+    /#(\d+)\b/g,
+    (_, number) => `[#${number}](${repositoryUrl}/issues/${number})`,
+  );
 }
 
 function formatCommit(commit, repositoryUrl) {
