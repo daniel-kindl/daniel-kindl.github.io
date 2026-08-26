@@ -47,16 +47,116 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Update Security Documentation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          tests_text = (
+              "Tests use Node's built-in runner with native type stripping — no test dependency or config. "
+              "The suite covers pure helpers in `src/lib/` plus the dependency-free release automation in "
+              "`scripts/release.test.mjs`; `content.ts` and `buildInfo.ts` remain out of scope because they "
+              "import Astro runtime values."
+          )
+          ci_text = (
+              "CI (`.github/workflows/ci.yml`) runs on PRs to `master`: `npm ci` → "
+              "`npm audit --audit-level=high` → asset generation → lint → formatting → `astro check` → "
+              "tests → a release dry run → the production build → Lighthouse. Deploy "
+              "(`.github/workflows/deploy.yml`) runs the same security and quality gates before "
+              "`npm run release`, then performs a second build so `src/lib/buildInfo.ts` sees the released "
+              "version before GitHub Pages is published. Releasing after the gates means a failed build cannot "
+              "strand a tag for a version that never deployed. If you change anything affecting bundle size, "
+              "LCP, or accessibility, expect Lighthouse to gate the deploy; it measures the representative "
+              "pages listed in `lighthouserc.json`."
+          )
+          content_text = (
+              "**Use `content:` for anything under `src/content/`** — publishing or editing a post or case study. "
+              "It is a repo-specific type registered in `commitlint.config.mjs`; `scripts/release.mjs` keeps it "
+              "out of the release-trigger rules, so content changes ride along in the next real release without "
+              "moving the site version. Reserve `feat:`/`fix:` for the site itself. See ADR #14 and ADR #16 in "
+              "`docs/tech-decisions.md`."
+          )
+
+          for filename in ('AGENTS.md', 'CLAUDE.md'):
+              path = Path(filename)
+              text = path.read_text()
+              text = text.replace(
+                  'npm test                 # node --test over src/lib/*.test.ts',
+                  'npm test                 # node --test over src/lib/*.test.ts and scripts/*.test.mjs',
+              )
+              if 'npm run release' not in text.split('```', 2)[1]:
+                  text = text.replace(
+                      'npm run generate-assets  # regenerate public/assets/meta PNGs, apple-touch-icon.png, and icon.svg (uses `canvas`)',
+                      'npm run generate-assets  # regenerate public/assets/meta PNGs, apple-touch-icon.png, and icon.svg (uses `canvas`)\n'
+                      'npm run release          # dependency-free release automation used by deployment',
+                  )
+              text = re.sub(
+                  r"Tests use Node's built-in runner.*?\n\nWhen starting the dev server",
+                  tests_text + '\n\nWhen starting the dev server',
+                  text,
+                  flags=re.S,
+              )
+              text = re.sub(
+                  r"CI \(`\.github/workflows/ci\.yml`\).*?not every route\.\n",
+                  ci_text + '\n',
+                  text,
+                  flags=re.S,
+              )
+              text = re.sub(
+                  r"\*\*Use `content:`.*?See ADR #14 in `docs/tech-decisions\.md`\.\n",
+                  content_text + '\n',
+                  text,
+                  flags=re.S,
+              )
+              path.write_text(text)
+
+          adr = Path('docs/tech-decisions.md')
+          text = adr.read_text()
+          heading = '## 16. Release automation: first-party Node script, superseding ADR #11'
+          if heading not in text:
+              entry = '''## 16. Release automation: first-party Node script, superseding ADR #11
+
+**Status:** Accepted — 2026-08-26 (supersedes the implementation in #11)
+
+**Context:** Dependabot and `npm audit` reported seven high-severity findings in the development
+dependency tree. Most came from stale packages bundled inside the npm CLI installed through
+`semantic-release` → `@semantic-release/npm`. npm's bundled dependencies cannot be changed with
+normal package overrides. Testing the older semantic-release line increased the vulnerable surface
+instead of reducing it. This site does not publish an npm package; the npm release plugin was only
+used to update version files.
+
+**Decision:** Remove semantic-release and all of its release plugins. `scripts/release.mjs` now
+implements the release path with Node built-ins and Git only. It preserves the repository's release
+rules: breaking changes trigger major releases, `feat` triggers minor, `fix`/`perf`/`revert` trigger
+patch, and `content`/`docs`/`chore` do not trigger a release but can appear in the next changelog.
+On a release it updates `CHANGELOG.md`, `package.json`, and `package-lock.json`, creates the release
+commit and tag, pushes them, and creates the GitHub Release through the GitHub REST API.
+`scripts/release.test.mjs` covers commit parsing, release selection, version bumps, and changelog
+grouping. CI and deployment block on `npm audit --audit-level=high`, and CI performs a release dry
+run against the repository history.
+
+**Consequences:** The project no longer embeds an npm CLI solely to version a static site, and the
+locked dependency tree audits clean. Release behavior is now first-party code that must be
+maintained, so its tests and dry-run gate are part of the release contract. The zero-manual-step
+release model from ADR #11 remains unchanged. ADR #14's `content:` policy also remains, but its
+release configuration now lives in `scripts/release.mjs` instead of `release.config.mjs`.
+'''
+              adr.write_text(text.rstrip() + '\n\n---\n\n' + entry)
+          PY
+
       - name: Format Security Changes
-        run: npx --no-install prettier --write scripts/release.mjs scripts/release.test.mjs
+        run: >-
+          npx --no-install prettier --write scripts/release.mjs scripts/release.test.mjs
+          AGENTS.md CLAUDE.md docs/tech-decisions.md README.md
 
       - name: Commit Generated Security Changes
         run: |
-          git add package-lock.json scripts/release.mjs scripts/release.test.mjs
+          git add package-lock.json scripts/release.mjs scripts/release.test.mjs AGENTS.md CLAUDE.md docs/tech-decisions.md README.md
           if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit --no-verify -m "fix: refresh audited dependency state"
+            git commit --no-verify -m "docs: document dependency-free release automation"
             git push origin HEAD:${{ github.head_ref }}
           fi
 
