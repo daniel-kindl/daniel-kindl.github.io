@@ -51,11 +51,6 @@ jobs:
       - name: Execute Lint Verification
         run: npm run lint
 
-      - name: Inspect README Formatting
-        run: |
-          npx --no-install prettier --write README.md
-          git diff -- README.md
-
       - name: Execute Format Verification
         run: npm run format:check
 
