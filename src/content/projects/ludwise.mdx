@@ -1,0 +1,114 @@
+---
+title: 'LUDWISE'
+summary: 'Transparent PC game store comparison and discovery platform, built around direct storefront data, durable provider boundaries, and a private catalogue backend.'
+role: 'Founder & Solo Developer'
+stack: ['TypeScript', 'Astro', 'Cloudflare Workers', 'D1', 'React', 'Vitest', 'Playwright']
+links:
+  repository: 'https://github.com/ludwise/ludwise-web'
+status: 'development'
+dates:
+  start: 2026-08-21
+  end: null
+weight: 10
+---
+
+## Context
+
+Buying a PC game should be a simple comparison: find the game, see which trusted stores sell it,
+and choose the offer that makes sense. In practice, the data is fragmented across storefronts,
+regions, currencies, editions, release states, and provider-specific identifiers.
+
+LUDWISE is my attempt to make that comparison transparent without turning the product into another
+marketplace. It is a discovery and comparison layer over direct storefront data. The first provider
+is Steam, with the architecture designed so another store is an adapter rather than a rewrite.
+
+The project is still in development. Staging is deployed; production has not launched.
+
+## The catalogue is the product
+
+The central model separates a canonical game from the stores that sell it. A store listing belongs
+to a game, offers belong to the listing, and market-specific prices belong to the offer. That keeps
+identity, availability, price, region, and currency from collapsing into one provider-shaped record.
+
+Current offers and price history are also separate concerns. The current catalogue answers what a
+visitor can buy now. Append-only observations preserve how that answer changed, with provider and
+sync provenance kept alongside the data.
+
+This matters because a comparison site is only useful when a number can be traced back to what was
+actually observed rather than reconstructed later from a lossy snapshot.
+
+## Provider boundaries before provider count
+
+Steam is the first storefront, but Steam is not allowed to become the domain model. Provider code
+sits behind interfaces at the edge of the application, while the core model remains independent of
+store-specific response shapes.
+
+That costs more work at the beginning. The payoff is that adding GOG, Epic, Humble Bundle, or
+another direct seller should mostly mean implementing a provider and mapping its data into an
+existing contract. The same principle applies outside catalogue ingestion: email, analytics,
+authentication, billing, and other external systems are intended to remain replaceable.
+
+The architecture is deliberately modular rather than prematurely split into microservices. The
+boundaries exist in code now so that a subsystem can move behind a process or network boundary later
+without first having to discover where its responsibilities should have been.
+
+## Public interface, private catalogue
+
+The visitor-facing website and catalogue backend live in separate repositories. The public web
+repository contains presentation, accessibility, design-system code, and the read contract. It has
+no provider credentials, persistence, ingestion logic, or catalogue decisions.
+
+In Cloudflare, the website reaches the backend through a service binding to a named Worker
+entrypoint. The browser does not call that read capability directly and there is no public API URL
+for it. The backend keeps the database and provider integrations on the private side of the
+boundary.
+
+That separation is not there to make the repository diagram look cleaner. It prevents the public
+interface from slowly accumulating price rules, provider logic, or credentials simply because they
+are convenient to reach from a page.
+
+## Anonymous by default
+
+The core product is designed to work without an account. Search, discovery, current prices, sales,
+price history, and other comparison features should not require registration.
+
+Accounts are for persistent user state: syncing preferences, wishlists, alerts, linked libraries,
+and other features that need identity across devices. The distinction is intentional. Signing in
+should upgrade the experience, not unlock a product that was arbitrarily hidden behind a form.
+
+## Verification as architecture
+
+LUDWISE treats repository rules as executable constraints where possible. CI checks formatting,
+linting, types, tests, migrations, builds, Worker behaviour, and architectural boundaries. The web
+client has its own contract, accessibility, architecture, and end-to-end checks.
+
+Some architectural decisions are therefore enforced twice: once in documentation and again by a
+test or lint rule that fails when code crosses the boundary. The goal is to make a rule survive the
+next refactor without depending on someone remembering a paragraph written months earlier.
+
+## Trade-offs
+
+The project is intentionally over-disciplined for its current traffic. A single-store prototype
+could have been built faster with one repository, provider-shaped database rows, browser-to-API
+fetches, and fewer gates.
+
+I chose the slower foundation because most of the difficult parts of LUDWISE are not rendering a
+price card. They are deciding what a game is across stores, preserving provenance, evolving a
+contract without coupling deployments, and keeping commercial relationships from becoming product
+logic.
+
+The risk is obvious: architecture can become a substitute for shipping. The counterweight is to
+keep the deployment model small, stay on managed Cloudflare primitives, and add providers and
+features only when the existing product has a reason to need them.
+
+## Outcome
+
+LUDWISE currently has a deployed staging environment, scheduled catalogue ingestion, a canonical
+domain model, a private backend, a separate public web client, and a tested read contract between
+them. Steam is the first provider and the catalogue is being populated while the public product is
+still being prepared.
+
+The next phase is less about inventing foundations and more about proving that those foundations
+make expansion boring: add more direct storefront providers, improve metadata and discovery, and
+turn the staging system into a useful public product without weakening the boundaries that got it
+there.

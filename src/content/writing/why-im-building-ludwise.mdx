@@ -1,0 +1,186 @@
+---
+title: "Why I'm Building LUDWISE"
+summary: 'LUDWISE started as a PC game price-comparison idea. The harder part turned out to be designing a catalogue and product I could trust before there was anything worth scaling.'
+date: 2026-08-26
+tags: ['LUDWISE', 'Architecture', 'Product Design', 'Cloudflare']
+draft: false
+project: ludwise
+---
+
+## The simple version of the idea
+
+LUDWISE started with a straightforward problem: I play a lot of PC games, there are a lot of stores,
+and checking where to buy something is more fragmented than it should be.
+
+The obvious product is a price-comparison site. Search for a game, see the stores that sell it, look
+at the prices and discounts, and choose where to buy it.
+
+That part is easy to describe. It is also the least interesting architectural problem in the
+project.
+
+The harder question is what has to be true before I trust the comparison.
+
+## I do not want another marketplace
+
+LUDWISE is not intended to sell games or keys. It sits between a player and the stores themselves.
+That distinction shaped one of the earliest product rules: catalogue data should come from direct
+storefronts, not from other comparison services, and I do not want grey-market key or account
+sellers mixed into the same results as official stores.
+
+Affiliate links may eventually help pay for the service, but they should not decide which offer
+appears first. If a store pays a commission and another does not, that is a commercial fact, not a
+ranking signal.
+
+That sounds like a product-policy detail until you try to model it. A comparison result has to know
+where an offer came from, which store owns it, which market it applies to, what currency was
+observed, and when the data was last seen. Once the product promises transparency, provenance stops
+being metadata and becomes part of correctness.
+
+## A game is not a Steam app
+
+Steam is the first provider because it is the obvious place to start, but I did not want the first
+API response I integrated to become the database schema for the next five years.
+
+The core model therefore separates the canonical game from the store listing, the purchasable
+offer, and the market-specific price. In simplified form:
+
+```text
+Game
+  -> StoreListing
+      -> StoreOffer
+          -> Market
+```
+
+That separation exists because stores disagree about identity and packaging. The same game can have
+different store IDs, editions, bundles, currencies, regions, availability rules, and release data.
+If all of that is collapsed into one row called `steam_game`, adding a second provider is not really
+an integration. It is a migration away from the assumptions made by the first one.
+
+I would rather pay that modelling cost now.
+
+## Current price and price history are different things
+
+Another early decision was to separate the current offer from historical observations.
+
+The current catalogue should be optimized for answering a visitor's question: what can I buy now?
+Price history answers a different question: what did we observe before, and when did it change?
+
+Trying to make one table do both usually means either the current query becomes awkward or history
+loses detail. LUDWISE keeps the current state separate and records changes append-only, together
+with provider and synchronization timestamps.
+
+That gives the system a useful rule: a historical number should be something the system actually
+observed, not something reconstructed later because the current row was overwritten.
+
+## Designing for stores I have not integrated yet
+
+Provider abstraction is easy to overdo. A project with one implementation can end up with fifteen
+interfaces that predict requirements nobody has actually seen.
+
+I am trying to avoid that version of abstraction while still preventing provider code from becoming
+the application itself. Steam-specific request and response shapes stay at the edge. The domain and
+application layers deal in LUDWISE concepts.
+
+The goal is not to pretend every storefront is identical. They are not. The goal is to make their
+differences explicit in adapters instead of spreading `if provider === 'steam'` through the product.
+
+GOG is the next provider I am investigating. That will be the first useful test of whether the
+boundary is real or only looks good while there is one implementation.
+
+## Accounts should remember things, not unlock things
+
+I also made a product decision that has architectural consequences: the useful part of LUDWISE
+should work without an account.
+
+Searching, discovering games, comparing current prices, browsing sales, and looking at price
+history do not need to know who the visitor is. I do not want to manufacture an authentication
+requirement just because accounts are useful for retention.
+
+Accounts make sense when the service needs persistent personal state: a synchronized wishlist,
+price or release alerts, preferred stores, hidden games, owned games, linked libraries, or settings
+that should follow someone to another device.
+
+That makes signing in an upgrade to an already useful product instead of a toll gate in front of it.
+It also keeps authentication out of the core catalogue path.
+
+## I split the website from the backend before launch
+
+LUDWISE originally lived together, but the public interface and private catalogue now live in
+separate repositories.
+
+The public web repository is intentionally capable of being cloned, built, and tested without the
+private backend. It owns presentation, accessibility, the design system, and the public read
+contract. It does not own the database, store integrations, ingestion, ranking, or price rules.
+
+In deployment, the web Worker reaches the private backend through a Cloudflare service binding to a
+named Worker entrypoint. The browser does not call that capability directly. There is no public read
+API URL involved in rendering the site.
+
+For a hobby project that has not launched yet, this is more structure than strictly necessary. It
+also means the line between "what the website displays" and "what the catalogue decides" is not a
+convention living in my head. It is a deployment boundary.
+
+## The project is deliberately stricter than it needs to be today
+
+There is an amusing mismatch between LUDWISE's current scale and the way I am building it.
+
+Production is not launched. Staging is still being populated. Steam is the only integrated store.
+There is no traffic problem to solve.
+
+At the same time, the repositories have CI gates, architecture tests, contract checks, migration
+verification, access controls, structured logging, provider boundaries, and rules about how the two
+repositories are allowed to depend on each other.
+
+Some of that is undoubtedly more discipline than a one-person pre-launch project requires.
+
+I am comfortable with that as long as the discipline removes future ambiguity instead of adding
+ceremony. A test that prevents catalogue logic from leaking into the frontend has value. A layer
+that only exists because an architecture diagram looked empty probably does not.
+
+That is the balance I am trying to keep.
+
+## Small project, real constraints
+
+I am also building LUDWISE with a useful constraint: it should remain inexpensive enough that I can
+keep running it as a hobby project even if it never becomes a business.
+
+That is one reason the infrastructure is concentrated on Cloudflare rather than assembled from a
+large collection of managed services. Workers, D1, service bindings, Access, and the surrounding
+platform cover a surprising amount of what the project needs while keeping the operational surface
+small.
+
+If LUDWISE eventually earns money, good. Affiliate links and optional paid extras are possible ways
+to support it. But the architecture should not require business success just to stay online.
+
+That constraint is healthy. It forces every new service and subsystem to justify itself.
+
+## Where it is now
+
+As of August 26, 2026, LUDWISE is still a development project, not a launched product.
+
+The staging system is deployed. Scheduled ingestion is populating the catalogue. The backend holds
+the canonical model, persistence, provider integrations, and read capability. The public website is
+a separate open repository with its own tests and contract. Steam is the first provider, and the
+next storefront work is moving toward GOG.
+
+There is still a lot between that and the product I have in mind: broader storefront coverage,
+better metadata, discovery, polished public pages, accounts, alerts, and eventually a public API.
+
+But the part I care about most is already becoming visible. LUDWISE is no longer a price-card mockup
+waiting for some APIs. It has rules about what it will trust, what it will expose, and where each
+kind of decision belongs.
+
+## What I want to find out
+
+The next stage is a test of whether those rules actually help.
+
+Adding the second and third storefront should be boring in the right places. The public website
+should evolve without needing private provider knowledge. The catalogue should gain richer data
+without losing provenance. New account features should stay optional for someone who only wants to
+compare a game and leave.
+
+If those things become easier because of decisions made before launch, the extra foundation was
+worth it.
+
+If they do not, I will have a much more interesting post to write about which assumptions were
+wrong.
