@@ -40,6 +40,11 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Inspect Safe Dependency Fixes
+        run: |
+          npm audit fix --package-lock-only
+          git diff -- package-lock.json
+
       - name: Execute Dependency Security Audit
         run: npm audit --audit-level=high
 
