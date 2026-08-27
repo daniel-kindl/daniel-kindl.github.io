@@ -1,3 +1,17 @@
+## [1.5.2](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.5.1...v1.5.2) (2026-08-27)
+
+### Bug Fixes
+
+* resolve dependency security alerts ([#24](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/24)) ([891b1b5](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/891b1b52f49887b163d6c4eef160d4fbd89abbb5))
+
+### Content
+
+* add LUDWISE project and introduction post ([44a153a](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/44a153a732c880ca8056c7fbe2f31f04017234c7))
+
+### Chores & Dependencies
+
+* update npm dependencies and Astro Markdown processor ([bb1c1ea](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/bb1c1eaefa8ff7e27e6de1d33ae883f6005e7a9c))
+
 ## [1.5.1](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.5.0...v1.5.1) (2026-08-12)
 
 ### Bug Fixes
