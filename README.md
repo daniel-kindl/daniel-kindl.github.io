@@ -41,36 +41,43 @@ run, so this is a local-only setup step.
 
 ## Scripts
 
-| Command                   | Purpose                                                 |
-| :------------------------ | :------------------------------------------------------ |
-| `npm run dev`             | Start local development server                          |
-| `npm run build`           | Build static production output                          |
-| `npm run preview`         | Preview built output                                    |
-| `npm run typecheck`       | Run Astro type checks                                   |
-| `npm test`                | Run the `node --test` suite over `src/lib/*.test.ts`    |
-| `npm run lint`            | Run ESLint                                              |
-| `npm run lint:fix`        | Run ESLint with autofix                                 |
-| `npm run format`          | Format files with Prettier                              |
-| `npm run format:check`    | Check formatting with Prettier                          |
-| `npm run generate-assets` | Regenerate OG images, icons, and `apple-touch-icon.png` |
+| Command                   | Purpose                                                       |
+| :------------------------ | :------------------------------------------------------------ |
+| `npm run dev`             | Start local development server                                |
+| `npm run build`           | Build static production output                                |
+| `npm run preview`         | Preview built output                                          |
+| `npm run typecheck`       | Run Astro type checks                                         |
+| `npm test`                | Run the Node test suite                                       |
+| `npm run lint`            | Run ESLint                                                    |
+| `npm run lint:fix`        | Run ESLint with autofix                                       |
+| `npm run format`          | Format files with Prettier                                    |
+| `npm run format:check`    | Check formatting with Prettier                                |
+| `npm run generate-assets` | Regenerate OG images, icons, and `apple-touch-icon.png`       |
+| `npm run release`         | Run the dependency-free release automation used by deployment |
 
 When using Claude Code, start the dev server with `astro dev --background` and manage it with
 `astro dev stop` / `astro dev status` / `astro dev logs`.
 
 ## CI/CD
 
-Pull requests to `master` run `npm run generate-assets` → `npm run lint` → `npm run format:check` →
-`astro check` → `npm test` → `npm run build` (`.github/workflows/ci.yml`). Pushes to `master` run
-that same gate set, then a Lighthouse CI budget check (`lighthouserc.json`), then `semantic-release`,
-then a second build so the footer carries the newly released version, and finally deploy to GitHub
-Pages (`.github/workflows/deploy.yml`). Releasing after the gates rather than before means a failed
-build can't leave a tag behind for a version that never shipped.
+Pull requests to `master` install the locked dependency tree, block on
+`npm audit --audit-level=high`, then run asset generation, lint, formatting, type checks, tests,
+the production build, and the Lighthouse CI budget (`.github/workflows/ci.yml`). Pushes to
+`master` run the same security and quality gates before release and deployment
+(`.github/workflows/deploy.yml`).
+
+Release automation is implemented in `scripts/release.mjs` using only Node.js and Git. It reads all
+commits since the latest `vX.Y.Z` tag, applies the repository's Conventional Commit release rules,
+updates `CHANGELOG.md`, `package.json`, and `package-lock.json`, commits and tags the release, pushes
+it, and creates the GitHub Release. The deployment then builds again so the footer carries the newly
+released version. Releasing after the gates means a failed build cannot leave a tag behind for a
+version that never shipped.
 
 Commits are enforced via Husky + commitlint using
 [Conventional Commits](https://www.conventionalcommits.org/) (`type: description`, e.g. `feat:`,
 `fix:`, `chore:`), and `lint-staged` runs ESLint/Prettier on staged files at commit time. Entries
-under `src/content/` use a repo-specific `content:` type, which is excluded from semantic-release's
-release rules so publishing a post or case study doesn't move the site version.
+under `src/content/` use a repo-specific `content:` type. The release automation does not treat it
+as releasable, so publishing a post or case study does not move the site version.
 
 ## Documentation
 
