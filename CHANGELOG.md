@@ -1,3 +1,24 @@
+## [1.5.5](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.5.4...v1.5.5) (2026-09-09)
+
+### Bug Fixes
+
+* declare markdown-satteri as a direct dependency ([#39](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/39)) ([686356f](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/686356faf3c7bb13fc2590ebd18505146de761a9))
+
+### Documentation
+
+* add STE for software article ([#35](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/35)) ([a54b824](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/a54b824453c0eab1dcfaf9a77bf6a7a93b06e303))
+* add tools before AI article ([#34](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/34)) ([d2a8b40](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/d2a8b401c3c226c3f619fe79e3445236f0d829ef))
+* add dk-devkit case study ([#33](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/33)) ([fd5dc27](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/fd5dc27936bd1e0810b6a2285d61d33ebb52a2eb))
+
+### Chores & Dependencies
+
+* remove accidental temp file ([2956770](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/2956770d52410011fdd986d38f5884172cfe55eb))
+* tmp ([b9c6152](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/b9c6152a70283882e1f2cde29816917a7d377878))
+* remove accidental temp file ([20c14f0](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/20c14f0aff3b6abe40c45ee65cd2a1e53a3d46a0))
+* tmp ([3840b5d](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/3840b5d816ee4c19197a95636f80056f75e70759))
+* remove accidental noop file ([bb9c0d1](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/bb9c0d1d3264f999cb69422a0f466ffe4ab26ac7))
+* noop ([e282caa](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/e282caabf30f2b862f8e4e4756a8641140730098))
+
 ## [1.5.4](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.5.3...v1.5.4) (2026-09-09)
 
 ### Bug Fixes
