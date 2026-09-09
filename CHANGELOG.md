@@ -1,3 +1,16 @@
+## [1.5.3](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.5.2...v1.5.3) (2026-09-09)
+
+### Bug Fixes
+
+* correct favicon metadata and portfolio claims ([#30](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/30)) ([5b0a81b](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/5b0a81b2a6fe3f24dcd4f18926785c0a11b4d540))
+
+### Chores & Dependencies
+
+* bump js-yaml from 4.3.1 to 4.3.2 ([#28](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/28)) ([25b39c2](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/25b39c26be75edbf98b5fdef28bb5e39f107bb47))
+* bump the npm-minor-patch group with 5 updates ([#25](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/25)) ([9e1a333](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/9e1a333bba1f7b8fa801780bbfe05dc528a847a5))
+* bump svgo from 4.0.2 to 4.1.0 ([#29](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/29)) ([f580721](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/f580721bb437c406a65c2f03169f7b18b5a90958))
+* bump fast-uri from 3.1.5 to 3.1.7 ([#26](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/26)) ([eb02992](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/eb029920770eccfc9d2167e29857b0767e08ef87))
+
 ## [1.5.2](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.5.1...v1.5.2) (2026-08-27)
 
 ### Bug Fixes
