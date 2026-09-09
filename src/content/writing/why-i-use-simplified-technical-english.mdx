@@ -1,0 +1,179 @@
+---
+title: 'Why I Use Simplified Technical English in Software Projects'
+summary: 'How I use ASD-STE100 as a baseline for technical prose, agent instructions, and project terminology without pretending that ordinary software documentation is strict aerospace STE.'
+date: 2026-09-09
+tags: ['Documentation', 'ASD-STE100', 'Technical Writing', 'AI-Assisted Development']
+draft: false
+---
+
+## Technical English is part of the system
+
+I used to treat documentation style as a presentation problem. Code had correctness rules. APIs had contracts. Tests had expected results. Prose mostly needed to be readable.
+
+That stopped being enough once more of my development workflow involved AI agents.
+
+An ambiguous sentence in a README is inconvenient for a person. An ambiguous sentence in an `AGENTS.md`, a tool description, a safety rule, or a task specification can change what an automated contributor does.
+
+The problem is not that an LLM cannot understand natural English. It usually can. The problem is that natural English gives both the writer and the reader many ways to express or interpret the same idea.
+
+For technical work, that flexibility is not always useful.
+
+I started using [ASD-STE100 Simplified Technical English](https://www.asd-ste100.org/) as the baseline for technical English across my projects.
+
+I am not claiming that my repositories are formally compliant aerospace documentation. They are not. I use the standard as a source of constraints and habits that make software documentation more precise.
+
+## What STE actually is
+
+ASD-STE100 is a controlled natural language for technical documentation. The current standard is Issue 9, published in January 2025.
+
+The standard has two main parts: writing rules and a controlled dictionary. The dictionary limits general vocabulary and usually assigns an approved word one meaning and one part of speech. The rules also allow subject-specific technical nouns and verbs, because real technical documentation still needs the vocabulary of its domain.
+
+That combination is important. The goal is not to write technical documentation with only a tiny set of generic words. The goal is to reduce unnecessary linguistic variation while keeping the terminology that the subject requires.
+
+Software engineering is full of subject-specific terms: repository, commit, container, cache, token, branch, worker, adapter, migration, and many more. Trying to replace those with simpler but less precise words would make documentation worse.
+
+The useful lesson is different: once a project chooses a term for a concept, keep using that term.
+
+## One term for one concept
+
+This is the rule that has had the largest effect on how I write software documentation.
+
+Suppose one architecture document calls something a _plugin_. Another page calls the same thing an _extension_. An issue says _module_. The code calls it a _provider_. A human reader can often infer that these words probably refer to the same thing.
+
+An automated system has to make the same inference, repeatedly.
+
+Even when it succeeds, the vocabulary has already made the system harder to reason about.
+
+In DKBot, for example, I want a controlled project vocabulary around concepts such as the core, extensions, capabilities, operations, interfaces, and durable state. If an extension is the defined unit, documentation should not casually rename it to plugin because the sentence sounds less repetitive.
+
+Repetition is cheaper than ambiguity.
+
+That principle also applies to code review. If a pull request introduces a second term for an existing concept, I would rather fix the vocabulary than accept both and depend on context forever.
+
+## Short sentences expose hidden assumptions
+
+Long technical sentences often hide more than one requirement.
+
+Consider this invented instruction:
+
+> When an extension restarts after a failure, DKBot should restore its state where possible while ensuring that permissions are still valid and avoiding retries that could repeat destructive operations.
+
+It sounds reasonable. It also contains several different decisions:
+
+- What state is restored?
+- What does "where possible" mean?
+- When are permissions revalidated?
+- Which operations are destructive?
+- How does the system detect a repeated operation?
+- Is retry behavior part of the core or the extension contract?
+
+Breaking the sentence apart does not solve those questions, but it makes them visible.
+
+A stricter version might become:
+
+```text
+The platform stores durable extension state.
+The platform checks permissions before it starts an operation.
+The platform does not automatically retry a destructive operation.
+An extension must identify an operation as destructive when it defines the operation.
+```
+
+Now each sentence can be challenged independently. If one of those claims is not actually true, the disagreement is easier to locate.
+
+That is valuable for human design reviews and for agents implementing a specification.
+
+## Modality must survive rewriting
+
+Software documentation depends heavily on words such as _must_, _should_, _can_, and _may_. They are not interchangeable tone choices.
+
+If I write:
+
+> The extension must not receive GitHub push credentials.
+
+then a rewrite that changes _must not_ to _should not_ has changed the architecture, not just the wording.
+
+This is why my agent-writing policy explicitly requires rewrites to preserve modality and uncertainty. A statement that says something _can_ happen must not become a statement that it _will_ happen. A tentative design must not become a settled decision because a model produced more confident prose.
+
+This matters especially when AI is involved. Models are good at making text smoother. Smooth text can accidentally sound more certain than the source.
+
+Clarity without fidelity is not an improvement.
+
+## I use two levels instead of pretending everything is strict STE
+
+Applying the complete ASD-STE100 standard to every README, issue, and design discussion would be impractical for the way I work. Software prose also has different audiences and purposes from aircraft maintenance procedures.
+
+So my development policy separates two modes.
+
+### Strict mode
+
+I use the stronger constraints for text where ambiguity can directly change automated behavior:
+
+- agent-to-agent instructions;
+- prompts and system messages;
+- tool descriptions;
+- error messages;
+- status reports;
+- procedures;
+- safety-sensitive text.
+
+For this material, boring is a feature. I want direct sentences, stable terminology, explicit conditions, and as little rhetorical variation as possible.
+
+### STE-flavored mode
+
+For normal technical prose, I use STE as a baseline rather than a compliance claim:
+
+- documentation;
+- code comments;
+- issues;
+- pull request descriptions;
+- changelogs;
+- architecture explanations.
+
+The text can be more natural, but the same habits remain: prefer short sentences, keep terminology stable, avoid unnecessary synonyms, preserve modality, and do not make uncertainty disappear.
+
+This is the mode I use for most repository documentation.
+
+## User-facing text is a different problem
+
+A product interface should not sound like an aircraft maintenance manual.
+
+For user-facing UI and product text, my rule is to start from the same precise baseline and then make the wording natural. The second pass can relax the controlled style if that improves readability, as long as it does not change the meaning.
+
+That gives me two separate questions:
+
+1. Is the source statement technically precise?
+2. Is the final wording appropriate for the person reading it?
+
+Keeping those steps separate is useful. It prevents "make this friendly" from silently changing a requirement or inventing information.
+
+Some text should never go through that second pass: identifiers, API names, protocol names, commands, exact strings, legal text, and quoted external material.
+
+## Why this matters more with AI agents
+
+AI-assisted development creates an unusual feedback loop. Agents read the documentation, modify the code, then often modify the documentation that future agents will read.
+
+Small vocabulary drift can therefore compound.
+
+One agent writes _plugin_. Another sees both _plugin_ and _extension_ and assumes they are different. A third adds a paragraph explaining the distinction. Soon the repository has an architecture that nobody deliberately designed.
+
+A controlled language policy does not prevent that by itself, but it gives review a concrete standard:
+
+- use the defined term;
+- do not invent a synonym;
+- keep the original certainty level;
+- separate independent requirements;
+- do not add facts that the source does not contain.
+
+These constraints reduce one common kind of AI-generated noise: prose that is grammatically good, technically plausible, and slightly less precise than what it replaced.
+
+## The point is not simpler English
+
+The name _Simplified Technical English_ can make the idea sound like a readability exercise. Readability is part of it, but the part I care about most is control.
+
+I want the language in a repository to behave more like the rest of the engineering system.
+
+Terms should have definitions. Requirements should preserve modality. Instructions should expose conditions. Rewrites should preserve facts. New vocabulary should be deliberate rather than decorative.
+
+I still write normal prose. I still want documentation to sound human. But when text describes how software behaves, I no longer treat wording as an unstructured layer above the engineering.
+
+The words are part of the interface too.
