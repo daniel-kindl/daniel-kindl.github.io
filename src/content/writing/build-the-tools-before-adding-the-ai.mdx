@@ -1,0 +1,152 @@
+---
+title: 'Build the Tools Before Adding the AI'
+summary: 'Why I am designing DKBot as a deterministic capability and operation platform first, with conversational AI added later as one way to invoke tools rather than as the foundation of the system.'
+date: 2026-09-09
+tags: ['AI', 'Software Architecture', 'Agents', 'Tooling', 'DKBot']
+draft: false
+---
+
+## The tempting version
+
+The obvious way to start building a personal assistant is to start with the assistant.
+
+Connect an LLM, give it a Telegram bot, add a few tools, and ask it things such as:
+
+> What are the open issues on this project?
+
+The result is immediately impressive because it already looks like the product. I can type a sentence, the model decides what I meant, it calls something, and I get an answer.
+
+It is also the wrong place for me to start DKBot.
+
+DKBot is still in its architecture and research phase. There is deliberately no production runtime yet. The first milestone is not a chatbot. It is a deterministic platform that can expose useful capabilities without an LLM at all.
+
+That sounds less exciting, but it changes where the intelligence and the reliability live.
+
+## A tool should exist before a model can call it
+
+Suppose I want DKBot to answer this:
+
+> What are the open issues on LUDWISE?
+
+There are two separate problems hidden inside that sentence.
+
+The first is deterministic: authenticate to GitHub, identify the repository, retrieve open issues, normalize the result, apply any project rules, and return structured data.
+
+The second is probabilistic: infer that my sentence means I want that operation, extract the repository I mean, decide how to present the result, and maybe ask for clarification if the request is ambiguous.
+
+I want DKBot core and its extensions to solve the first problem before an AI layer is allowed to solve the second.
+
+In other words, the model should not _be_ the GitHub integration. It should be one client of a GitHub capability that already works.
+
+That gives the operation a contract that can be tested directly:
+
+```text
+issue.list
+  input: repository, filters
+  output: issues[]
+  permissions: github.read.issues
+```
+
+The exact contract may change as DKBot develops, but the architectural direction matters: natural language does not own the operation.
+
+## Determinism gives me something to test
+
+An LLM is useful precisely because it can handle inputs I did not enumerate in advance. That makes it a poor foundation for behavior that I _can_ enumerate in advance.
+
+If an operation has structured input and output, I can test it without a prompt:
+
+- the same request can produce the same normalized result;
+- invalid input can fail with a defined error;
+- permissions can be checked before execution;
+- retries and timeouts can have explicit policy;
+- logs can identify the operation that ran;
+- another interface can invoke the same operation without copying its implementation.
+
+If the only implementation is "give this prompt and these tools to a model," those boundaries become much harder to see. A failure might be a provider error, a tool error, a prompt problem, incorrect tool selection, malformed arguments, or a model deciding that a different action looked more useful.
+
+I still expect those failures once an AI layer exists. I just do not want them mixed with failures in the underlying platform.
+
+## Telegram is an interface, not the product
+
+I do want to chat with DKBot. Telegram is one obvious interface because it is available on every device I use and works well for short conversational requests.
+
+But building DKBot _around_ Telegram would create the same architectural problem as building it around an LLM.
+
+A request should not become a Telegram command handler that happens to call GitHub. The useful part should exist below the transport:
+
+```text
+Telegram ----\
+CLI ----------> DKBot operations -> extensions -> external systems
+Web UI -------/
+AI/LLM -------/
+```
+
+The CLI might call an operation explicitly. A web interface might present it as a button. Telegram might expose it through conversation. An LLM might select it from a set of available tools.
+
+Those are different interaction models over the same capability.
+
+That matters because I do not know which interface will be most useful later. Telegram is convenient now. A local web interface might be better for dashboards. Automation needs no conversation at all. Other messaging systems may eventually become extensions.
+
+The core should not care.
+
+## The AI layer becomes easier to replace
+
+There is another benefit: the frontier model stops being part of DKBot's identity.
+
+Today I might want to use Pi as the harness around Claude, Codex, or another provider. Later I might want a custom agent loop, a local model, or a specialized model for one class of tasks.
+
+If capabilities are defined independently, changing the model does not mean rewriting the integrations.
+
+The AI layer needs to understand a stable tool surface. It can inspect available capabilities, select operations, pass arguments, and interpret results. The same operation remains usable when the model provider changes.
+
+That is a much healthier dependency direction:
+
+```text
+AI depends on DKBot capabilities
+
+not
+
+DKBot capabilities depend on one AI implementation
+```
+
+The model is powerful, but it stays replaceable.
+
+## Security also has a clearer place to live
+
+An assistant that can read GitHub today may be able to modify GitHub tomorrow. It may eventually access files, calendars, infrastructure, smart-home devices, or other systems where a wrong action matters.
+
+I do not want the prompt to be the security boundary.
+
+The platform should know that an extension exposes a capability. It should know which operation is being requested. It should know what permission that operation requires. A deny-by-default permission model can then make a decision before the model's requested action reaches the extension.
+
+The AI can propose an action. It does not get to redefine the authorization model around that action.
+
+The same idea applies to persistence. DKBot is being designed around platform-owned durable state and disposable extension processes. State should survive an extension restart because the platform owns the contract, not because a long-running agent happened to remember what occurred earlier.
+
+## What V0 means without an LLM
+
+A non-AI V0 still has to be useful enough to prove the architecture.
+
+I should be able to install DKBot, install an extension, discover its capabilities, invoke an operation through a deterministic interface, persist required state, restart components, and get a predictable result. Installation, updates, permissions, failure handling, and extension lifecycle should work before natural-language routing hides them behind a pleasant conversation.
+
+Only then does the intelligence layer become interesting.
+
+At that point I can type:
+
+> What are the open issues on LUDWISE?
+
+The model's job is relatively small. It maps that request to an operation that DKBot already knows how to execute.
+
+That is the distinction I want to preserve: **AI decides how to use the platform; AI is not the platform.**
+
+## The slower start is the faster architecture
+
+Starting with a chatbot would produce visible progress sooner. Starting with deterministic tools means spending more time on capability boundaries, extension contracts, permissions, persistence, lifecycle, and interfaces before there is a conversation demo to show.
+
+For DKBot, I think that cost is worth paying.
+
+The difficult part of a useful assistant is not making a model call a function once. The difficult part is building a system where the function is reliable, reusable, observable, permissioned, and still makes sense when the model, interface, or integration changes.
+
+So the first version of my assistant will intentionally contain very little that looks intelligent.
+
+The intelligence can come later. The tools need to deserve it first.
