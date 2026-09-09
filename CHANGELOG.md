@@ -1,3 +1,9 @@
+## [1.5.4](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.5.3...v1.5.4) (2026-09-09)
+
+### Bug Fixes
+
+* pin patched setup-node action ([11b215c](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/11b215c1adf556eba07173602788608ae277842c))
+
 ## [1.5.3](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.5.2...v1.5.3) (2026-09-09)
 
 ### Bug Fixes
