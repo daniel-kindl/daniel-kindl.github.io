@@ -1,0 +1,37 @@
+name: Temporary Lockfile Update
+
+on:
+  push:
+    branches: [fix/declare-markdown-satteri]
+
+permissions:
+  contents: write
+
+jobs:
+  update-lockfile:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@e51e5fe84fc33b4c73ebe40526b2694712b5b858 # post-v7.0.0 security fix
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Update Lockfile
+        run: npm install --package-lock-only --ignore-scripts
+
+      - name: Commit Lockfile
+        run: |
+          if git diff --quiet -- package-lock.json; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add package-lock.json
+          git commit -m 'fix: update markdown-satteri lockfile'
+          git push
