@@ -1,0 +1,78 @@
+---
+title: 'dk-devkit'
+summary: 'Portable development toolkit for isolated environments, reusable agent workflows, capability-based installation, and controlled automation across a Linux workstation.'
+role: 'Solo Developer'
+stack: ['Bash', 'Python', 'Distrobox', 'Podman', 'GitHub Actions']
+links:
+  repository: 'https://github.com/daniel-kindl/dk-devkit'
+status: 'development'
+dates:
+  start: 2026-09-04
+  end: null
+weight: 9
+---
+
+## Context
+
+My development setup had accumulated the usual problem: useful tools existed, but the machine itself had become the documentation. A command worked because a package happened to be installed on the host, an agent worked because its runtime was somewhere on `PATH`, and recreating the setup meant remembering decisions that were never written down.
+
+`dk-devkit` turns that setup into a portable toolkit. The repository contains reusable commands, agent workflows, environment definitions, and installation policy. The workstation becomes one composition of those pieces rather than the only place where they make sense.
+
+The goal is not to make every Linux distribution look identical. It is to make each tool state what capability it needs, then let the platform layer decide how that capability is provided.
+
+## Components ask for capabilities, not distributions
+
+The installer is built around small components. A component declares its dependencies, the platform capabilities it needs, and the boundary between tracked configuration and machine-local state.
+
+That means a component does not say "install this Fedora package." It can say that it needs a container runtime or another capability. The platform adapter owns the distribution-specific answer.
+
+`./install.sh --doctor` reports what the machine is and which capabilities are available. `--dry-run` shows the convergence plan without changing the system. Named profiles such as `minimal`, `developer`, `agent-dev`, and `daniel` select tracked component sets without turning the profile itself into a second installer.
+
+The result is a deliberate separation:
+
+- components define what they need;
+- platform adapters define how a machine can provide it;
+- profiles define useful compositions;
+- machine-local identity, credentials, and state stay outside Git.
+
+Bazzite/Fedora is the currently verified platform. Other adapters are not presented as equally supported until there is evidence to justify that claim.
+
+## Development environments own their toolchains
+
+I do not want every language runtime and package manager installed on the host just because one project might need it.
+
+`devbox` routes a command into the development environment that owns a repository. The current environments include `web-dev`, `python-dev`, and `rust-dev`, with other environments declared separately as their support matures.
+
+For example:
+
+```sh
+devbox exec web-dev --cwd ~/projects/example -- pnpm check
+```
+
+The same routing model is used by host shims for tools such as Claude Code and Codex. The command can be launched from the workstation, but it executes where the repository's toolchain actually lives.
+
+This keeps the host smaller and makes the environment boundary explicit. A Node project does not require the workstation itself to become a Node development environment.
+
+## One agent harness without one giant environment
+
+Pi is different from the routed coding clients. It acts as a host control-plane tool, so `dk-devkit` installs it once on the host instead of duplicating it into each development environment.
+
+Pi still needs Node, but that does not mean Node has to become part of the host development toolchain. Its component installs a private runtime used by the generated Pi launcher. A normal host shell still does not resolve `node`, `npm`, or `pnpm`.
+
+That distinction is small, but it is the design I want throughout the toolkit: satisfy a tool's runtime requirement without broadening the workstation's global state more than necessary.
+
+## The model sandbox does not get my repository
+
+The higher-risk part of AI-assisted development is unattended execution. `agentbox` handles that by running a coding agent against a disposable clone inside an isolated Podman sandbox. The real working repository is not mounted into the model environment.
+
+The model also does not receive GitHub push or merge authority. Its output crosses back into the trusted layer only after validation, where accepted commits can be imported onto an `agent/*` branch.
+
+`agentq` sits above that boundary. It coordinates GitHub issue work in the trusted layer: selecting runnable work, invoking `agentbox`, checking the resulting diff, opening pull requests, waiting for configured gates, and merging only when repository policy allows it.
+
+The important separation is authority, not just process count. The model can modify its disposable clone. The trusted layer decides whether those changes are allowed to affect the real repository.
+
+## Outcome
+
+`dk-devkit` is still evolving, but the architecture is already useful in daily work. Installation is convergent instead of anecdotal, project toolchains can stay in their own environments, agent configuration has one source, and unattended coding work has a clearer trust boundary than "give the agent a shell in my repository."
+
+The project is becoming less about configuring one workstation and more about making the development workflow itself reproducible.
