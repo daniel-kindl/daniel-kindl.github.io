@@ -1,0 +1,72 @@
+---
+title: 'MazeLab'
+summary: 'Terminal algorithm visualizer for maze generation and pathfinding, with step-by-step animation, deterministic seeds, solver comparison, and terminal-aware rendering.'
+role: 'Solo Developer'
+stack: ['Rust', 'Ratatui', 'Clap', 'GitHub Actions']
+links:
+  repository: 'https://github.com/daniel-kindl/mazelab'
+status: 'development'
+dates:
+  start: 2026-09-12
+  end: null
+weight: 8
+---
+
+## Context
+
+MazeLab is a small terminal application for exploring maze-generation and pathfinding algorithms as
+they run. Instead of showing only the finished maze or final route, it exposes the current cell, the
+frontier, and the cells a solver has expanded.
+
+The first version includes Recursive Backtracker and Randomized Prim for generation, plus DFS, BFS,
+and A\* for solving. Runs can be paused, stepped one operation at a time, accelerated, or generated
+instantly.
+
+## Comparing algorithms on the same maze
+
+A solver run stays visible when the next solver runs, so the statistics band can compare two runs on
+the same maze. That makes differences in search work visible without changing the input between
+runs.
+
+At braid factor 0, MazeLab generates a perfect maze: exactly one path joins the start and goal. DFS,
+BFS, and A\* therefore return paths of the same length. The useful comparison is the number of cells
+each solver expanded before reaching the goal.
+
+Braiding can add loops when a maze with multiple possible routes is more useful for an experiment.
+
+## Reproducibility as a scoped guarantee
+
+MazeLab supports seeded generation, but the reproducibility contract is deliberately narrow. The
+same seed, maze size, and MazeLab version produce the same maze on Linux, Windows, and macOS.
+Determinism is not promised across versions, so an implementation change does not become an
+accidental permanent file format.
+
+The command line exposes the seed and dimensions needed to reproduce the default unbraided case.
+The project documents the guarantee explicitly instead of treating a deterministic PRNG as enough on
+its own.
+
+## Terminal constraints are part of the design
+
+The maze fits the available terminal at startup and can be refitted after a resize. Rendering does
+not rely on color alone: cell states remain identifiable by glyph when color is unavailable.
+Terminals that cannot display the normal block glyphs can switch to an ASCII set with `--ascii`.
+
+CI compiles, tests, and lints on Linux, Windows, and macOS, but the project does not claim that this
+proves every terminal renders identically. Rendering tests operate in memory, so the README keeps
+platform support separate from claims about fonts and color tables that CI cannot observe.
+
+## Extension boundary
+
+Generators and solvers use documented module contracts, with a separate extension guide walking
+through a generator implementation. That keeps adding another algorithm focused on its behavior
+instead of requiring changes throughout the application.
+
+The crate also forbids unsafe Rust and runs formatting, Clippy, and tests as its normal validation
+path.
+
+## Outcome
+
+MazeLab already supports interactive generation, solver comparison, seeded reproduction, braiding,
+automatic terminal fitting, and an ASCII fallback. It remains a small project by design, but the
+repository treats behavior, reproducibility, and terminal limitations as explicit contracts rather
+than incidental implementation details.
