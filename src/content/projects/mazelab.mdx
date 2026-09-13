@@ -19,7 +19,7 @@ they run. Instead of showing only the finished maze or final route, it exposes t
 frontier, and the cells a solver has expanded.
 
 The first version includes Recursive Backtracker and Randomized Prim for generation, plus DFS, BFS,
-and A* for solving. Runs can be paused, stepped one operation at a time, accelerated, or generated
+and A\* for solving. Runs can be paused, stepped one operation at a time, accelerated, or generated
 instantly.
 
 ## Comparing algorithms on the same maze
@@ -29,7 +29,7 @@ the same maze. That makes differences in search work visible without changing th
 runs.
 
 At braid factor 0, MazeLab generates a perfect maze: exactly one path joins the start and goal. DFS,
-BFS, and A* therefore return paths of the same length. The useful comparison is the number of cells
+BFS, and A\* therefore return paths of the same length. The useful comparison is the number of cells
 each solver expanded before reaching the goal.
 
 Braiding can add loops when a maze with multiple possible routes is more useful for an experiment.
