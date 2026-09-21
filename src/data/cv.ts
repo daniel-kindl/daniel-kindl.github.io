@@ -16,6 +16,16 @@ export const technicalProfile = {
     databases: ['SQL Server', 'PostgreSQL', 'SQLite'],
     testing: ['xUnit'],
     devops: ['Git', 'GitHub Actions', 'GitHub Pages', 'OneDev', 'Docker', 'CI/CD Pipeline'],
+    agentic: [
+      'Codex',
+      'Claude',
+      'GitHub Copilot',
+      'Grok',
+      'OpenRouter',
+      'Pi',
+      'Orca',
+      'Ollama',
+    ],
   },
   experience: [
     {
