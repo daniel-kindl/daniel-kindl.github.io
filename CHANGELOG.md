@@ -1,3 +1,21 @@
+## [1.6.0](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.5.5...v1.6.0) (2026-09-21)
+
+### Features
+
+* surface agentic development workflow ([#51](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/51)) ([879b121](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/879b121f6a5a626e17e30cecacb0ca9e120ec274))
+
+### Documentation
+
+* add MazeLab project case study ([#46](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/46)) ([f8a0960](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/f8a09605e678fa47619c1f13d317dddc9eafa90b))
+
+### Chores & Dependencies
+
+* bump the npm-minor-patch group across 1 directory with 6 updates ([#47](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/47)) ([522ec79](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/522ec790e847d1fd619f0605c9e22f7d7bcb254d))
+* bump actions/setup-node ([#48](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/48)) ([0f778dd](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/0f778dd0f7b9d4dc9a7cfb37aa98dc4fb8c964ac))
+* bump devalue from 5.8.1 to 5.9.2 ([#49](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/49)) ([b2167ce](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/b2167ce8911a90b747ad48f3b5114b9948160f1c))
+* bump actions/setup-node ([#43](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/43)) ([1705800](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/1705800a2774ae4d4ae34c3e78544bbe536b6efe))
+* bump @astrojs/mdx from 7.0.8 to 8.0.0 ([#45](https://github.com/daniel-kindl/daniel-kindl.github.io/issues/45)) ([d036c2a](https://github.com/daniel-kindl/daniel-kindl.github.io/commit/d036c2a5a07f26599eead32676acd7a66c237e28))
+
 ## [1.5.5](https://github.com/daniel-kindl/daniel-kindl.github.io/compare/v1.5.4...v1.5.5) (2026-09-09)
 
 ### Bug Fixes
