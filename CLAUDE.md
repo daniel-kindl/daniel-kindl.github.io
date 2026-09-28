@@ -10,14 +10,15 @@ is installed — the site ships zero client-side components. Static output, depl
 ## Commands
 
 ```
-npm run dev             # astro dev — foreground. See below for background mode.
+npm run check            # lint, format check, type check, and tests. Run this before a pull request.
+npm run dev              # astro dev — foreground. See below for background mode.
 npm run build            # astro build — static output to dist/
 npm run preview          # preview built output
 npm run typecheck        # astro check
 npm run lint             # eslint . --max-warnings 0 (warnings fail)
 npm run lint:fix         # eslint . --fix --max-warnings 0
 npm test                 # node --test over src/lib/*.test.ts
-npm run format            # prettier --write .
+npm run format           # prettier --write .
 npm run format:check     # prettier --check .
 npm run generate-assets  # regenerate public/assets/meta PNGs, apple-touch-icon.png, and icon.svg (uses `canvas`)
 ```
@@ -35,25 +36,17 @@ astro dev --background
 
 Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
-CI (`.github/workflows/ci.yml`) runs on PRs to `master`: `npm run generate-assets` → `npm run lint`
-→ `npm run format:check` → `astro check` → `npm test` → `npm run build`. Deploy
-(`.github/workflows/deploy.yml`) runs on push to `master` (or `workflow_dispatch`) and runs that
-same gate set first, then a Lighthouse CI budget check (`lighthouserc.json`), then publishes the
-built site to GitHub Pages. If you change anything affecting bundle size, LCP, or accessibility,
-expect Lighthouse to gate the deploy; it measures 5 representative pages listed in
-`lighthouserc.json`, not every route.
+CI (`.github/workflows/ci.yml`) runs on pull requests to `master`: `npm run generate-assets`,
+then `npm run check`, then `npm run build`, then the Lighthouse budget in `lighthouserc.json`.
+Deploy (`.github/workflows/deploy.yml`) runs on push to `master` (or `workflow_dispatch`) and runs
+that same sequence, then publishes the built site to GitHub Pages. Lighthouse measures the 5 pages
+listed in `lighthouserc.json`. A change that affects bundle size, LCP, or accessibility can fail
+that budget.
 
-Commits are enforced via Husky + commitlint (Conventional Commits: `type: description`,
-e.g. `feat:`, `fix:`, `chore:`). `lint-staged` runs ESLint/Prettier on staged files at commit time.
-
-**Use `content:` for anything under `src/content/`** — publishing or editing a post or case study.
-The type is registered in `commitlint.config.mjs`. Reserve `feat:`/`fix:` for the site itself.
-See ADR #16 in `docs/tech-decisions.md`.
-
-**Commit message style**: this repo's history is single-line subjects only — no body paragraphs,
-no trailers (e.g. no `Co-Authored-By:`). Match that: `type: short imperative description`, optionally
-suffixed with `(#issueNumber)` when tied to a tracked issue. Don't add explanatory bodies; the diff
-is the explanation.
+**Commit subjects** are a writing convention. No hook and no workflow checks them. Use one line:
+`type: short imperative description`, optionally suffixed with `(#issueNumber)`. Do not add a body
+or a trailer. Use `content:` for a change under `src/content/`. Use `feat:` or `fix:` for a change
+to the site. See ADR #17 in `docs/tech-decisions.md`.
 
 ## Documentation
 

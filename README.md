@@ -43,6 +43,7 @@ run, so this is a local-only setup step.
 
 | Command                   | Purpose                                                 |
 | :------------------------ | :------------------------------------------------------ |
+| `npm run check`           | Lint, check formatting, type-check, and run tests       |
 | `npm run dev`             | Start local development server                          |
 | `npm run build`           | Build static production output                          |
 | `npm run preview`         | Preview built output                                    |
@@ -59,16 +60,16 @@ When using Claude Code, start the dev server with `astro dev --background` and m
 
 ## CI/CD
 
-Pull requests to `master` install the locked dependency tree, block on
-`npm audit --audit-level=high`, then run asset generation, lint, formatting, type checks, tests,
-the production build, and the Lighthouse CI budget (`.github/workflows/ci.yml`). Pushes to
-`master` run the same gates, then deploy (`.github/workflows/deploy.yml`).
+Run `npm run check` before you open a pull request. It runs ESLint, a Prettier check, Astro type
+checks, and the Node test suite.
 
-Commits are enforced via Husky + commitlint using
-[Conventional Commits](https://www.conventionalcommits.org/) (`type: description`, e.g. `feat:`,
-`fix:`, `chore:`), and `lint-staged` runs ESLint/Prettier on staged files at commit time. Entries
-under `src/content/` use a repo-specific `content:` type so a post or case study stays distinct
-from a change to the site itself.
+Pull requests to `master` install the locked dependency tree, block on
+`npm audit --audit-level=high`, then run asset generation, `npm run check`, the production build,
+and the Lighthouse CI budget (`.github/workflows/ci.yml`). Pushes to `master` run the same gates,
+then deploy (`.github/workflows/deploy.yml`).
+
+Commit subjects stay a writing convention (`type: description`, with `content:` for entries under
+`src/content/`). Nothing in Git or CI rejects a subject. See ADR #17.
 
 ## Documentation
 
