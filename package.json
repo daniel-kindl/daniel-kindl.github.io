@@ -20,10 +20,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "astro check",
-    "test": "node --test \"src/lib/*.test.ts\" \"scripts/*.test.mjs\"",
+    "test": "node --test \"src/lib/*.test.ts\"",
     "prepare": "husky",
-    "generate-assets": "node generate-assets.js",
-    "release": "node scripts/release.mjs"
+    "generate-assets": "node generate-assets.js"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",

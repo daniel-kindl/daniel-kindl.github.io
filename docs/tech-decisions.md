@@ -362,3 +362,36 @@ explicit `npx astro add svelte` first, which is a deliberate speed bump rather t
 runes guidance in ADR #3 still applies whenever that happens. Verified by deleting `node_modules`
 and running `npm ci` followed by generate-assets, lint, format:check, typecheck, test and build —
 proving nothing depended on Svelte resolving transitively.
+
+---
+
+## 16. Deployment: no site version, superseding the release half of ADR #11 and #14
+
+**Status:** Accepted — 2026-09-28 (supersedes the release automation in #11 and the version reason in #14)
+
+**Context:** ADR #11, and the later dependency-free replacement in `scripts/release.mjs`, cut a
+semantic version on every push to `master` that contained a `feat`, `fix`, `perf`, `revert`, or
+breaking commit. That step rewrote `CHANGELOG.md`, `package.json`, and `package-lock.json`,
+committed, tagged, opened a GitHub Release, and forced a second production build so the footer
+could show the new version. ADR #14 added a `content:` commit type so a post would not move that
+version. `SECURITY.md` already says only the revision on `master` is supported. A personal
+portfolio has one deployed revision and no package consumers, so the version, the changelog, and
+the second build recorded a release nobody installs.
+
+**Decision:** Deploy builds once and publishes that output. It does not bump `package.json`,
+rewrite a changelog, create a commit, create a tag, or open a GitHub Release. Remove
+`scripts/release.mjs`, `scripts/release.test.mjs`, `scripts/changelog-bootstrap.mjs`,
+`CHANGELOG.md`, and `src/lib/buildInfo.ts`. The footer no longer shows a version. Git history and
+pull requests are the change record. `scripts/sync-mirror.ps1` mirrors `master` only.
+Dependabot no longer ignores `conventional-changelog-conventionalcommits`.
+
+Conventional Commits stay. ADR #6 uses them for commit discipline, not to calculate a version.
+The `content:` type stays so a post or case study stays distinct from a change to the site.
+`package.json` keeps its current `version` field as a static private-package field. Nothing in
+the build reads it, and deploy does not write it. Existing git tags stay in place.
+
+ADR #11 and ADR #14 are left intact. They record decisions that were correct when made.
+
+**Consequences:** A push to `master` publishes the commit that passed the gates. A content-only
+commit and a site commit take the same deploy path. The deploy token needs `contents: read`,
+`pages: write`, and `id-token: write`. It no longer needs permission to push.
