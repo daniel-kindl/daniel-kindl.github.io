@@ -1,8 +1,25 @@
 # Tech Decisions
 
-ADR-style log of stack and tooling decisions for this project. One entry per decision:
-**Status / Context / Decision / Consequences.** Append new entries as decisions are made or
-revisited — don't edit history, add a new dated entry if a decision changes.
+Log of durable stack and tooling decisions. One entry per decision: **Status / Context /
+Decision / Consequences.**
+
+Add an entry only for a durable decision. A durable decision has one or more of these properties:
+
+- The choice is architectural.
+- The choice is a tooling or platform choice with a real trade-off.
+- The choice is costly to reverse.
+- A later reader is likely to question the choice.
+- A future contributor needs the reason.
+
+Leave existing entries unchanged. When a decision changes, append a new dated entry.
+
+These changes do not get an entry:
+
+- a routine refactor
+- a content change
+- a dependency bump
+- a formatting choice
+- an implementation detail that the code already shows
 
 ---
 
