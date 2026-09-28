@@ -15,22 +15,21 @@ const { title, time, promotedFrom }: Props = Astro.props;
   <div
     aria-hidden="true"
     class="absolute top-1.5 -left-7.75 h-2 w-2 rounded-full border border-(--bg-primary) bg-(--text-primary)"
-  >
-  </div>
+  ></div>
 
   <div class="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
-    <Typography variant="h3" class="text-sm! font-bold tracking-tight">{title}</Typography>
-    <span class="font-mono text-[10px] tracking-wider text-(--text-muted) uppercase tabular-nums"
-      >{time}</span
-    >
+    <Typography variant="h3" class="text-sm! font-bold tracking-tight">
+      {title}
+    </Typography>
+    <span class="font-mono text-[10px] tracking-wider text-(--text-muted) uppercase tabular-nums">
+      {time}
+    </span>
   </div>
-  {
-    promotedFrom && (
-      <div class="mt-1 font-mono text-[10px] tracking-wider text-(--text-muted) uppercase">
-        [Promoted from {promotedFrom}]
-      </div>
-    )
-  }
+  {promotedFrom && (
+    <div class="mt-1 font-mono text-[10px] tracking-wider text-(--text-muted) uppercase">
+      [Promoted from {promotedFrom}]
+    </div>
+  )}
   <div class="mt-2">
     <slot />
   </div>

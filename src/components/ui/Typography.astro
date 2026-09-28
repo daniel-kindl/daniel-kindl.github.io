@@ -25,31 +25,23 @@ const HeadingTag =
 const headingStyle = HeadingTag ? styles[variant] : '';
 ---
 
-{
-  HeadingTag && (
-    <HeadingTag class={`${headingStyle} ${className}`} {...rest}>
-      <slot />
-    </HeadingTag>
-  )
-}
-{
-  variant === 'body' && (
-    <p class={`${styles.body} ${className}`} {...rest}>
-      <slot />
-    </p>
-  )
-}
-{
-  variant === 'eyebrow' && (
-    <span class={`${styles.eyebrow} ${className}`} {...rest}>
-      <slot />
-    </span>
-  )
-}
-{
-  variant === 'mono' && (
-    <span class={`${styles.mono} ${className}`} {...rest}>
-      <slot />
-    </span>
-  )
-}
+{HeadingTag && (
+  <HeadingTag class={`${headingStyle} ${className}`} {...rest}>
+    <slot />
+  </HeadingTag>
+)}
+{variant === 'body' && (
+  <p class={`${styles.body} ${className}`} {...rest}>
+    <slot />
+  </p>
+)}
+{variant === 'eyebrow' && (
+  <span class={`${styles.eyebrow} ${className}`} {...rest}>
+    <slot />
+  </span>
+)}
+{variant === 'mono' && (
+  <span class={`${styles.mono} ${className}`} {...rest}>
+    <slot />
+  </span>
+)}

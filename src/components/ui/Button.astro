@@ -25,14 +25,12 @@ const combinedClass = `${buttonBaseStyles} ${buttonVariants[variant]} ${classNam
 const isAnchor = 'href' in rest && rest.href !== undefined;
 ---
 
-{
-  isAnchor ? (
-    <a class={combinedClass} {...(rest as HTMLAttributes<'a'>)}>
-      <slot />
-    </a>
-  ) : (
-    <button class={combinedClass} {...(rest as HTMLAttributes<'button'>)}>
-      <slot />
-    </button>
-  )
-}
+{isAnchor ? (
+  <a class={combinedClass} {...(rest as HTMLAttributes<'a'>)}>
+    <slot />
+  </a>
+) : (
+  <button class={combinedClass} {...(rest as HTMLAttributes<'button'>)}>
+    <slot />
+  </button>
+)}

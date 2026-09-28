@@ -32,16 +32,18 @@ const recentPosts = allPosts.slice(0, 2);
         [{allProjects.length} shipped projects · {allPosts.length} engineering write-ups]
       </Typography>
       <div class="flex gap-4">
-        <Button href="/projects" variant="primary">View Projects</Button>
-        <Button href="/about" variant="secondary">About & CV</Button>
+        <Button href="/projects" variant="primary">
+          View Projects
+        </Button>
+        <Button href="/about" variant="secondary">
+          About & CV
+        </Button>
       </div>
     </Container>
   </div>
 
   <Container as="section" class="border-b border-(--border-color) py-20">
-    <header
-      class="reveal mb-12 flex flex-col gap-4 sm:flex-row sm:items-baseline sm:justify-between"
-    >
+    <header class="reveal mb-12 flex flex-col gap-4 sm:flex-row sm:items-baseline sm:justify-between">
       <div>
         <Typography variant="eyebrow">Selected Work</Typography>
         <Typography variant="h2">Recent Project Highlights</Typography>
@@ -52,23 +54,19 @@ const recentPosts = allPosts.slice(0, 2);
     </header>
 
     <div class="space-y-12">
-      {
-        features.map((project, index) => (
-          <ProjectCard
-            project={project}
-            index={index}
-            headingLevel="h3"
-            class={`reveal ${index === 1 ? 'delay-150' : ''}`}
-          />
-        ))
-      }
+      {features.map((project, index) => (
+        <ProjectCard
+          project={project}
+          index={index}
+          headingLevel="h3"
+          class={`reveal ${index === 1 ? 'delay-150' : ''}`}
+        />
+      ))}
     </div>
   </Container>
 
   <Container as="section" class="border-b border-(--border-color) py-20">
-    <header
-      class="reveal mb-12 flex flex-col gap-4 sm:flex-row sm:items-baseline sm:justify-between"
-    >
+    <header class="reveal mb-12 flex flex-col gap-4 sm:flex-row sm:items-baseline sm:justify-between">
       <div>
         <Typography variant="eyebrow">Latest Writing</Typography>
         <Typography variant="h2">Recent Write-Ups</Typography>
@@ -79,22 +77,22 @@ const recentPosts = allPosts.slice(0, 2);
     </header>
 
     <div class="space-y-12">
-      {
-        recentPosts.map((post, index) => (
-          <WritingPostCard
-            post={post}
-            headingLevel="h3"
-            class={`reveal ${index === 1 ? 'delay-150' : ''}`}
-          />
-        ))
-      }
+      {recentPosts.map((post, index) => (
+        <WritingPostCard
+          post={post}
+          headingLevel="h3"
+          class={`reveal ${index === 1 ? 'delay-150' : ''}`}
+        />
+      ))}
     </div>
   </Container>
 
   <Container as="section" class="py-20">
     <div class="reveal max-w-3xl border border-(--border-color) bg-(--bg-primary) p-8 md:p-12">
       <Typography variant="eyebrow">How I Work</Typography>
-      <Typography variant="h2" class="mb-4">Good development starts with structure</Typography>
+      <Typography variant="h2" class="mb-4">
+        Good development starts with structure
+      </Typography>
       <Typography variant="body" class="mb-4 text-(--text-muted)">
         I like structure. Good DevOps and a dependable platform make it easier to take software from
         an idea to a release, then keep improving it over time. When builds, tests, and releases are
@@ -105,7 +103,9 @@ const recentPosts = allPosts.slice(0, 2);
         implementation, review, testing, CI, and maintenance. Code review, tests, CI, and explicit
         acceptance criteria stay the source of control.
       </Typography>
-      <Button href={mailto} variant="primary">Get in touch</Button>
+      <Button href={mailto} variant="primary">
+        Get in touch
+      </Button>
     </div>
   </Container>
 </Layout>

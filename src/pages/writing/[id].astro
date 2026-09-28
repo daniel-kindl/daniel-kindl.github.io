@@ -33,31 +33,30 @@ const hasToc = hasTocEntries(tocHeadings);
     <div class="border-b border-(--border-color) bg-(--bg-primary) py-12 md:py-20">
       <Container>
         <div class="mb-4">
-          <Button href="/writing" variant="link">← Back to Writing</Button>
+          <Button href="/writing" variant="link">
+            ← Back to Writing
+          </Button>
         </div>
         <Typography variant="eyebrow">
-          <time datetime={toIsoDate(post.data.date)}>{formatDate(post.data.date)}</time> · {
-            readingTime
-          } min read
-          {
-            post.data.updated && (
-              <>
-                {' · Updated '}
-                <time datetime={toIsoDate(post.data.updated)}>{formatDate(post.data.updated)}</time>
-              </>
-            )
-          }
+          <time datetime={toIsoDate(post.data.date)}>{formatDate(post.data.date)}</time> ·{' '}
+          {readingTime} min read
+          {post.data.updated && (
+            <>
+              {' · Updated '}
+              <time datetime={toIsoDate(post.data.updated)}>{formatDate(post.data.updated)}</time>
+            </>
+          )}
         </Typography>
-        <Typography variant="h1" class="mb-6 max-w-4xl">{post.data.title}</Typography>
-        {
-          post.data.tags.length > 0 && (
-            <div class="flex flex-wrap gap-2">
-              {post.data.tags.map((tag: string) => (
-                <Tag label={tag} href={`/writing/tags/${slugify(tag)}`} />
-              ))}
-            </div>
-          )
-        }
+        <Typography variant="h1" class="mb-6 max-w-4xl">
+          {post.data.title}
+        </Typography>
+        {post.data.tags.length > 0 && (
+          <div class="flex flex-wrap gap-2">
+            {post.data.tags.map((tag: string) => (
+              <Tag label={tag} href={`/writing/tags/${slugify(tag)}`} />
+            ))}
+          </div>
+        )}
       </Container>
     </div>
 
@@ -69,32 +68,26 @@ const hasToc = hasTocEntries(tocHeadings);
             <Content />
           </div>
           <div class="mt-12 max-w-3xl border-t border-(--border-color) pt-8">
-            {
-              relatedProject ? (
-                <>
-                  <p class="mb-3 font-mono text-xs text-(--text-muted) uppercase">
-                    Related Project
-                  </p>
-                  <Button href={`/projects/${relatedProject.id}`} variant="secondary">
-                    {relatedProject.data.title} →
-                  </Button>
-                </>
-              ) : (
-                <Button href="/writing" variant="secondary">
-                  More Writing →
+            {relatedProject ? (
+              <>
+                <p class="mb-3 font-mono text-xs text-(--text-muted) uppercase">Related Project</p>
+                <Button href={`/projects/${relatedProject.id}`} variant="secondary">
+                  {relatedProject.data.title} →
                 </Button>
-              )
-            }
+              </>
+            ) : (
+              <Button href="/writing" variant="secondary">
+                More Writing →
+              </Button>
+            )}
           </div>
         </div>
 
-        {
-          hasToc && (
-            <div class="sticky top-6 hidden h-fit border-l border-(--border-color) pl-6 md:col-span-4 md:block">
-              <TableOfContents headings={tocHeadings} variant="desktop" />
-            </div>
-          )
-        }
+        {hasToc && (
+          <div class="sticky top-6 hidden h-fit border-l border-(--border-color) pl-6 md:col-span-4 md:block">
+            <TableOfContents headings={tocHeadings} variant="desktop" />
+          </div>
+        )}
       </div>
     </Container>
   </article>

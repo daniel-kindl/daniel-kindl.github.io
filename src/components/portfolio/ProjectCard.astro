@@ -27,9 +27,9 @@ const hiddenStackCount = project.data.stack.length - visibleStack.length;
   class={`grid grid-cols-1 md:grid-cols-12 gap-6 items-start border-b border-(--border-color) pb-12 last:border-0 ${isEven ? 'md:pt-4' : 'md:pt-16'} ${className}`}
 >
   <div class={`md:col-span-7 flex flex-col ${isEven ? 'md:order-1' : 'md:order-2'}`}>
-    <Typography variant="eyebrow"
-      >Project {String(index + 1).padStart(2, '0')} · {project.data.role}</Typography
-    >
+    <Typography variant="eyebrow">
+      Project {String(index + 1).padStart(2, '0')} · {project.data.role}
+    </Typography>
     <Typography variant="h2" as={headingLevel} class="mb-4">
       {project.data.title}
     </Typography>
@@ -40,18 +40,21 @@ const hiddenStackCount = project.data.stack.length - visibleStack.length;
       Status: {getProjectStatusLabel(project.data.status)} · Timeline: {timelineLabel}
     </div>
     <div class="mb-6 flex flex-wrap gap-2">
-      {visibleStack.map((tech: string) => <Tag label={tech} />)}
+      {visibleStack.map((tech: string) => (
+        <Tag label={tech} />
+      ))}
       {hiddenStackCount > 0 && <Tag label={`+${hiddenStackCount} more`} />}
     </div>
     <div class="flex gap-3">
-      <Button href={`/projects/${project.id}`} variant="primary"> Read Case Study → </Button>
-      {
-        project.data.links?.repository && (
-          <ExternalLink href={project.data.links.repository} variant="secondary">
-            Repository
-          </ExternalLink>
-        )
-      }
+      <Button href={`/projects/${project.id}`} variant="primary">
+        {' '}
+        Read Case Study →{' '}
+      </Button>
+      {project.data.links?.repository && (
+        <ExternalLink href={project.data.links.repository} variant="secondary">
+          Repository
+        </ExternalLink>
+      )}
     </div>
   </div>
 

@@ -16,19 +16,21 @@ const sortedPosts = await getPublishedPosts();
   <Container class="py-12 md:py-20">
     <header class="mb-12">
       <Typography variant="eyebrow">Writing</Typography>
-      <Typography variant="h1" class="mb-4">Notes on Building Software</Typography>
+      <Typography variant="h1" class="mb-4">
+        Notes on Building Software
+      </Typography>
       <Typography variant="body" class="max-w-2xl text-(--text-muted)">
         Technical write-ups on the tools and systems I build.
       </Typography>
     </header>
 
     <div class="space-y-12">
-      {sortedPosts.map((post) => <WritingPostCard post={post} />)}
-      {
-        sortedPosts.length === 0 && (
-          <p class="text-sm text-(--text-muted)">No posts published yet — check back soon.</p>
-        )
-      }
+      {sortedPosts.map((post) => (
+        <WritingPostCard post={post} />
+      ))}
+      {sortedPosts.length === 0 && (
+        <p class="text-sm text-(--text-muted)">No posts published yet — check back soon.</p>
+      )}
     </div>
   </Container>
 </Layout>

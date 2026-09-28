@@ -36,19 +36,17 @@ if (src && alt === undefined) {
 
 <figure style={maxWidth ? `max-width: ${maxWidth}` : undefined}>
   {src && <Image src={src} alt={alt!} loading="lazy" decoding="async" />}
-  {
-    video && (
-      <video
-        src={video}
-        poster={poster}
-        muted
-        playsinline
-        loop
-        controls
-        preload="metadata"
-        aria-label={caption}
-      />
-    )
-  }
+  {video && (
+    <video
+      src={video}
+      poster={poster}
+      muted
+      playsinline
+      loop
+      controls
+      preload="metadata"
+      aria-label={caption}
+    />
+  )}
   <figcaption>{caption}</figcaption>
 </figure>

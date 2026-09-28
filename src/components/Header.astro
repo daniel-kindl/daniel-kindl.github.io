@@ -21,36 +21,38 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
     <a
       href="/"
       class={`inline-flex min-h-[44px] items-center font-bold tracking-normal text-(--text-primary) uppercase transition-colors hover:underline active:underline ${focusRingStyles}`}
-      >Daniel Kindl</a
     >
+      Daniel Kindl
+    </a>
 
     <div class="flex flex-wrap items-center gap-2">
       <nav aria-label="Primary" class="flex flex-wrap items-center gap-2">
-        {
-          navItems.map((item) => (
-            <a
-              href={item.href}
-              aria-current={isActive(item.href) ? 'page' : undefined}
-              class={`inline-flex min-h-[44px] items-center px-1 uppercase transition-colors sm:px-3 ${focusRingStyles} ${
-                isActive(item.href)
-                  ? 'text-(--text-primary) underline decoration-(--text-primary) underline-offset-4'
-                  : 'text-(--text-muted) hover:text-(--text-primary) active:text-(--text-primary)'
-              }`}
-            >
-              {item.label}
-            </a>
-          ))
-        }
+        {navItems.map((item) => (
+          <a
+            href={item.href}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+            class={`inline-flex min-h-[44px] items-center px-1 uppercase transition-colors sm:px-3 ${focusRingStyles} ${
+              isActive(item.href)
+                ? 'text-(--text-primary) underline decoration-(--text-primary) underline-offset-4'
+                : 'text-(--text-muted) hover:text-(--text-primary) active:text-(--text-primary)'
+            }`}
+          >
+            {item.label}
+          </a>
+        ))}
       </nav>
 
-      <span aria-hidden="true" class="text-(--text-muted)">|</span>
+      <span aria-hidden="true" class="text-(--text-muted)">
+        |
+      </span>
 
       <button
         id="theme-toggle"
         class={`inline-flex min-h-[44px] cursor-pointer items-center px-1 text-(--text-muted) uppercase transition-colors hover:text-(--text-primary) active:text-(--text-primary) sm:px-3 ${focusRingStyles}`}
         aria-label="Toggle color theme"
       >
-        [<span class="theme-label-light">Light</span><span class="theme-label-dark">Dark</span>]
+        [<span class="theme-label-light">Light</span>
+        <span class="theme-label-dark">Dark</span>]
       </button>
     </div>
   </Container>
