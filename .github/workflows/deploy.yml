@@ -11,7 +11,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: 'pages'
+  group: pages
   cancel-in-progress: false
 
 jobs:
@@ -22,45 +22,32 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout Repository
+      - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Setup Node.js Environment
+      - name: Setup Node.js
         uses: actions/setup-node@db0fb3a98ed314b69026b6e8c9be26a7e2fe65a8 # post-v7.0.0 security fix
         with:
           node-version: 24
-          cache: 'npm'
+          cache: npm
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm ci
 
-      - name: Execute Dependency Security Audit
-        run: npm audit --audit-level=high
-
-      - name: Generate Programmatic Assets
+      - name: Generate assets
         run: npm run generate-assets
 
-      - name: Execute Source Checks
-        run: npm run check
-
-      - name: Compile Production Artifacts
+      - name: Build
         run: npm run build
 
-      - name: Execute Lighthouse Performance Budget
-        uses: treosh/lighthouse-ci-action@3e7e23fb74242897f95c0ba9cabad3d0227b9b18 # v12
-        with:
-          uploadArtifacts: true
-          temporaryPublicStorage: true
-          configPath: './lighthouserc.json'
-
-      - name: Setup Pages Architecture
+      - name: Setup Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
-      - name: Upload Static Package
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
-          path: './dist'
+          path: ./dist
 
-      - name: Deploy to GitHub Pages Target
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

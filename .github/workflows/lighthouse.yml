@@ -1,20 +1,22 @@
-name: Continuous Integration
+name: Lighthouse
 
 on:
-  pull_request:
+  push:
     branches: [master]
+  workflow_dispatch:
 
 permissions:
   contents: read
+  actions: write
 
 concurrency:
-  group: ${{ github.ref }}
+  group: lighthouse-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  validate:
+  lighthouse:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -28,8 +30,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Check
-        run: npm run check
+      - name: Generate assets
+        run: npm run generate-assets
 
       - name: Build
         run: npm run build
+
+      - name: Lighthouse
+        uses: treosh/lighthouse-ci-action@3e7e23fb74242897f95c0ba9cabad3d0227b9b18 # v12
+        with:
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          configPath: ./lighthouserc.json

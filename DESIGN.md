@@ -268,7 +268,7 @@ photography, no illustration, no decorative screenshots of a UI already describe
   metadata rails elsewhere in the system: a system readout describing the artifact above it.
 - **Motion:** MP4/WebM only, `muted playsinline loop preload="metadata"` with a poster frame.
   **Never a GIF** — a few seconds of UI motion runs 2–5 MB as GIF, can't be optimized by `sharp`,
-  and the deploy's Lighthouse budget (LCP ≤ 2500ms, perf ≥ 0.9) won't absorb it.
+  and the Lighthouse budget (LCP ≤ 2500ms, perf ≥ 0.9) won't absorb it.
 - **Images** go through `astro:assets` so dimensions are intrinsic and CLS stays at zero. Raw
   `<img>` in content is not the pattern.
 - **Swatches** are the preferred way to show a color spec: a fixed 16×16 hairline-bordered chip next

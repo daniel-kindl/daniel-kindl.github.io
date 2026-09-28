@@ -36,12 +36,12 @@ astro dev --background
 
 Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
-CI (`.github/workflows/ci.yml`) runs on pull requests to `master`: `npm run generate-assets`,
-then `npm run check`, then `npm run build`, then the Lighthouse budget in `lighthouserc.json`.
-Deploy (`.github/workflows/deploy.yml`) runs on push to `master` (or `workflow_dispatch`) and runs
-that same sequence, then publishes the built site to GitHub Pages. Lighthouse measures the 5 pages
-listed in `lighthouserc.json`. A change that affects bundle size, LCP, or accessibility can fail
-that budget.
+CI (`.github/workflows/ci.yml`) runs on pull requests to `master`: `npm ci`, then `npm run check`,
+then `npm run build`. That is the merge gate. Deploy (`.github/workflows/deploy.yml`) runs on push
+to `master` (or `workflow_dispatch`): `npm ci`, `npm run generate-assets`, `npm run build`, then
+GitHub Pages. Lighthouse (`.github/workflows/lighthouse.yml`) runs on push to `master` (or
+`workflow_dispatch`) and measures the 5 pages in `lighthouserc.json` once. It does not run on pull
+requests and it does not block the deploy. See ADR #18 in `docs/tech-decisions.md`.
 
 **Commit subjects** are a writing convention. No hook and no workflow checks them. Use one line:
 `type: short imperative description`, optionally suffixed with `(#issueNumber)`. Do not add a body
@@ -106,7 +106,8 @@ plus an optional icon), `Tag`, `Timeline`/`TimelineEvent`, `TableOfContents` (sh
 kept separate from `ui/` so it's clear which are safe to import from an entry. Every entry in both
 collections is `.mdx`, not `.md`. See `docs/content-guide.md` § Adding media, ADR #12 in
 `docs/tech-decisions.md`, and `DESIGN.md` § Media & Figures (a figure is evidence, never
-atmosphere; no GIFs, since the Lighthouse budget gates the deploy). `generate-assets.js` has its
+atmosphere; no GIFs, since the Lighthouse budget in `lighthouserc.json` limits font and script
+size). `generate-assets.js` has its
 own `{md,mdx}` extension filter that must track the content loader's glob.
 
 **Theming uses a `data-theme` attribute, not Tailwind's `.dark` class.** `ThemeScript.astro`
@@ -138,6 +139,7 @@ font preloads, `ThemeScript`, `ClientRouter` for View Transitions, skip-to-conte
 to render skills/experience via `Timeline`.
 
 **Asset generation**: `generate-assets.js` uses `node-canvas` to procedurally generate OG images,
-`icon-192`/`icon-512`, `apple-touch-icon.png`, and `icon.svg`. It runs in CI before every build.
+`icon-192`/`icon-512`, `apple-touch-icon.png`, and `icon.svg`. Deploy and the Lighthouse workflow
+run it before those builds. Pull-request CI does not.
 `node-canvas` is a native module — see the Setup section in `README.md` for the system-library
 prerequisite (Cairo/Pango) if `npm install` fails locally.

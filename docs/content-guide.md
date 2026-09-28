@@ -82,7 +82,7 @@ import phaseScreen from '@assets/projects/ocho-phase-screen.png';
 - **Images** go in `src/assets/` and must be imported, not referenced by URL string — that's what
   routes them through `astro:assets` for AVIF/WebP conversion and intrinsic dimensions.
 - **No GIFs.** Use MP4/WebM via `Figure`'s `video` prop with a `poster`. A GIF of UI motion will
-  fail the Lighthouse budget that gates deploys (`lighthouserc.json`).
+  fail the Lighthouse budget on `master` (`lighthouserc.json`). That check does not block the deploy.
 - **`Swatch`** renders a hex chip inline, including inside markdown table cells. Use it for color
   specs instead of describing colors in prose.
 
