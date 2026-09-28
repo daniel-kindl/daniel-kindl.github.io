@@ -2,6 +2,7 @@
 
 [![CI](https://img.shields.io/github/actions/workflow/status/daniel-kindl/daniel-kindl.github.io/ci.yml?event=pull_request&label=CI&logo=githubactions&logoColor=white)](https://github.com/daniel-kindl/daniel-kindl.github.io/actions/workflows/ci.yml)
 [![Deploy](https://img.shields.io/github/actions/workflow/status/daniel-kindl/daniel-kindl.github.io/deploy.yml?branch=master&label=Deploy&logo=githubactions&logoColor=white)](https://github.com/daniel-kindl/daniel-kindl.github.io/actions/workflows/deploy.yml)
+[![Lighthouse](https://img.shields.io/github/actions/workflow/status/daniel-kindl/daniel-kindl.github.io/lighthouse.yml?branch=master&label=Lighthouse&logo=githubactions&logoColor=white)](https://github.com/daniel-kindl/daniel-kindl.github.io/actions/workflows/lighthouse.yml)
 [![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)](https://astro.build)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
@@ -30,14 +31,14 @@ machine, install them first:
 sudo apt-get install -y libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
 ```
 
-(GitHub Actions' `ubuntu-latest` runner has these preinstalled, which is why CI doesn't need this
-step.) See the [`node-canvas` install guide](https://github.com/Automattic/node-canvas#installation)
+(GitHub Actions' `ubuntu-latest` runner has these preinstalled, which is why the workflows do not
+need this step.) See the [`node-canvas` install guide](https://github.com/Automattic/node-canvas#installation)
 for other platforms.
 
 Icons and OG images (`public/assets/meta/`, `public/apple-touch-icon.png`, `public/icon.svg`) are
 generated, not committed. Run `npm run generate-assets` once after cloning, before `npm run dev` or
-`npm run build`, otherwise those image requests will 404 locally. CI regenerates them fresh on every
-run, so this is a local-only setup step.
+`npm run build`, otherwise those image requests will 404 locally. Deploy and the Lighthouse
+workflow regenerate them, so this is a local-only setup step.
 
 ## Scripts
 
@@ -63,10 +64,11 @@ When using Claude Code, start the dev server with `astro dev --background` and m
 Run `npm run check` before you open a pull request. It runs ESLint, a Prettier check, Astro type
 checks, and the Node test suite.
 
-Pull requests to `master` install the locked dependency tree, block on
-`npm audit --audit-level=high`, then run asset generation, `npm run check`, the production build,
-and the Lighthouse CI budget (`.github/workflows/ci.yml`). Pushes to `master` run the same gates,
-then deploy (`.github/workflows/deploy.yml`).
+Pull requests to `master` install the locked dependency tree, run `npm run check`, and run the
+production build (`.github/workflows/ci.yml`). A push to `master` installs dependencies, generates
+assets, builds once, and deploys that output to GitHub Pages (`.github/workflows/deploy.yml`).
+The Lighthouse budget runs on `master` in its own workflow (`.github/workflows/lighthouse.yml`),
+one pass over the five URLs in `lighthouserc.json`. It does not block the deploy. See ADR #18.
 
 Commit subjects stay a writing convention (`type: description`, with `content:` for entries under
 `src/content/`). Nothing in Git or CI rejects a subject. See ADR #17.

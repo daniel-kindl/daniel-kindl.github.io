@@ -424,3 +424,44 @@ rejects a subject.
 **Consequences:** `npm install` does not install Git hooks. Run `npm run check` before a pull
 request. CI is the gate on `master`. A subject that skips the type prefix can land. History before
 this ADR keeps its old subjects. ADR #6 and ADR #16 stay as written.
+
+---
+
+## 18. Pull-request CI checks; deploy publishes
+
+**Status:** Accepted — 2026-09-28 (narrows the CI and deploy sentence in #17)
+
+**Context:** After #16 and #17, a pull request and a push to `master` still did the same work.
+Each run installed dependencies, ran `npm audit --audit-level=high`, generated assets, ran
+`npm run check`, built the site, and ran Lighthouse CI. Lighthouse collected three runs of the
+five URLs in `lighthouserc.json`. Deploy repeated that work and then published the site. The
+release step, the full git history, and the pull-request title check are already gone. Checkout
+uses the default fetch depth. The deploy token already has only `contents: read`, `pages: write`,
+and `id-token: write`.
+
+**Decision:** A pull request to `master` runs `npm ci`, `npm run check`, and `npm run build`.
+That is the merge gate. `npm run check` is lint, the format check, the type check, and the tests.
+
+A push to `master`, or a manual run of the deploy workflow, installs dependencies, runs
+`npm run generate-assets`, builds once, and deploys that output to GitHub Pages. Deploy does not
+run `npm run check`, `npm audit`, or Lighthouse.
+
+Neither workflow runs `npm audit`. Dependabot opens the weekly dependency updates. An advisory
+in the registry does not fail an unrelated pull request.
+
+Lighthouse moves to `.github/workflows/lighthouse.yml`. A push to `master`, or a manual run,
+generates assets, builds, and collects one run of the same five URLs. The assertions stay. The
+workflow does not run on a pull request, and a failure does not stop the Pages deploy. Three runs
+smooth score variance. One run still fails a broken page, a script over 30 KB, a font over 96 KB,
+or a category score under its minimum. If one run fails and a repeat passes, raise `numberOfRuns`
+in that workflow only.
+
+Concurrency stays split. Pull-request CI cancels an older run on the same ref. Deploy uses the
+`pages` group and does not cancel an in-progress publish. Lighthouse uses its own group, cancels
+an older run on the same ref, and does not share the deploy group. The Lighthouse job can upload
+a report, so its token also has `actions: write`.
+
+**Consequences:** A pull request can merge while Lighthouse is red on an earlier commit. The next
+push to `master` measures the new site. The pull-request build does not generate images. Deploy
+generates them before the published build. Run `npm audit` locally when you want that report.
+ADR #17 stays as written.

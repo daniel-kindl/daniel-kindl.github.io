@@ -37,12 +37,12 @@ astro dev --background
 
 Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
-CI (`.github/workflows/ci.yml`) runs on pull requests to `master`: `npm run generate-assets`,
-then `npm run check`, then `npm run build`, then the Lighthouse budget in `lighthouserc.json`.
-Deploy (`.github/workflows/deploy.yml`) runs on push to `master` (or `workflow_dispatch`) and runs
-that same sequence, then publishes the built site to GitHub Pages. Lighthouse measures the 5 pages
-listed in `lighthouserc.json`. A change that affects bundle size, LCP, or accessibility can fail
-that budget.
+CI (`.github/workflows/ci.yml`) runs on pull requests to `master`: `npm ci`, then `npm run check`,
+then `npm run build`. That is the merge gate. Deploy (`.github/workflows/deploy.yml`) runs on push
+to `master` (or `workflow_dispatch`): `npm ci`, `npm run generate-assets`, `npm run build`, then
+GitHub Pages. Lighthouse (`.github/workflows/lighthouse.yml`) runs on push to `master` (or
+`workflow_dispatch`) and measures the 5 pages in `lighthouserc.json` once. It does not run on pull
+requests and it does not block the deploy. See ADR #18 in `docs/tech-decisions.md`.
 
 **Commit subjects** are a writing convention. No hook and no workflow checks them. Use one line:
 `type: short imperative description`, optionally suffixed with `(#issueNumber)`. Do not add a body
@@ -124,6 +124,7 @@ font preloads, `ThemeScript`, `ClientRouter` for View Transitions, skip-to-conte
 to render skills/experience via `Timeline`.
 
 **Asset generation**: `generate-assets.js` uses `node-canvas` to procedurally generate OG images,
-`icon-192`/`icon-512`, `apple-touch-icon.png`, and `icon.svg`. It runs in CI before every build.
+`icon-192`/`icon-512`, `apple-touch-icon.png`, and `icon.svg`. Deploy and the Lighthouse workflow
+run it before those builds. Pull-request CI does not.
 `node-canvas` is a native module — see the Setup section in `README.md` for the system-library
 prerequisite (Cairo/Pango) if `npm install` fails locally.
