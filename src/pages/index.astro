@@ -91,47 +91,16 @@ const recentPosts = allPosts.slice(0, 2);
     <div class="reveal max-w-3xl border border-(--border-color) bg-(--bg-primary) p-8 md:p-12">
       <Typography variant="eyebrow">How I Work</Typography>
       <Typography variant="h2" class="mb-4">
-        Scoped work, then a pull request
+        An issue, then a pull request
       </Typography>
       <Typography variant="body" class="mb-4 text-(--text-muted)">
-        I open the work as a GitHub issue before an agent starts. Repository instructions state the
-        boundaries: the architecture, the verification command, and the decisions the change has to
-        keep. The normal end of the task is a pull request.
-      </Typography>
-      <Typography variant="body" class="mb-4 text-(--text-muted)">
-        The verification command runs before merge. This site runs
-        <span class="font-mono text-sm">npm run check</span> and a production build.
-        <a
-          class="underline decoration-(--border-color) underline-offset-2 hover:decoration-(--text-primary)"
-          href="/projects/startup-exe"
-        >
-          startup.exe
-        </a>
-        runs <span class="font-mono text-sm">./eng/verify.sh</span>, which checks formatting, builds
-        Release, and runs the tests.
-        <a
-          class="underline decoration-(--border-color) underline-offset-2 hover:decoration-(--text-primary)"
-          href="/projects/mazelab"
-        >
-          MazeLab
-        </a>
-        runs formatting, Clippy, and the test suite. I add a separate review when a change is easy
-        to get subtly wrong. Agents can draft the research, the code, and the tests. Merge waits on
-        the verification command, and on that review when I asked for one.
+        I write each task as a GitHub issue before an agent starts. The issue sets the scope. The
+        repository instructions set the rules.
       </Typography>
       <Typography variant="body" class="mb-6 text-(--text-muted)">
-        I keep the workflows repeatable. MazeLab rebuilds one maze from a seed, a size, and a
-        version. startup.exe replays a seed and an ordered action list, and it keeps the playtest
-        artifacts.
-        <a
-          class="underline decoration-(--border-color) underline-offset-2 hover:decoration-(--text-primary)"
-          href="/projects/dk-devkit"
-        >
-          dk-devkit
-        </a>
-        installs from declared components, runs unattended work on a disposable clone, and keeps
-        GitHub push and merge authority in the trusted layer. Milestone notes and project docs
-        record the decision, so the next session can start from the repository.
+        An agent can write the research, the code, and the tests. The task usually ends as a pull
+        request. I run the same checks before each merge. If I ask for a review, I wait for that
+        review. The documents record the decision. The next session starts from the repository.
       </Typography>
       <Button href={mailto} variant="primary">
         Get in touch
