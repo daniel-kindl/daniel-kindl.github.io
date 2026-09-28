@@ -2,7 +2,6 @@
 import ExternalLink from '@components/ui/ExternalLink.astro';
 import Container from '@components/ui/Container.astro';
 import { focusRingStyles } from '@lib/buttonStyles';
-import { buildInfo } from '@lib/buildInfo';
 import { mailto, siteConfig } from '@lib/siteConfig';
 
 const currentYear = new Date().getFullYear();
@@ -19,7 +18,7 @@ const currentYear = new Date().getFullYear();
           href="https://astro.build"
           class={`underline decoration-(--border-color) underline-offset-4 transition-colors hover:text-(--text-primary) hover:decoration-(--text-primary) ${focusRingStyles}`}
           >Astro</ExternalLink
-        > · v{buildInfo.version}</span
+        ></span
       >
     </div>
     <div class="flex flex-wrap items-center gap-2 uppercase">

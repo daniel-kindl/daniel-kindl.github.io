@@ -23,7 +23,7 @@ Projects and writing are Zod-validated Astro Content Collections rather than han
 
 ## Performance as a gate, not a goal
 
-The deploy runs a Lighthouse CI budget before publishing, and a failing score blocks the release rather than filing a warning somewhere:
+The deploy runs a Lighthouse CI budget before publishing, and a failing score blocks the deploy rather than filing a warning somewhere:
 
 | Assertion                | Budget    |
 | ------------------------ | --------- |
@@ -40,7 +40,7 @@ See a [passing production run](https://github.com/daniel-kindl/daniel-kindl.gith
 
 ## Delivery
 
-Pull requests run asset generation, lint, format check, type check, and a full production build. Pushes to `master` add semantic-release, which computes the version from Conventional Commits, updates the changelog, tags, and publishes to GitHub Pages with no release PR to approve.
+Pull requests run asset generation, lint, format check, type check, and a full production build. A push to `master` runs those same checks, then the Lighthouse budget, then publishes the built site to GitHub Pages.
 
 ## Outcome
 

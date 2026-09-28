@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -24,8 +24,6 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
 
       - name: Setup Node.js Environment
         uses: actions/setup-node@db0fb3a98ed314b69026b6e8c9be26a7e2fe65a8 # post-v7.0.0 security fix
@@ -63,16 +61,6 @@ jobs:
           uploadArtifacts: true
           temporaryPublicStorage: true
           configPath: './lighthouserc.json'
-
-      - name: Run Release Automation
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run release
-
-      # buildInfo.ts reads the version from package.json. The release step writes
-      # the next version only after all gates pass, so rebuild before publishing.
-      - name: Recompile With Released Version
-        run: npm run build
 
       - name: Setup Pages Architecture
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
