@@ -1,7 +1,7 @@
-# Content Guide: Adding Projects and Writing Posts
+# Content
 
-Practical how-to for adding new content. For the underlying architecture (collections, routing,
-theming), see `CLAUDE.md`. For why the stack is shaped this way, see `docs/tech-decisions.md`.
+How to add a project or a writing post. For repository rules, see `AGENTS.md`. For a stack
+decision, see `docs/tech-decisions.md`.
 
 Both collections are defined and Zod-validated in `src/content.config.ts`. Invalid frontmatter
 fails `npm run typecheck` and `npm run build` (and therefore CI) with a schema error pointing at
@@ -49,8 +49,8 @@ the offending field — that's the fastest way to check you got a new entry righ
 
 ## Adding media or components to an entry
 
-Every entry in both collections is `.mdx`. The filename minus extension is still the `id`, so the
-URL and OG image path are unaffected by the extension. (See ADR #12 in `docs/tech-decisions.md`.)
+Every entry in both collections is `.mdx`. The filename minus the extension is still the `id`, so
+the URL does not depend on the extension. See ADR #12 in `docs/tech-decisions.md`.
 
 Components meant for content live in `src/components/content/` and are imported below the
 frontmatter:
@@ -86,7 +86,7 @@ import phaseScreen from '@assets/projects/ocho-phase-screen.png';
 - **`Swatch`** renders a hex chip inline, including inside markdown table cells. Use it for color
   specs instead of describing colors in prose.
 
-`DESIGN.md` § Media & Figures has the rule these components encode: a figure is evidence, never
+`docs/design.md` § Media & Figures has the rule these components encode: a figure is evidence, never
 atmosphere. If you can't caption what it proves, leave it out.
 
 MDX is stricter than Markdown about raw `{` and `<` outside code fences — if a build fails on an
@@ -95,7 +95,7 @@ MDX is stricter than Markdown about raw `{` and `<` outside code fences — if a
 ## Adding a new writing post
 
 1. Create `src/content/writing/<slug>.mdx`. The filename becomes the entry `id`, used both for the
-   URL (`/writing/<slug>`) and in `src/pages/rss.xml.js`.
+   URL (`/writing/<slug>`) and in `src/pages/rss.xml.ts`.
 2. Fill in frontmatter:
 
    ```yaml
@@ -143,3 +143,13 @@ npm run build       # confirms the page actually renders
 
 There's no content test suite — `astro check` + a successful build is the correctness bar for
 frontmatter and rendering.
+
+## Voice
+
+Write for a hiring manager or a technical recruiter.
+
+Use plain, specific sentences. Name a deliverable, a date, a test count, or a link the visitor can
+open. Leave a fact out when you do not have it. Do not add a testimonial, a client logo, a usage
+metric, or a case study that is not already true.
+
+Write as a working engineer who is open to a conversation.

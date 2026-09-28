@@ -52,8 +52,8 @@ const fonts = ['Space Grotesk', 'JetBrains Mono', 'IBM Plex Sans'];
           persists to <code>localStorage</code>.
         </li>
         <li>
-          Icons and social-share (OG) images are generated procedurally at build time with
-          node-canvas, not hand-drawn or committed to git.
+          Icons and the social-share image are files in the repository. Every page uses the same
+          share image. The title and the description still change on each page.
         </li>
         <li>
           Search is static: Pagefind indexes the built HTML after every build and ships its own
@@ -77,8 +77,8 @@ const fonts = ['Space Grotesk', 'JetBrains Mono', 'IBM Plex Sans'];
           build, before merge.
         </li>
         <li>
-          Pushes to <code>master</code> build the site, run a Lighthouse CI budget check, then deploy
-          to GitHub Pages. A failing budget blocks the deploy.
+          A push to <code>master</code> builds the site and deploys that build to GitHub Pages. Lighthouse
+          checks five pages in its own workflow. A failed check does not stop the deploy.
         </li>
       </ul>
     </section>

@@ -8,77 +8,60 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![Node](https://img.shields.io/badge/node-%3E%3D24-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 
-Production portfolio site at [danielkindl.dev](https://danielkindl.dev), built with
-Astro 7, TypeScript (strict) and Tailwind CSS 4. No island framework is installed — see ADR #15.
+Production portfolio site at [danielkindl.dev](https://danielkindl.dev), built with Astro 7,
+TypeScript (strict), and Tailwind CSS 4. No island framework is installed. See ADR #15.
 
 ## Features
 
-- Static, content-driven project and writing pages backed by Zod-validated Astro content
-  collections, authored in MDX
-- Light/dark theme toggle with no flash on load, following system preference until you choose
-- RSS feed, tag-based browsing, and reading-time estimates on posts and case studies
-- Sticky table of contents with scrollspy on any entry with two or more headings
-- Full-text site search powered by [Pagefind](https://pagefind.app)
-- Per-entry social share (OG) images generated at build time, not hand-drawn or committed
+- Static project and writing pages from Zod-validated Astro content collections, authored in MDX
+- Light and dark theme with no flash on load. The first visit follows the system preference.
+- RSS feed, tag pages, and reading-time estimates on posts and case studies
+- Sticky table of contents with scrollspy on any entry that has two or more headings
+- Full-text search powered by [Pagefind](https://pagefind.app)
+- One committed social-share image. The page title and description still change per page.
 
 ## Setup
 
-`npm install` builds the native [`canvas`](https://www.npmjs.com/package/canvas) module (used by
-`generate-assets.js`), which requires Cairo/Pango system libraries. On a fresh Debian/Ubuntu
-machine, install them first:
+Requires Node.js 24 or newer.
 
 ```
-sudo apt-get install -y libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+npm install
+npm run dev
 ```
-
-(GitHub Actions' `ubuntu-latest` runner has these preinstalled, which is why the workflows do not
-need this step.) See the [`node-canvas` install guide](https://github.com/Automattic/node-canvas#installation)
-for other platforms.
-
-Icons and OG images (`public/assets/meta/`, `public/apple-touch-icon.png`, `public/icon.svg`) are
-generated, not committed. Run `npm run generate-assets` once after cloning, before `npm run dev` or
-`npm run build`, otherwise those image requests will 404 locally. Deploy and the Lighthouse
-workflow regenerate them, so this is a local-only setup step.
 
 ## Scripts
 
-| Command                   | Purpose                                                 |
-| :------------------------ | :------------------------------------------------------ |
-| `npm run check`           | Lint, check formatting, type-check, and run tests       |
-| `npm run dev`             | Start local development server                          |
-| `npm run build`           | Build static production output                          |
-| `npm run preview`         | Preview built output                                    |
-| `npm run typecheck`       | Run Astro type checks                                   |
-| `npm test`                | Run the Node test suite                                 |
-| `npm run lint`            | Run ESLint                                              |
-| `npm run lint:fix`        | Run ESLint with autofix                                 |
-| `npm run format`          | Format files with Prettier                              |
-| `npm run format:check`    | Check formatting with Prettier                          |
-| `npm run generate-assets` | Regenerate OG images, icons, and `apple-touch-icon.png` |
-
-When using Claude Code, start the dev server with `astro dev --background` and manage it with
-`astro dev stop` / `astro dev status` / `astro dev logs`.
+| Command                | Purpose                                           |
+| :--------------------- | :------------------------------------------------ |
+| `npm run check`        | Lint, check formatting, type-check, and run tests |
+| `npm run dev`          | Start the local development server                |
+| `npm run build`        | Build static production output                    |
+| `npm run preview`      | Preview the built output                          |
+| `npm run typecheck`    | Run Astro type checks                             |
+| `npm test`             | Run the Node test suite                           |
+| `npm run lint`         | Run ESLint                                        |
+| `npm run lint:fix`     | Run ESLint with autofix                           |
+| `npm run format`       | Format files with Prettier                        |
+| `npm run format:check` | Check formatting with Prettier                    |
 
 ## CI/CD
 
 Run `npm run check` before you open a pull request. It runs ESLint, a Prettier check, Astro type
 checks, and the Node test suite.
 
-Pull requests to `master` install the locked dependency tree, run `npm run check`, and run the
-production build (`.github/workflows/ci.yml`). A push to `master` installs dependencies, generates
-assets, builds once, and deploys that output to GitHub Pages (`.github/workflows/deploy.yml`).
-The Lighthouse budget runs on `master` in its own workflow (`.github/workflows/lighthouse.yml`),
-one pass over the five URLs in `lighthouserc.json`. It does not block the deploy. See ADR #18.
+A pull request to `master` installs the locked dependency tree, runs `npm run check`, and runs the
+production build (`.github/workflows/ci.yml`). A push to `master` installs dependencies, builds
+once, and deploys that output to GitHub Pages (`.github/workflows/deploy.yml`). The Lighthouse
+budget runs on `master` in `.github/workflows/lighthouse.yml`, one pass over the five URLs in
+`lighthouserc.json`. A failure does not block the deploy. See ADR #18.
 
 Commit subjects stay a writing convention (`type: description`, with `content:` for entries under
 `src/content/`). Nothing in Git or CI rejects a subject. See ADR #17.
 
 ## Documentation
 
-- [`docs/tech-decisions.md`](docs/tech-decisions.md): ADR log for stack/tooling choices.
-- [`docs/content-guide.md`](docs/content-guide.md): how to add `projects`/`writing` content entries,
-  including media and in-content components.
-- [`DESIGN.md`](DESIGN.md): the design system, with the named rules that govern color, typography,
-  separation, and figures.
-- [`CLAUDE.md`](CLAUDE.md): architecture and conventions, written for Claude Code but accurate for
-  anyone.
+- [`AGENTS.md`](AGENTS.md): repository rules for coding agents. This is the canonical copy.
+- [`docs/content.md`](docs/content.md): how to add a `projects` or `writing` entry.
+- [`docs/design.md`](docs/design.md): color, typography, layout, and figures.
+- [`docs/tech-decisions.md`](docs/tech-decisions.md): ADR log for stack and tooling choices.
+- [`SECURITY.md`](SECURITY.md): how to report a vulnerability.
