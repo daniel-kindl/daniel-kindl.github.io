@@ -78,9 +78,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={new URL(ogImage, Astro.site)} />
   </head>
-  <body
-    class="flex min-h-screen flex-col bg-(--bg-primary) text-(--text-primary) antialiased selection:bg-(--accent)/30 selection:text-(--text-primary)"
-  >
+  <body class="flex min-h-screen flex-col bg-(--bg-primary) text-(--text-primary) antialiased selection:bg-(--accent)/30 selection:text-(--text-primary)">
     <!-- Skip to main content link for screen-readers -->
     <a
       href="#main-content"
@@ -97,7 +95,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <main class="grow">
       <!-- A hidden anchor provides a valid focus target for the skip link without
            adding tabindex to the semantic <main> element. -->
-      <a id="main-content" href="#main-content" tabindex="-1" class="sr-only">Main content</a>
+      <a id="main-content" href="#main-content" tabindex="-1" class="sr-only">
+        Main content
+      </a>
       <slot />
     </main>
 

@@ -13,51 +13,62 @@ const currentYear = new Date().getFullYear();
     class="flex flex-col items-start justify-between gap-4 font-mono text-xs text-(--text-muted) sm:flex-row sm:items-baseline"
   >
     <div>
-      <span
-        >{`© ${currentYear} ${siteConfig.name}`} | Built with <ExternalLink
+      <span>
+        {`© ${currentYear} ${siteConfig.name}`} | Built with{' '}
+        <ExternalLink
           href="https://astro.build"
           class={`underline decoration-(--border-color) underline-offset-4 transition-colors hover:text-(--text-primary) hover:decoration-(--text-primary) ${focusRingStyles}`}
-          >Astro</ExternalLink
-        ></span
-      >
+        >
+          Astro
+        </ExternalLink>
+      </span>
     </div>
     <div class="flex flex-wrap items-center gap-2 uppercase">
       <ExternalLink
         href={siteConfig.socials.github}
         class={`justify-center transition-colors hover:text-(--text-primary) ${focusRingStyles}`}
-        >GitHub</ExternalLink
       >
+        GitHub
+      </ExternalLink>
       <ExternalLink
         href={siteConfig.socials.linkedin}
         class={`justify-center transition-colors hover:text-(--text-primary) ${focusRingStyles}`}
-        >LinkedIn</ExternalLink
       >
+        LinkedIn
+      </ExternalLink>
       <ExternalLink
         href={siteConfig.socials.bluesky}
         class={`justify-center transition-colors hover:text-(--text-primary) ${focusRingStyles}`}
-        >Bluesky</ExternalLink
       >
+        Bluesky
+      </ExternalLink>
       <ExternalLink
         href={siteConfig.socials.x}
         class={`justify-center transition-colors hover:text-(--text-primary) ${focusRingStyles}`}
-        >X</ExternalLink
       >
+        X
+      </ExternalLink>
       <a
         href={mailto}
         class={`inline-flex min-h-[44px] min-w-[44px] items-center justify-center transition-colors hover:text-(--text-primary) ${focusRingStyles}`}
-        >Email</a
       >
-      <span aria-hidden="true" class="text-(--border-color)">|</span>
+        Email
+      </a>
+      <span aria-hidden="true" class="text-(--border-color)">
+        |
+      </span>
       <a
         href="/rss.xml"
         class={`inline-flex min-h-[44px] min-w-[44px] items-center justify-center transition-colors hover:text-(--text-primary) ${focusRingStyles}`}
-        >RSS</a
       >
+        RSS
+      </a>
       <a
         href="/colophon"
         class={`inline-flex min-h-[44px] min-w-[44px] items-center justify-center px-1 transition-colors hover:text-(--text-primary) ${focusRingStyles}`}
-        >Colophon</a
       >
+        Colophon
+      </a>
     </div>
   </Container>
 </footer>

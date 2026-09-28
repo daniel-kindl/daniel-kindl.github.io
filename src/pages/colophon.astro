@@ -16,7 +16,9 @@ const fonts = ['Space Grotesk', 'JetBrains Mono', 'IBM Plex Sans'];
   <Container class="py-12 md:py-20">
     <header class="mb-16 border-b border-(--border-color) pb-12">
       <Typography variant="eyebrow">Colophon</Typography>
-      <Typography variant="h1" class="mb-6">How This Site Is Built</Typography>
+      <Typography variant="h1" class="mb-6">
+        How This Site Is Built
+      </Typography>
       <div class="max-w-2xl space-y-4">
         <Typography variant="body" class="text-(--text-muted)">
           A short reference for what's actually running this site, for anyone curious about the
@@ -31,7 +33,9 @@ const fonts = ['Space Grotesk', 'JetBrains Mono', 'IBM Plex Sans'];
         <Typography variant="h2">What It Runs On</Typography>
       </div>
       <div class="flex flex-wrap gap-2">
-        {stack.map((item) => <Tag label={item} />)}
+        {stack.map((item) => (
+          <Tag label={item} />
+        ))}
       </div>
     </section>
 
@@ -48,8 +52,8 @@ const fonts = ['Space Grotesk', 'JetBrains Mono', 'IBM Plex Sans'];
         </li>
         <li>
           Theming uses a <code>data-theme</code> attribute and CSS custom properties, not Tailwind's
-          <code>.dark</code> class. The first visit follows your system preference; after that the toggle
-          persists to <code>localStorage</code>.
+          <code>.dark</code> class. The first visit follows your system preference; after that the
+          toggle persists to <code>localStorage</code>.
         </li>
         <li>
           Icons and the social-share image are files in the repository. Every page uses the same
@@ -77,8 +81,8 @@ const fonts = ['Space Grotesk', 'JetBrains Mono', 'IBM Plex Sans'];
           build, before merge.
         </li>
         <li>
-          A push to <code>master</code> builds the site and deploys that build to GitHub Pages. Lighthouse
-          checks five pages in its own workflow. A failed check does not stop the deploy.
+          A push to <code>master</code> builds the site and deploys that build to GitHub Pages.
+          Lighthouse checks five pages in its own workflow. A failed check does not stop the deploy.
         </li>
       </ul>
     </section>
@@ -89,7 +93,9 @@ const fonts = ['Space Grotesk', 'JetBrains Mono', 'IBM Plex Sans'];
         <Typography variant="h2">Fonts</Typography>
       </div>
       <div class="flex flex-wrap gap-2">
-        {fonts.map((item) => <Tag label={item} />)}
+        {fonts.map((item) => (
+          <Tag label={item} />
+        ))}
       </div>
       <p class="mt-4 text-sm leading-relaxed text-(--text-muted)">
         All three are SIL OFL licensed and self-hosted as variable fonts, no Google Fonts CDN.

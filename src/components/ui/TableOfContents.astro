@@ -15,37 +15,35 @@ const { headings, variant }: Props = Astro.props;
 const linkClasses = `block text-(--text-muted) underline decoration-(--border-color) underline-offset-2 transition-colors hover:text-(--text-primary) hover:decoration-(--text-primary) ${focusRingStyles}`;
 ---
 
-{
-  variant === 'mobile' ? (
-    <details class="mb-8 max-w-3xl border border-(--border-color) md:hidden">
-      <summary class="flex min-h-[44px] cursor-pointer items-center p-4 font-mono text-xs text-(--text-muted) uppercase">
-        [+] On This Page
-      </summary>
-      <ul class="space-y-1 px-4 pb-4 font-mono text-xs" data-toc>
-        {headings.map((heading) => (
-          <li class={heading.depth === 3 ? 'pl-4' : ''}>
-            <a href={`#${heading.slug}`} class={`py-2 ${linkClasses}`}>
-              {heading.text}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </details>
-  ) : (
-    <nav aria-label="Table of contents" class="space-y-2">
-      <p class="font-mono text-[10px] text-(--text-muted) uppercase">On This Page</p>
-      <ul class="space-y-1 font-mono text-xs" data-toc>
-        {headings.map((heading) => (
-          <li class={heading.depth === 3 ? 'pl-4' : ''}>
-            <a href={`#${heading.slug}`} class={`py-1 ${linkClasses}`}>
-              {heading.text}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  )
-}
+{variant === 'mobile' ? (
+  <details class="mb-8 max-w-3xl border border-(--border-color) md:hidden">
+    <summary class="flex min-h-[44px] cursor-pointer items-center p-4 font-mono text-xs text-(--text-muted) uppercase">
+      [+] On This Page
+    </summary>
+    <ul class="space-y-1 px-4 pb-4 font-mono text-xs" data-toc>
+      {headings.map((heading) => (
+        <li class={heading.depth === 3 ? 'pl-4' : ''}>
+          <a href={`#${heading.slug}`} class={`py-2 ${linkClasses}`}>
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </details>
+) : (
+  <nav aria-label="Table of contents" class="space-y-2">
+    <p class="font-mono text-[10px] text-(--text-muted) uppercase">On This Page</p>
+    <ul class="space-y-1 font-mono text-xs" data-toc>
+      {headings.map((heading) => (
+        <li class={heading.depth === 3 ? 'pl-4' : ''}>
+          <a href={`#${heading.slug}`} class={`py-1 ${linkClasses}`}>
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
 
 <script>
   let tocObserver: IntersectionObserver | null = null;

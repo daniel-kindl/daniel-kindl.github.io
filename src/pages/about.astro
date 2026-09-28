@@ -36,10 +36,16 @@ const skillGroups = [
   <Container class="py-12 md:py-20" data-pagefind-body>
     <header class="mb-16 border-b border-(--border-color) pb-12">
       <Typography variant="eyebrow">About</Typography>
-      <Typography variant="h1" class="mb-6">{name}</Typography>
+      <Typography variant="h1" class="mb-6">
+        {name}
+      </Typography>
       <div class="max-w-2xl space-y-4">
-        <Typography variant="body" class="text-lg">{role}</Typography>
-        <Typography variant="body" class="text-(--text-muted)">{summary}</Typography>
+        <Typography variant="body" class="text-lg">
+          {role}
+        </Typography>
+        <Typography variant="body" class="text-(--text-muted)">
+          {summary}
+        </Typography>
       </div>
     </header>
 
@@ -50,21 +56,19 @@ const skillGroups = [
       </div>
 
       <Timeline>
-        {
-          experienceWithContinuity.map((item) => (
-            <TimelineEvent
-              title={`${item.role} — ${item.company}`}
-              time={item.period}
-              promotedFrom={item.promotedFrom}
-            >
-              <ul class="mt-2 list-disc space-y-1 pl-5 text-sm leading-relaxed text-(--text-muted)">
-                {item.achievements.map((achievement) => (
-                  <li>{achievement}</li>
-                ))}
-              </ul>
-            </TimelineEvent>
-          ))
-        }
+        {experienceWithContinuity.map((item) => (
+          <TimelineEvent
+            title={`${item.role} — ${item.company}`}
+            time={item.period}
+            promotedFrom={item.promotedFrom}
+          >
+            <ul class="mt-2 list-disc space-y-1 pl-5 text-sm leading-relaxed text-(--text-muted)">
+              {item.achievements.map((achievement) => (
+                <li>{achievement}</li>
+              ))}
+            </ul>
+          </TimelineEvent>
+        ))}
       </Timeline>
     </section>
 
@@ -74,18 +78,16 @@ const skillGroups = [
         <Typography variant="h2">Technical Toolkit</Typography>
       </div>
       <div class="grid gap-8 md:grid-cols-2">
-        {
-          skillGroups.map((group) => (
-            <div>
-              <h3 class="mb-3 font-mono text-xs text-(--text-muted) uppercase">{group.label}</h3>
-              <div class="flex flex-wrap gap-2">
-                {group.items.map((item) => (
-                  <Tag label={item} />
-                ))}
-              </div>
+        {skillGroups.map((group) => (
+          <div>
+            <h3 class="mb-3 font-mono text-xs text-(--text-muted) uppercase">{group.label}</h3>
+            <div class="flex flex-wrap gap-2">
+              {group.items.map((item) => (
+                <Tag label={item} />
+              ))}
             </div>
-          ))
-        }
+          </div>
+        ))}
       </div>
     </section>
   </Container>
