@@ -9,7 +9,7 @@ status: 'development'
 dates:
   start: 2026-09-04
   end: null
-weight: 9
+weight: 40
 ---
 
 ## Context
@@ -70,6 +70,10 @@ The model also does not receive GitHub push or merge authority. Its output cross
 `agentq` sits above that boundary. It coordinates GitHub issue work in the trusted layer: selecting runnable work, invoking `agentbox`, checking the resulting diff, opening pull requests, waiting for configured gates, and merging only when repository policy allows it.
 
 The important separation is authority, not just process count. The model can modify its disposable clone. The trusted layer decides whether those changes are allowed to affect the real repository.
+
+## A rebuild has a written path
+
+The recovery guide starts from a fresh Bazzite install of the `daniel` profile. The SSH key and other secrets stay outside Git. The guide marks the steps a person has to do. `./install.sh` then converges the selected components.
 
 ## Outcome
 
