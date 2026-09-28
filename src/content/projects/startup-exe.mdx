@@ -1,0 +1,59 @@
+---
+title: 'startup.exe'
+summary: 'Alpha simulation of a software startup. Headless monthly rules, seeded replay, and a console playtest runner. No game client and no public release.'
+role: 'Solo Developer'
+stack: ['C#', '.NET 10', 'xUnit', 'GitHub Actions']
+status: 'development'
+dates:
+  start: 2026-09-20
+  end: null
+weight: 50
+---
+
+## Context
+
+startup.exe is a management game about building and operating a software product. The work that
+exists today is the simulation. Milestones M0 through M8 are complete. M9, market and competition,
+is in progress. The repository is private, and there is no public build to download.
+
+## Implemented systems
+
+`Startup.Core` owns the rules. A month resolves in a fixed order: demand and signups, incidents,
+churn, revenue, operating cost, and bankruptcy. The player acts before the month resolves. The same
+seed and the same ordered actions replay the same run.
+
+Completed milestones added these decisions:
+
+- what to build, through a feature catalog with prerequisites and typed effects
+- whether to hire, and later which person to hire, pay, assign, or remove
+- a monthly growth plan, including paid acquisition
+- retention under capacity pressure and incidents
+- a price that trades revenue per user against acquisition and retention
+- software quality, where a shortcut can add bug pressure and stabilization work costs time
+
+The model is one company, one product, and one aggregate user population.
+
+## The runner is a test harness
+
+`Startup.Runner` is a console program for manual playtesting. It reads commands and prints state.
+It holds no game rules. A headless protocol writes machine-readable playtest records, and the
+repository keeps JSON and Markdown evidence for fixed-seed scenarios.
+
+`./eng/verify.sh` is the pull-request gate. It checks formatting, builds Release, and runs the
+tests. Stryker mutation testing is a separate probe. It runs when a milestone is hardening or when
+a core rule changes. Surviving mutants are reviewed as possible gaps in the tests.
+
+## What is still ahead
+
+The repository has no `Startup.Game` project and no Godot dependency. A later presentation layer
+would own the interface, input, and audio, and would call `Startup.Core`. That layer has not
+started.
+
+M9 will add aggregate market state and competitive pressure on top of the current acquisition,
+retention, and pricing rules. The plan leaves out individual competitors and per-customer
+switching. Those market systems are not in the simulation yet.
+
+## Outcome
+
+The alpha is a deterministic company simulation with a console runner, seeded replay, and milestone
+playtest evidence. There is no game client on this page, because the project has not built one.
