@@ -395,3 +395,32 @@ ADR #11 and ADR #14 are left intact. They record decisions that were correct whe
 **Consequences:** A push to `master` publishes the commit that passed the gates. A content-only
 commit and a site commit take the same deploy path. The deploy token needs `contents: read`,
 `pages: write`, and `id-token: write`. It no longer needs permission to push.
+
+---
+
+## 17. Local checks: `npm run check`, no Git hooks
+
+**Status:** Accepted — 2026-09-28 (supersedes the hook enforcement in #6; narrows the commit-format sentence in #16)
+
+**Context:** ADR #6 installed Husky, commitlint, and lint-staged so every commit used a
+Conventional Commits subject and so staged files passed ESLint and Prettier. ADR #11 used that
+subject to calculate a version. ADR #16 removed the version step and kept the subject format as
+discipline. The hooks, `commitlint.config.mjs`, and the `lint-pr-title` job
+(`amannn/action-semantic-pull-request`) still rejected a subject that did not match. CI on every
+pull request to `master` already runs ESLint, Prettier, the Astro type check, the tests, and the
+production build. The local hook repeated the source checks and stopped the commit before CI could
+report the same result. The subject format no longer changes a version, a changelog, or a tag.
+
+**Decision:** Remove Husky, `@commitlint/cli`, `@commitlint/config-conventional`, lint-staged,
+`commitlint.config.mjs`, `.lintstagedrc.json`, and the `commit-msg` and `pre-commit` hooks. Remove
+the `lint-pr-title` job. `npm run check` runs lint, the format check, the type check, and the
+tests. CI and deploy run `npm run check` in place of those four steps. Asset generation, the
+dependency audit, the production build, and the Lighthouse budget stay as their own steps.
+
+A commit subject stays a writing convention: one line, `type: description`, `content:` for a change
+under `src/content/`, and `feat:` or `fix:` for a change to the site. No hook and no workflow
+rejects a subject.
+
+**Consequences:** `npm install` does not install Git hooks. Run `npm run check` before a pull
+request. CI is the gate on `master`. A subject that skips the type prefix can land. History before
+this ADR keeps its old subjects. ADR #6 and ADR #16 stay as written.

@@ -73,14 +73,13 @@ const fonts = ['Space Grotesk', 'JetBrains Mono', 'IBM Plex Sans'];
           deploy target. The site is served from GitHub Pages on a custom domain.
         </li>
         <li>
-          Pull requests run linting, format checks, type checking, and a full production build
-          before merge.
+          Pull requests run lint, format checks, type checks, and tests, then a full production
+          build, before merge.
         </li>
         <li>
           Pushes to <code>master</code> build the site, run a Lighthouse CI budget check, then deploy
           to GitHub Pages. A failing budget blocks the deploy.
         </li>
-        <li>Commit messages are enforced as Conventional Commits via a Git hook.</li>
       </ul>
     </section>
 

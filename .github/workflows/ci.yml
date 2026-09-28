@@ -3,7 +3,6 @@ name: Continuous Integration
 on:
   pull_request:
     branches: [master]
-    types: [opened, edited, reopened, synchronize]
 
 permissions:
   contents: read
@@ -13,17 +12,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint-pr-title:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      pull-requests: write
-    steps:
-      - name: Enforce Conventional Commit PR Title
-        uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6.1.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   validate:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -46,17 +34,8 @@ jobs:
       - name: Generate Programmatic Assets
         run: npm run generate-assets
 
-      - name: Execute Lint Verification
-        run: npm run lint
-
-      - name: Execute Format Verification
-        run: npm run format:check
-
-      - name: Execute Type Verification
-        run: npm run typecheck
-
-      - name: Execute Test Suite
-        run: npm test
+      - name: Execute Source Checks
+        run: npm run check
 
       - name: Compile Production Artifacts
         run: npm run build
