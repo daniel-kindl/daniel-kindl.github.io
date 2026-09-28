@@ -47,8 +47,26 @@ for a change to the site. No hook and no workflow rejects a subject. See ADR #17
 ## Documents
 
 Read `docs/content.md` before you add or edit a project or a writing entry. Read `docs/design.md`
-before you change color, type, layout, or figures. Append a stack or tooling decision to
-`docs/tech-decisions.md`. Leave existing entries in that file unchanged.
+before you change color, type, layout, or figures.
+
+Append an entry to `docs/tech-decisions.md` only for a durable decision. A durable decision has
+one or more of these properties:
+
+- The choice is architectural.
+- The choice is a tooling or platform choice with a real trade-off.
+- The choice is costly to reverse.
+- A later reader is likely to question the choice.
+- A future contributor needs the reason.
+
+Leave existing entries unchanged. When a decision changes, append a new dated entry.
+
+These changes do not get an entry:
+
+- a routine refactor
+- a content change
+- a dependency bump
+- a formatting choice
+- an implementation detail that the code already shows
 
 ## Architecture
 

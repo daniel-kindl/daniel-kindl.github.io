@@ -63,5 +63,5 @@ Commit subjects stay a writing convention (`type: description`, with `content:` 
 - [`AGENTS.md`](AGENTS.md): repository rules for coding agents. This is the canonical copy.
 - [`docs/content.md`](docs/content.md): how to add a `projects` or `writing` entry.
 - [`docs/design.md`](docs/design.md): color, typography, layout, and figures.
-- [`docs/tech-decisions.md`](docs/tech-decisions.md): ADR log for stack and tooling choices.
+- [`docs/tech-decisions.md`](docs/tech-decisions.md): log of durable stack and tooling decisions.
 - [`SECURITY.md`](SECURITY.md): how to report a vulnerability.
