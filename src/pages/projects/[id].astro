@@ -50,11 +50,7 @@ const linkLabels = [
 ].filter((label): label is string => Boolean(label));
 ---
 
-<Layout
-  title={`${project.data.title} — Case Study`}
-  description={project.data.summary}
-  ogImage={`/assets/meta/og/projects/${project.id}.png`}
->
+<Layout title={`${project.data.title} — Case Study`} description={project.data.summary}>
   <article data-pagefind-body>
     <div class="border-b border-(--border-color) bg-(--bg-primary) py-12 md:py-20">
       <Container>

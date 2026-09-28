@@ -1,130 +1,103 @@
 # AGENTS.md
 
-Guidance for AI coding agents working in this repository. See also `CLAUDE.md` (kept in sync with
-this file) and `docs/tech-decisions.md` for the ADR log behind these choices.
+This file is the instruction source for agents that work in this repository. `CLAUDE.md` imports
+this file.
 
 ## Project
 
-Daniel Kindl's portfolio site: Astro 7 + TypeScript (strict) + Tailwind CSS 4. No island framework
-is installed — the site ships zero client-side components. Static output, deployed to GitHub Pages.
+Daniel Kindl's portfolio site uses Astro 7, TypeScript (strict), and Tailwind CSS 4. No island
+framework is installed. The build output is static. GitHub Pages serves the site.
 
 ## Commands
 
-```
-npm run check            # lint, format check, type check, and tests. Run this before a pull request.
-npm run dev              # astro dev — foreground. See below for background mode.
-npm run build            # astro build — static output to dist/
-npm run preview          # preview built output
-npm run typecheck        # astro check
-npm run lint             # eslint . --max-warnings 0 (warnings fail)
-npm run lint:fix         # eslint . --fix --max-warnings 0
-npm test                 # node --test over src/lib/*.test.ts
-npm run format           # prettier --write .
-npm run format:check     # prettier --check .
-npm run generate-assets  # regenerate public/assets/meta PNGs, apple-touch-icon.png, and icon.svg (uses `canvas`)
-```
+Run `npm run check` before you open a pull request. The command runs the linter, the format check,
+the type check, and the tests.
 
-Tests use Node's built-in runner with native type stripping — no test dependency, no config. They
-cover only the pure helpers in `src/lib/` that have no `astro:content` value imports; `content.ts`
-is deliberately out of scope. (The `directory-sync-tool` project referenced in
-content is a separate C#/.NET repo with its own xUnit suite — not this one).
+Pull-request CI (`.github/workflows/ci.yml`) runs `npm ci`, then `npm run check`, then
+`npm run build`. That run is the merge gate.
 
-When starting the dev server, use background mode:
+Deploy (`.github/workflows/deploy.yml`) runs on a push to `master`, or on `workflow_dispatch`. It
+runs `npm ci`, then `npm run build`, then publishes to GitHub Pages. Deploy does not run
+`npm run check`.
+
+Lighthouse (`.github/workflows/lighthouse.yml`) runs on a push to `master`, or on
+`workflow_dispatch`. It measures the five URLs in `lighthouserc.json` once. It does not run on a
+pull request. A failure does not block the deploy. See ADR #18 in `docs/tech-decisions.md`.
+
+Start the dev server in the background:
 
 ```
 astro dev --background
 ```
 
-Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
+Stop it with `astro dev stop`. Read status with `astro dev status`. Read logs with
+`astro dev logs`.
 
-CI (`.github/workflows/ci.yml`) runs on pull requests to `master`: `npm ci`, then `npm run check`,
-then `npm run build`. That is the merge gate. Deploy (`.github/workflows/deploy.yml`) runs on push
-to `master` (or `workflow_dispatch`): `npm ci`, `npm run generate-assets`, `npm run build`, then
-GitHub Pages. Lighthouse (`.github/workflows/lighthouse.yml`) runs on push to `master` (or
-`workflow_dispatch`) and measures the 5 pages in `lighthouserc.json` once. It does not run on pull
-requests and it does not block the deploy. See ADR #18 in `docs/tech-decisions.md`.
+`npm test` runs Node's test runner on `src/lib/*.test.ts`. The tests cover pure helpers that do
+not import `astro:content` values. `src/lib/content.ts` is out of scope. The directory-sync tool
+named in the project content is a separate C# repository.
 
-**Commit subjects** are a writing convention. No hook and no workflow checks them. Use one line:
-`type: short imperative description`, optionally suffixed with `(#issueNumber)`. Do not add a body
-or a trailer. Use `content:` for a change under `src/content/`. Use `feat:` or `fix:` for a change
-to the site. See ADR #17 in `docs/tech-decisions.md`.
+## Commit subjects
 
-## Documentation
+Use one line: `type: short imperative description`. You may add `(#issueNumber)` at the end. Do not
+add a body or a trailer. Use `content:` for a change under `src/content/`. Use `feat:` or `fix:`
+for a change to the site. No hook and no workflow rejects a subject. See ADR #17 in
+`docs/tech-decisions.md`.
 
-Full documentation: https://docs.astro.build
+## Documents
 
-Consult these guides before working on related tasks:
-
-- [Adding pages, dynamic routes, or middleware](https://docs.astro.build/en/guides/routing/)
-- [Working with Astro components](https://docs.astro.build/en/basics/astro-components/)
-- [Using React, Vue, Svelte, or other framework components](https://docs.astro.build/en/guides/framework-components/)
-- [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
-- [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
-- [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
-
-`docs/tech-decisions.md` is an ADR log for stack/tooling choices (Node version, Astro, Svelte,
-Tailwind v4, ESLint flat config, commit discipline, `tsconfig` path aliases, fonts). Append new
-dated entries there when making a comparable decision — don't edit existing ones.
+Read `docs/content.md` before you add or edit a project or a writing entry. Read `docs/design.md`
+before you change color, type, layout, or figures. Append a stack or tooling decision to
+`docs/tech-decisions.md`. Leave existing entries in that file unchanged.
 
 ## Architecture
 
-**Content is data-driven via two Zod-validated collections** (`src/content.config.ts`), loaded
-from `src/content/{projects,writing}/*.{md,mdx}`:
+Two Zod collections live in `src/content.config.ts`. Files live in
+`src/content/{projects,writing}/*.{md,mdx}`. Every entry is `.mdx`.
 
-- `projects`: title, summary, role, stack, links (production/repository/release, all optional
-  URLs — `release` renders as a third "View Release" button on the case-study page when present),
-  status (`development | finished | maintaining | archived`), dates (start/end), `weight` (int, controls
-  homepage feature ordering — higher sorts first).
-- `writing`: title, summary, date, tags (string array), draft (bool — draft posts are excluded from
-  builds and RSS except in `import.meta.env.DEV`).
+`projects` fields: title, summary, role, stack, links (`production`, `repository`, `release`),
+status (`development | finished | maintaining | archived`), dates (`start`, `end`), and `weight`.
+`release` renders a third "View Release" button when the URL is present. A higher `weight` sorts
+first on the homepage.
 
-Dynamic routes (`src/pages/projects/[id].astro`, `src/pages/writing/[id].astro`,
-`src/pages/writing/tags/[tag].astro`) use `getStaticPaths()` + `getCollection()` to statically
-render one page per entry. Tag pages are derived by scanning all posts' `tags` and slugifying them
-(`src/lib/slug.ts`) into a `Map` — there's no separate tags collection. `src/pages/rss.xml.js` uses
-`@astrojs/rss` over the same `writing` collection.
+`writing` fields: title, summary, date, tags, and draft. A draft post is absent from the production
+build and from RSS. `npm run dev` still renders it (`import.meta.env.DEV`).
 
-**Path aliases** (`tsconfig.json`): `@components/*`, `@layouts/*`, `@lib/*`, `@styles/*`,
-`@content/*`, `@assets/*` all map to `./src/...`. Existing `.astro` pages under `src/pages/` mostly
-use relative imports instead (established before the aliases existed); newer code (e.g.
-`src/lib/buttonStyles.ts` consumers, `Footer.astro`) uses the aliases. Prefer aliases for new code.
+These routes use `getStaticPaths()` and `getCollection()`:
 
-**UI primitives** (`src/components/ui/`) are small, variant-driven Astro components composed into
-page-level layouts — `Container`, `Typography` (h1/h2/h3/body/eyebrow/mono variants), `Button` /
-`ExternalLink` (share variant classes from `src/lib/buttonStyles.ts`; `ExternalLink` always sets
-`target="_blank" rel="noopener noreferrer"` and appends a screen-reader "(opens in new tab)" label
-plus an optional icon), `Tag`, `Timeline`/`TimelineEvent`. `src/components/portfolio/` holds
-content-specific composites (`ProjectCard`, `WritingPostCard`).
+- `src/pages/projects/[id].astro`
+- `src/pages/writing/[id].astro`
+- `src/pages/writing/tags/[tag].astro`
 
-**Theming uses a `data-theme` attribute, not Tailwind's `.dark` class.** `ThemeScript.astro`
-(inlined in `<head>` before paint, to avoid FOUC) and the inline script in `Header.astro` read/write
-`document.documentElement.dataset.theme` + `localStorage.theme`, and re-run on
-`astro:page-load`/`astro:after-swap` for View Transitions. CSS variables (`--bg-primary`,
-`--text-primary`, `--text-muted`, `--border-color`) are defined in `src/styles/global.css` under
-`:root` and `:root[data-theme='dark']`, and components consume them via Tailwind's arbitrary-value
-syntax `bg-(--bg-primary)` / `text-(--text-primary)`, not Tailwind theme color utilities. An
-earlier `.dark`-class-based token file (`tokens.css`) and a `ThemeToggle.svelte` island that used
-it were dead code and have been removed — see ADR-9 in `docs/tech-decisions.md` if you find
-references to either in history.
+Tag pages come from each post's `tags`, through `src/lib/slug.ts`. There is no tags collection.
+`src/pages/rss.xml.ts` builds the feed with `@astrojs/rss`.
 
-**There is no island framework installed, and no directory for one.** `@astrojs/svelte` and its
-toolchain were removed once it became clear the repo held zero `.svelte` files — see ADR #15, which
-supersedes ADR-3. `src/components/islands/` and `src/components/playground/` no longer exist either;
-their placeholders were unused dead code. Adding an interactive component starts with
-`npx astro add svelte`, and it should use Svelte 5 runes (`$state`, etc.) rather than the legacy
-`export let` API and hydrate only via explicit `client:*` directives. The Lighthouse script budget
-(30 KB) is the practical ceiling on what any island can ship.
+Path aliases in `tsconfig.json`: `@components/*`, `@layouts/*`, `@lib/*`, `@styles/*`,
+`@content/*`, `@assets/*`. Prefer an alias in new code.
 
-**Global layout**: `src/layouts/Layout.astro` is the single page shell (meta/OG/Twitter tags,
-font preloads, `ThemeScript`, `ClientRouter` for View Transitions, skip-to-content link, `Header` +
-`<main>` + `Footer`). Every page wraps its content in it with a `title` prop (and optional
-`description`/`ogImage`).
+UI primitives live in `src/components/ui/`. Portfolio composites live in
+`src/components/portfolio/`. Content components live in `src/components/content/` (`Figure`,
+`Swatch`). A figure is evidence. Read the Media & Figures section in `docs/design.md` before you
+add one.
 
-**Static data**: `src/data/cv.ts` exports `technicalProfile`, consumed only by `src/pages/about.astro`
-to render skills/experience via `Timeline`.
+The theme uses a `data-theme` attribute. `ThemeScript.astro` and the script in `Header.astro` read
+and write `document.documentElement.dataset.theme` and `localStorage.theme`. CSS variables live in
+`src/styles/global.css` under `:root` and `:root[data-theme='dark']`. Use Tailwind arbitrary values
+such as `bg-(--bg-primary)` and `text-(--text-primary)`. Keep theme colors on those variables.
 
-**Asset generation**: `generate-assets.js` uses `node-canvas` to procedurally generate OG images,
-`icon-192`/`icon-512`, `apple-touch-icon.png`, and `icon.svg`. Deploy and the Lighthouse workflow
-run it before those builds. Pull-request CI does not.
-`node-canvas` is a native module — see the Setup section in `README.md` for the system-library
-prerequisite (Cairo/Pango) if `npm install` fails locally.
+No island framework is installed. To add an interactive component, run `npx astro add svelte`, then
+write the component with Svelte 5 runes (`$state`). Hydrate only with an explicit `client:*`
+directive. The Lighthouse script budget is 30 KB.
+
+`src/layouts/Layout.astro` is the page shell. Pass `title`. `description` and `ogImage` are
+optional. The default share image is `/assets/meta/og-default.png`.
+
+`src/data/cv.ts` exports `technicalProfile`. Only `src/pages/about.astro` reads it.
+
+Icons and the share image are committed files under `public/`. Keep them as static files. `og:title`
+and `og:description` already change per page. See ADR #19 in `docs/tech-decisions.md`.
+
+## Copy
+
+Visitor-facing copy follows the Voice section in `docs/content.md`. That includes pages outside
+the content collections.

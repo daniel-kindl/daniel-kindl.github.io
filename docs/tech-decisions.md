@@ -465,3 +465,29 @@ a report, so its token also has `actions: write`.
 push to `master` measures the new site. The pull-request build does not generate images. Deploy
 generates them before the published build. Run `npm audit` locally when you want that report.
 ADR #17 stays as written.
+
+---
+
+## 19. Committed icons and one share image
+
+**Status:** Accepted — 2026-09-28 (retires the per-entry image step described in #12 and #18)
+
+**Context:** `generate-assets.js` used the `canvas` package to draw icons, a default Open Graph
+image, and one Open Graph image per project and writing entry. `canvas` is a native module. A fresh
+machine needed Cairo and Pango before `npm install` could finish. Deploy and the Lighthouse
+workflow ran the script because those PNG files were gitignored. The per-entry image showed the
+entry title on a dark card. `og:title` and `og:description` already carry that title and the
+summary. A replacement rasterizer (WASM or another native binding) would keep a generator, a font,
+and a second copy of the content-file rules.
+
+**Decision:** Remove `canvas`, `generate-assets.js`, and the `generate-assets` script. Commit
+`public/icon.svg`, `public/apple-touch-icon.png`, `public/assets/meta/icon-192.png`,
+`public/assets/meta/icon-512.png`, and `public/assets/meta/og-default.png`. Every page uses
+`/assets/meta/og-default.png` unless the page passes `ogImage`. Deploy and Lighthouse no longer
+generate images. They install dependencies and build.
+
+**Consequences:** A social card shows the site image plus the page title and description. A new
+entry does not need an image step. `npm install` does not build a native graphics module. ADR #12
+and ADR #18 stay as written. The sentence in #12 that keeps `generate-assets.js` in step with the
+content glob no longer applies. The deploy sentence in #18 that runs `npm run generate-assets` no
+longer applies.
