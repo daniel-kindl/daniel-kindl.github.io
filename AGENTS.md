@@ -115,6 +115,15 @@ optional. The default share image is `/assets/meta/og-default.png`.
 Icons and the share image are committed files under `public/`. Keep them as static files. `og:title`
 and `og:description` already change per page. See ADR #19 in `docs/tech-decisions.md`.
 
+## OneDev mirror
+
+`scripts/sync-mirror.ps1` fast-forwards `master` from the GitHub remote `hosting` to the OneDev
+remote `origin`.
+
+The Windows scheduled task `PortfolioSiteMirrorSync` runs this script.
+
+Read the OneDev mirror section in `README.md` before you change or remove the script.
+
 ## Copy
 
 Visitor-facing copy follows the Voice section in `docs/content.md`. That includes pages outside

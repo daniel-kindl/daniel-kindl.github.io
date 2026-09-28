@@ -58,6 +58,19 @@ budget runs on `master` in `.github/workflows/lighthouse.yml`, one pass over the
 Commit subjects stay a writing convention (`type: description`, with `content:` for entries under
 `src/content/`). Nothing in Git or CI rejects a subject. See ADR #17.
 
+## OneDev mirror
+
+`scripts/sync-mirror.ps1` fast-forwards `master` from the GitHub remote `hosting` to the OneDev
+remote `origin`.
+
+The script pushes only when `origin/master` is an ancestor of `hosting/master`.
+
+Run the script on the Windows clone at `D:\_programming\Portolio-Website`.
+
+The scheduled task `PortfolioSiteMirrorSync` runs the same script.
+
+The script writes `scripts/sync-mirror.log`.
+
 ## Documentation
 
 - [`AGENTS.md`](AGENTS.md): repository rules for coding agents. This is the canonical copy.
