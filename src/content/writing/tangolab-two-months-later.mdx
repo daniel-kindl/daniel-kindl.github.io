@@ -1,0 +1,57 @@
+---
+title: 'Tangolab Two Months Later'
+summary: 'Two months after the first Tangolab post, the useful work was finding what was not actually configured: DNS, the address, the backups, and the single disk.'
+date: 2026-09-29
+tags: ['Homelab', 'Linux', 'Docker', 'Self-Hosting', 'Infrastructure']
+draft: false
+---
+
+## The diagram was ahead of the machine
+
+[The first Tangolab post](/writing/started-homelab/) described the lab I wanted. Debian on an old office PC, a few containers, nightly backups, and enough notes to rebuild the machine.
+
+Some of that table did not last. On 25 July I removed Wiki.js and the first Uptime Kuma. OneDev does not use PostgreSQL. It keeps its own database on disk, and nothing else on the host needed a wiki. The machine has 8 GB of RAM. Kuma is back now, on image `1.23.17`. The 2.x image is a poor fit beside OneDev, so I stayed on the 1.x line. From inside the lab it checks OneDev, Pi-hole, Glances, Portainer, DNS, and Postgres. There is no public status page.
+
+PostgreSQL is still there. Other projects on this host use it. It is not the database behind every row in that first table.
+
+## The checks I trusted were the wrong checks
+
+Pi-hole was supposed to ask Unbound, and Unbound was supposed to resolve names itself. The running config still used Google's resolvers. The environment variable I had set does nothing on Pi-hole v6, and the published port pointed at a port Unbound does not listen on. The DNSSEC checks I had already run were grading Google's answers. After the fix, Unbound answers directly, and a name that fails DNSSEC fails through Pi-hole as well.
+
+`192.168.0.102` was a DHCP lease that had been lucky. When the router's pool moved, the host came back on a different address. The names, the proxy, and the git remote broke together, because each of them had the old address written down. The address is static now.
+
+Tests from the server kept succeeding while a PC on the same LAN could not open DNS or the Pi-hole UI. The firewall was on. Containers that use the host network do not get Docker's usual pass, so those packets were dropped. Allowing the LAN subnet fixed it. Localhost was never the client that mattered.
+
+Caddy is the reverse proxy from the "what's next" list. It serves the `.local` names and the `*.danielkindl.dev` names. Pi-hole answers those names on the LAN. Tailscale split DNS answers them for remote clients. The certificates come from Let's Encrypt through a Cloudflare DNS challenge, so the lab does not have to accept connections from the internet for a certificate to be issued. The first time I turned that config on, an empty API token made Caddy crash, and the local names went down with it. The next time, the token was in the env file and still empty inside the container. Compose substitutes that file into the compose YAML. It does not put the values into the container unless the service lists them.
+
+## Silence was a bad success signal
+
+Backup failures send a phone notification. That path was dead at the start. This host was using Tailscale's resolver for its own lookups, and that resolver does not answer names outside `danielkindl.dev`. The notification server never resolved, so the message could not be sent. The host now asks its own Pi-hole.
+
+A stale restic lock had been failing the cleanup step since 25 July. The script did not stop on a failed command, so the failure stayed in a log. It stops now. A run that finishes also sends a short ok, so a backup that never starts is no longer identical to a backup that worked. The first ok from this change goes out after the next 02:00 run.
+
+The Tailscale certificate job had the same shape. Cron ran it, threw the output away because this host has no local mailer, and left the July certificate in place until September. The job now writes a log, checks the expiry every morning, and sends a notification when renewal fails.
+
+## The disk is the lab
+
+There is one disk. The git repositories, the container data, and the operating system are all on it. Restic copies `/srv/homelab/data` to Google Drive every night. The restic password, the rclone config, and the service env file stay on the disk. If the disk dies, those files have to come from somewhere else, or the Drive copy cannot be opened. The git repositories have a second copy that does not need the restic password. Each morning the host writes a bundle of every OneDev project and copies the bundles to the same Drive account.
+
+The rebuild steps are written down: a new Debian install, the static address, Docker, the bundles, the restic data, and the order to start the containers. I have not run that procedure on an empty machine. In July I did restore one snapshot far enough to load a database dump and to check one git repository. That is a smaller test.
+
+The disk still reports a healthy SMART result. It also has about 23,000 power-on hours. `smartd` sends a notification if that health result changes. A Sunday job reads the counters I chose to alert on: reallocated sectors, pending sectors, and offline uncorrectable sectors. Those three are still zero.
+
+On Sunday at 02:00 the host waits until the backup is finished, installs package updates, and reboots. The job is installed. It has not run yet.
+
+## What I will not page myself for
+
+Trivy still reports HIGH and CRITICAL findings in the images this lab runs. The pre-push hook rejects a push when it sees them. A Monday scan stores the current ids and sends a notification only when a new id appears. The old list is work for later. It does not need an alarm every week.
+
+Another daily job compares each pinned image tag with newer upstream tags of the same major version. It does not pull or redeploy. That check is why Glances moved from `4.5.6-full` to `4.5.7-full`. Postgres stays on 18. Kuma stays on `1.23.17`.
+
+The certificates Caddy serves raise an alert at 30, 14, and 7 days before they expire. On the day I wrote this, three of them had 30 days left, which is also when Let's Encrypt normally renews them.
+
+## Still the same PC
+
+The hardware has not changed. Storage is still the 500 GB drive. Memory is still 8 GB. A full rebuild drill is still not done, and the move to newer hardware is still only a plan.
+
+What changed is what the lab does when I am not watching it. It checks the disk, the backups, the certificates, and the names, and the way back is written down if the drive fails.
