@@ -52,9 +52,8 @@ needed, runs ESLint, a Prettier check, Astro type checks, the Node test suite, a
 build, and fails on any warning.
 
 A pull request to `master` runs `./eng/verify.sh` (`.github/workflows/ci.yml`). A push to `master`
-runs the same script and deploys that output to GitHub Pages (`.github/workflows/deploy.yml`). The Lighthouse
-budget runs on `master` in `.github/workflows/lighthouse.yml`, one pass over the five URLs in
-`lighthouserc.json`. A failure does not block the deploy. See ADR #18 and ADR #20.
+runs the same script and deploys that output to GitHub Pages (`.github/workflows/deploy.yml`). The Lighthouse budget runs on every pull request to `master` and on `master` in `.github/workflows/lighthouse.yml`, one pass over the five URLs in
+`lighthouserc.json`. A failure does not block the deploy. See ADR #18, ADR #20, and ADR #21.
 
 Commit subjects stay a writing convention (`type: description`, with `content:` for entries under
 `src/content/`). Nothing in Git or CI rejects a subject. See ADR #17.
