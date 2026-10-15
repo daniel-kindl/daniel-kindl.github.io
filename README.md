@@ -56,7 +56,8 @@ runs the same script and deploys that output to GitHub Pages (`.github/workflows
 `lighthouserc.json`. A failure does not block the deploy. See ADR #18, ADR #20, and ADR #21.
 
 Commit subjects stay a writing convention (`type: description`, with `content:` for entries under
-`src/content/`). Nothing in Git or CI rejects a subject. See ADR #17.
+`src/content/`). No Git hook rejects a subject. The `pr-title` check rejects a non-conventional pull-request title,
+which becomes the squash commit subject. See ADR #17 and ADR #22.
 
 ## Documentation
 

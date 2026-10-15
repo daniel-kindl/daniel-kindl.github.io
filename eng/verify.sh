@@ -35,4 +35,7 @@ if grep -Eq '\[WARN\]|\[warn\]' "$log"; then
   exit 1
 fi
 
+echo "==> built-site checks"
+node --test "test/*.test.mjs"
+
 echo "verify: OK"

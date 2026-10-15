@@ -550,6 +550,28 @@ The run on `master` stays and still does not block the deploy. ADR #18 stays as 
 
 ---
 
+## 22. Pull-request title check, updating ADR #17
+
+**Status:** Accepted — 2026-10-15 (updates the "no workflow rejects a subject" sentence in #17)
+
+**Context:** ADR #17 removed Husky, commitlint, and the `lint-pr-title` job, so nothing checks a
+subject. The protect-master ruleset allows only squash merges, and the squash commit takes the
+pull-request title. A title that skips the type prefix lands on `master` as is.
+
+**Decision:** Add `.github/workflows/pr-title.yml` with one job, `pr-title`. It runs on a pull
+request to `master` (opened, edited, reopened, synchronize), reads the title through an environment
+variable, and matches it with a Bash regex: `type(scope)?!?: description`, no trailing period.
+Types: `feat`, `fix`, `content`, `docs`, `chore`, `test`, `refactor`, `perf`, `ci`, `build`,
+`style`, `revert`. The job has no token permissions, no checkout, no third-party action, and no
+npm dependency. The protect-master ruleset requires `pr-title`. A pull-request template reminds
+the author of the format.
+
+**Consequences:** `master` history stays conventional through squash merges. Local commits on a
+branch are still free-form, and Git hooks stay out (the rest of ADR #17 holds). Dependabot titles
+(`chore: bump ...`) already match. ADR #17 stays as written.
+
+---
+
 ## 23. Retire the OneDev mirror
 
 **Status:** Accepted — 2026-10-15 (retires the OneDev mirror mentioned in #6, #11, and #16)
@@ -557,10 +579,14 @@ The run on `master` stays and still does not block the deploy. ADR #18 stays as 
 **Context:** `scripts/sync-mirror.ps1` fast-forwarded `master` from GitHub to a local OneDev
 remote through a Windows scheduled task on one machine. That mirror is no longer in use. GitHub is
 the only remote: issues, pull requests, the protect-master ruleset, CI, and Pages all live there.
+The colophon page still told visitors the repository had two remotes.
 
 **Decision:** Remove `scripts/sync-mirror.ps1` and the OneDev mirror sections in `AGENTS.md` and
-`README.md`. GitHub `master` is the single source of truth.
+`README.md`. The colophon names GitHub as the only remote. GitHub `master` is the single source of
+truth.
 
-**Consequences:** No script or document refers to OneDev, the `hosting` remote name, or the
-`PortfolioSiteMirrorSync` task. Delete that scheduled task on the Windows machine if it still
+**Consequences:** No script, repository document, or colophon text describes a OneDev remote, the
+`hosting` remote name, or the `PortfolioSiteMirrorSync` task. OneDev mentions in `src/data/cv.ts`
+and `src/content/writing/started-homelab.mdx` describe Daniel's homelab and skills, not this
+repository, and stay as history. Delete that scheduled task on the Windows machine if it still
 exists. Earlier ADRs that mention OneDev stay as written.
