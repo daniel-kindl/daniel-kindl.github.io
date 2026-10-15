@@ -569,3 +569,24 @@ the author of the format.
 **Consequences:** `master` history stays conventional through squash merges. Local commits on a
 branch are still free-form, and Git hooks stay out (the rest of ADR #17 holds). Dependabot titles
 (`chore: bump ...`) already match. ADR #17 stays as written.
+
+---
+
+## 23. Retire the OneDev mirror
+
+**Status:** Accepted — 2026-10-15 (retires the OneDev mirror mentioned in #6, #11, and #16)
+
+**Context:** `scripts/sync-mirror.ps1` fast-forwarded `master` from GitHub to a local OneDev
+remote through a Windows scheduled task on one machine. That mirror is no longer in use. GitHub is
+the only remote: issues, pull requests, the protect-master ruleset, CI, and Pages all live there.
+The colophon page still told visitors the repository had two remotes.
+
+**Decision:** Remove `scripts/sync-mirror.ps1` and the OneDev mirror sections in `AGENTS.md` and
+`README.md`. The colophon names GitHub as the only remote. GitHub `master` is the single source of
+truth.
+
+**Consequences:** No script, repository document, or colophon text describes a OneDev remote, the
+`hosting` remote name, or the `PortfolioSiteMirrorSync` task. OneDev mentions in `src/data/cv.ts`
+and `src/content/writing/started-homelab.mdx` describe Daniel's homelab and skills, not this
+repository, and stay as history. Delete that scheduled task on the Windows machine if it still
+exists. Earlier ADRs that mention OneDev stay as written.

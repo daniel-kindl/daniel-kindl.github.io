@@ -4,7 +4,7 @@ How to add a project or a writing post. For repository rules, see `AGENTS.md`. F
 decision, see `docs/tech-decisions.md`.
 
 Both collections are defined and Zod-validated in `src/content.config.ts`. Invalid frontmatter
-fails `npm run typecheck` and `npm run build` (and therefore CI) with a schema error pointing at
+fails `npm run typecheck`, `npm run build`, and `./eng/verify.sh` (and therefore CI) with a schema error pointing at
 the offending field — that's the fastest way to check you got a new entry right.
 
 ## Adding a new project
@@ -137,12 +137,11 @@ MDX is stricter than Markdown about raw `{` and `<` outside code fences — if a
 After adding either kind of entry, run:
 
 ```
-npm run typecheck   # catches frontmatter schema errors, including a bad `project` reference
-npm run build       # confirms the page actually renders
+./eng/verify.sh   # lint, format, astro check (schema and `project` references), tests, build
 ```
 
-There's no content test suite — `astro check` + a successful build is the correctness bar for
-frontmatter and rendering.
+`astro check` and a successful production build are the correctness bar for frontmatter and
+rendering. CI runs the same script on the pull request.
 
 ## Voice
 
