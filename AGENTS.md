@@ -35,7 +35,9 @@ Stop it with `astro dev stop`. Read status with `astro dev status`. Read logs wi
 `astro dev logs`.
 
 `npm test` runs Node's test runner on `src/lib/*.test.ts`. The tests cover pure helpers that do
-not import `astro:content` values. `src/lib/content.ts` is out of scope. The directory-sync tool
+not import `astro:content` values. `src/lib/content.ts` is out of scope. `./eng/verify.sh` also runs
+`node --test "test/*.test.mjs"` after the build. Those tests check `dist/`: internal links and
+anchors, RSS and sitemap URLs, and that no `draft: true` post ships. They need a fresh build. The directory-sync tool
 named in the project content is a separate C# repository.
 
 ## Commit subjects
