@@ -529,3 +529,21 @@ script built.
 **Consequences:** Deploy now runs the full source checks before it publishes, so a red check on
 `master` stops a publish. A deploy takes slightly longer. The rest of ADR #18 (no `npm audit`,
 concurrency groups, Lighthouse in its own workflow) is unchanged. ADR #18 stays as written.
+
+---
+
+## 21. Lighthouse on pull requests as a merge gate
+
+**Status:** Accepted — 2026-10-15 (narrows the Lighthouse paragraph in #18)
+
+**Context:** ADR #18 ran Lighthouse only on a push to `master`, so a pull request could merge while
+the budget was red. The budget catches a script over 30 KB, a font over 96 KB, and a category score
+under its minimum, and those are cheapest to fix before merge.
+
+**Decision:** `.github/workflows/lighthouse.yml` also runs on a pull request to `master`. The job
+name stays `lighthouse`, and the protect-master ruleset requires that check. `lighthouserc.json` is
+unchanged: one run of the same five URLs with the same assertions.
+
+**Consequences:** A pull request that breaks a budget cannot merge. One run can be noisy. If a
+pull request fails and a re-run passes, raise `numberOfRuns` as ADR #18 says, not the thresholds.
+The run on `master` stays and still does not block the deploy. ADR #18 stays as written.

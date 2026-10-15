@@ -20,9 +20,10 @@ Pull-request CI (`.github/workflows/ci.yml`) runs `./eng/verify.sh`. That run is
 Deploy (`.github/workflows/deploy.yml`) runs on a push to `master`, or on `workflow_dispatch`. It
 runs `./eng/verify.sh`, then publishes `dist/` to GitHub Pages. See ADR #20.
 
-Lighthouse (`.github/workflows/lighthouse.yml`) runs on a push to `master`, or on
-`workflow_dispatch`. It measures the five URLs in `lighthouserc.json` once. It does not run on a
-pull request. A failure does not block the deploy. See ADR #18 in `docs/tech-decisions.md`.
+Lighthouse (`.github/workflows/lighthouse.yml`) runs on a pull request to `master`, on a push to
+`master`, and on `workflow_dispatch`. It measures the five URLs in `lighthouserc.json` once. The
+`lighthouse` check is required on a pull request. A failure on `master` does not block the deploy.
+See ADR #18 and ADR #21 in `docs/tech-decisions.md`.
 
 Start the dev server in the background:
 
