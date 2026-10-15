@@ -28,7 +28,6 @@ fi
 echo "==> tests"
 npm test
 
-
 echo "==> build"
 npm run build 2>&1 | tee "$log"
 if grep -Eq '\[WARN\]|\[warn\]' "$log"; then
