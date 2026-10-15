@@ -547,3 +547,20 @@ unchanged: one run of the same five URLs with the same assertions.
 **Consequences:** A pull request that breaks a budget cannot merge. One run can be noisy. If a
 pull request fails and a re-run passes, raise `numberOfRuns` as ADR #18 says, not the thresholds.
 The run on `master` stays and still does not block the deploy. ADR #18 stays as written.
+
+---
+
+## 23. Retire the OneDev mirror
+
+**Status:** Accepted — 2026-10-15 (retires the OneDev mirror mentioned in #6, #11, and #16)
+
+**Context:** `scripts/sync-mirror.ps1` fast-forwarded `master` from GitHub to a local OneDev
+remote through a Windows scheduled task on one machine. That mirror is no longer in use. GitHub is
+the only remote: issues, pull requests, the protect-master ruleset, CI, and Pages all live there.
+
+**Decision:** Remove `scripts/sync-mirror.ps1` and the OneDev mirror sections in `AGENTS.md` and
+`README.md`. GitHub `master` is the single source of truth.
+
+**Consequences:** No script or document refers to OneDev, the `hosting` remote name, or the
+`PortfolioSiteMirrorSync` task. Delete that scheduled task on the Windows machine if it still
+exists. Earlier ADRs that mention OneDev stay as written.
