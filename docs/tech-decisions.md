@@ -508,3 +508,24 @@ entry does not need an image step. `npm install` does not build a native graphic
 and ADR #18 stay as written. The sentence in #12 that keeps `generate-assets.js` in step with the
 content glob no longer applies. The deploy sentence in #18 that runs `npm run generate-assets` no
 longer applies.
+
+---
+
+## 20. One verify script for CI and deploy, narrowing ADR #18
+
+**Status:** Accepted — 2026-10-15 (narrows the CI and deploy decision in #18)
+
+**Context:** ADR #18 had pull-request CI run `npm ci`, `npm run check`, and `npm run build`, and
+had deploy build without `npm run check`. It also named `npm run generate-assets`, which ADR #19
+removed. Local runs and the two workflows each listed their own steps. Lint warnings, `astro check`
+warnings, and Astro build warnings did not fail any of them.
+
+**Decision:** `./eng/verify.sh` is the one local and CI entry point. It runs `npm ci` in CI or
+when `node_modules` is missing, then lint, the format check, the type check, the tests, and the
+production build. A lint warning, an `astro check` warning or hint, or an Astro build warning
+fails the script. Pull-request CI and deploy both run it. Deploy publishes the `dist/` that the
+script built.
+
+**Consequences:** Deploy now runs the full source checks before it publishes, so a red check on
+`master` stops a publish. A deploy takes slightly longer. The rest of ADR #18 (no `npm audit`,
+concurrency groups, Lighthouse in its own workflow) is unchanged. ADR #18 stays as written.
