@@ -1,0 +1,29 @@
+name: PR Title
+
+on:
+  pull_request:
+    branches: [master]
+    types: [opened, edited, reopened, synchronize]
+
+permissions: {}
+
+concurrency:
+  group: pr-title-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  pr-title:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Check Conventional Commits title
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          pattern='^(feat|fix|content|docs|chore|test|refactor|perf|ci|build|style|revert)(\([a-z0-9._/-]+\))?!?: [^ ].*[^.]$'
+          if [[ "$TITLE" =~ $pattern ]]; then
+            echo "OK: $TITLE"
+          else
+            echo "::error::PR title must be 'type: description' (types: feat, fix, content, docs, chore, test, refactor, perf, ci, build, style, revert; no trailing period). Got: $TITLE"
+            exit 1
+          fi

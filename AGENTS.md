@@ -42,7 +42,8 @@ named in the project content is a separate C# repository.
 
 Use one line: `type: short imperative description`. You may add `(#issueNumber)` at the end. Do not
 add a body or a trailer. Use `content:` for a change under `src/content/`. Use `feat:` or `fix:`
-for a change to the site. No hook and no workflow rejects a subject. See ADR #17 in
+for a change to the site. No Git hook rejects a subject. The `pr-title` check rejects a pull-request
+title that does not match, and the squash merge uses that title. See ADR #17 and ADR #22 in
 `docs/tech-decisions.md`.
 
 ## Documents

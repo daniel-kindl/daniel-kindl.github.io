@@ -547,3 +547,25 @@ unchanged: one run of the same five URLs with the same assertions.
 **Consequences:** A pull request that breaks a budget cannot merge. One run can be noisy. If a
 pull request fails and a re-run passes, raise `numberOfRuns` as ADR #18 says, not the thresholds.
 The run on `master` stays and still does not block the deploy. ADR #18 stays as written.
+
+---
+
+## 22. Pull-request title check, updating ADR #17
+
+**Status:** Accepted — 2026-10-15 (updates the "no workflow rejects a subject" sentence in #17)
+
+**Context:** ADR #17 removed Husky, commitlint, and the `lint-pr-title` job, so nothing checks a
+subject. The protect-master ruleset allows only squash merges, and the squash commit takes the
+pull-request title. A title that skips the type prefix lands on `master` as is.
+
+**Decision:** Add `.github/workflows/pr-title.yml` with one job, `pr-title`. It runs on a pull
+request to `master` (opened, edited, reopened, synchronize), reads the title through an environment
+variable, and matches it with a Bash regex: `type(scope)?!?: description`, no trailing period.
+Types: `feat`, `fix`, `content`, `docs`, `chore`, `test`, `refactor`, `perf`, `ci`, `build`,
+`style`, `revert`. The job has no token permissions, no checkout, no third-party action, and no
+npm dependency. The protect-master ruleset requires `pr-title`. A pull-request template reminds
+the author of the format.
+
+**Consequences:** `master` history stays conventional through squash merges. Local commits on a
+branch are still free-form, and Git hooks stay out (the rest of ADR #17 holds). Dependabot titles
+(`chore: bump ...`) already match. ADR #17 stays as written.
