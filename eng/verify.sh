@@ -28,11 +28,15 @@ fi
 echo "==> tests"
 npm test
 
+
 echo "==> build"
 npm run build 2>&1 | tee "$log"
 if grep -Eq '\[WARN\]|\[warn\]' "$log"; then
   echo "verify: astro build reported warnings" >&2
   exit 1
 fi
+
+echo "==> built-site checks"
+node --test "test/*.test.mjs"
 
 echo "verify: OK"
