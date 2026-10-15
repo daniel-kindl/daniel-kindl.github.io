@@ -38,17 +38,22 @@ export function resolvePath(distDir, pathname) {
 /** Return broken internal links and anchors for one page. */
 export function findBrokenLinks(distDir, pageRel, html, readPage = (f) => readFileSync(f, 'utf8')) {
   const broken = [];
-  const pageDir = posix.dirname(`/${pageRel}`);
+  const pageUrl = new URL(`/${pageRel}`, SITE_ORIGIN);
   for (const raw of extractLinks(html)) {
-    let url = raw;
-    if (url.startsWith(SITE_ORIGIN)) url = url.slice(SITE_ORIGIN.length) || '/';
-    if (/^[a-z][a-z0-9+.-]*:/i.test(url) || url.startsWith('//') || url === '') continue;
-    const [path, hash] = url.split('#');
+    if (raw === '') continue;
+    let url;
+    try {
+      url = new URL(raw, pageUrl);
+    } catch {
+      broken.push(`${pageRel}: ${raw} (invalid URL)`);
+      continue;
+    }
+    if (url.origin !== SITE_ORIGIN) continue;
+    const hash = url.hash.slice(1);
     let file;
-    if (path === '') file = join(distDir, pageRel);
+    if (url.pathname === pageUrl.pathname) file = join(distDir, pageRel);
     else {
-      const abs = path.startsWith('/') ? path : posix.join(pageDir, path);
-      file = resolvePath(distDir, abs);
+      file = resolvePath(distDir, url.pathname);
       if (!file) {
         broken.push(`${pageRel}: ${raw} (missing target)`);
         continue;
