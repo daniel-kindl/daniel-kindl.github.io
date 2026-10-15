@@ -52,25 +52,12 @@ needed, runs ESLint, a Prettier check, Astro type checks, the Node test suite, a
 build, and fails on any warning.
 
 A pull request to `master` runs `./eng/verify.sh` (`.github/workflows/ci.yml`). A push to `master`
-runs the same script and deploys that output to GitHub Pages (`.github/workflows/deploy.yml`). The Lighthouse
-budget runs on `master` in `.github/workflows/lighthouse.yml`, one pass over the five URLs in
-`lighthouserc.json`. A failure does not block the deploy. See ADR #18 and ADR #20.
+runs the same script and deploys that output to GitHub Pages (`.github/workflows/deploy.yml`). The Lighthouse budget runs on every pull request to `master` and on `master` in `.github/workflows/lighthouse.yml`, one pass over the five URLs in
+`lighthouserc.json`. A failure does not block the deploy. See ADR #18, ADR #20, and ADR #21.
 
 Commit subjects stay a writing convention (`type: description`, with `content:` for entries under
-`src/content/`). Nothing in Git or CI rejects a subject. See ADR #17.
-
-## OneDev mirror
-
-`scripts/sync-mirror.ps1` fast-forwards `master` from the GitHub remote `hosting` to the OneDev
-remote `origin`.
-
-The script pushes only when `origin/master` is an ancestor of `hosting/master`.
-
-Run the script on the Windows clone at `D:\_programming\Portolio-Website`.
-
-The scheduled task `PortfolioSiteMirrorSync` runs the same script.
-
-The script writes `scripts/sync-mirror.log`.
+`src/content/`). No Git hook rejects a subject. The `pr-title` check rejects a non-conventional pull-request title,
+which becomes the squash commit subject. See ADR #17 and ADR #22.
 
 ## Documentation
 
