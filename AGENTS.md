@@ -40,6 +40,28 @@ not import `astro:content` values. `src/lib/content.ts` is out of scope. `./eng/
 anchors, RSS and sitemap URLs, and that no `draft: true` post ships. They need a fresh build. The directory-sync tool
 named in the project content is a separate C# repository.
 
+## Agent workflow
+
+This site keeps one long-lived branch, `master`. There is no `dev` branch and no SemVer.
+
+1. Start from an issue. Read the issue and its acceptance criteria. A trivial content fix may skip
+   the issue when the person who asked says so.
+2. Branch from `master` as `type/<issue>-slug` (for example `chore/86-verify-script`). Use the
+   commit-subject types below.
+3. Run `./eng/verify.sh`. Mark anything you could not run as NOT RUN.
+4. Open a pull request against `master`. Use a Conventional Commits title (the `pr-title` check
+   enforces it; the squash commit uses it). Fill in `.github/pull_request_template.md`: `Closes #n`,
+   what changed, and the verify output.
+5. Sentinel reviews the pull request. Fix review items on the same branch with new commits. Do not
+   force-push a branch under review. Merge `master` into the branch to resolve conflicts.
+6. A human or the coordinating agent merges after the required checks pass. Agents never push to
+   `master` and never merge their own pull requests. The protect-master ruleset enforces pull
+   requests and squash merges.
+
+Do not weaken a gate (lint rules, `astro check` severity, Lighthouse budgets, required checks) to
+get a pull request green. Propose the change in the pull request and record a durable change as an
+ADR.
+
 ## Commit subjects
 
 Use one line: `type: short imperative description`. You may add `(#issueNumber)` at the end. Do not
