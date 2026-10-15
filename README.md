@@ -31,29 +31,30 @@ npm run dev
 
 ## Scripts
 
-| Command                | Purpose                                           |
-| :--------------------- | :------------------------------------------------ |
-| `npm run check`        | Lint, check formatting, type-check, and run tests |
-| `npm run dev`          | Start the local development server                |
-| `npm run build`        | Build static production output                    |
-| `npm run preview`      | Preview the built output                          |
-| `npm run typecheck`    | Run Astro type checks                             |
-| `npm test`             | Run the Node test suite                           |
-| `npm run lint`         | Run ESLint                                        |
-| `npm run lint:fix`     | Run ESLint with autofix                           |
-| `npm run format`       | Format files with Prettier                        |
-| `npm run format:check` | Check formatting with Prettier                    |
+| Command                | Purpose                                             |
+| :--------------------- | :-------------------------------------------------- |
+| `./eng/verify.sh`      | Full gate: install, check, build; fails on warnings |
+| `npm run check`        | Lint, check formatting, type-check, and run tests   |
+| `npm run dev`          | Start the local development server                  |
+| `npm run build`        | Build static production output                      |
+| `npm run preview`      | Preview the built output                            |
+| `npm run typecheck`    | Run Astro type checks                               |
+| `npm test`             | Run the Node test suite                             |
+| `npm run lint`         | Run ESLint                                          |
+| `npm run lint:fix`     | Run ESLint with autofix                             |
+| `npm run format`       | Format files with Prettier                          |
+| `npm run format:check` | Check formatting with Prettier                      |
 
 ## CI/CD
 
-Run `npm run check` before you open a pull request. It runs ESLint, a Prettier check, Astro type
-checks, and the Node test suite.
+Run `./eng/verify.sh` before you open a pull request. It installs the locked dependency tree when
+needed, runs ESLint, a Prettier check, Astro type checks, the Node test suite, and the production
+build, and fails on any warning.
 
-A pull request to `master` installs the locked dependency tree, runs `npm run check`, and runs the
-production build (`.github/workflows/ci.yml`). A push to `master` installs dependencies, builds
-once, and deploys that output to GitHub Pages (`.github/workflows/deploy.yml`). The Lighthouse
+A pull request to `master` runs `./eng/verify.sh` (`.github/workflows/ci.yml`). A push to `master`
+runs the same script and deploys that output to GitHub Pages (`.github/workflows/deploy.yml`). The Lighthouse
 budget runs on `master` in `.github/workflows/lighthouse.yml`, one pass over the five URLs in
-`lighthouserc.json`. A failure does not block the deploy. See ADR #18.
+`lighthouserc.json`. A failure does not block the deploy. See ADR #18 and ADR #20.
 
 Commit subjects stay a writing convention (`type: description`, with `content:` for entries under
 `src/content/`). Nothing in Git or CI rejects a subject. See ADR #17.

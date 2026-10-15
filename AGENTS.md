@@ -10,15 +10,15 @@ framework is installed. The build output is static. GitHub Pages serves the site
 
 ## Commands
 
-Run `npm run check` before you open a pull request. The command runs the linter, the format check,
-the type check, and the tests.
+Run `./eng/verify.sh` before you open a pull request. It is the one local and CI entry point. It
+runs `npm ci` (in CI, or when `node_modules` is missing), the linter, the format check, the type
+check, the tests, and the production build. A lint warning, an `astro check` warning or hint, or an
+Astro build warning fails it. `npm run check` still runs the four source checks without the build.
 
-Pull-request CI (`.github/workflows/ci.yml`) runs `npm ci`, then `npm run check`, then
-`npm run build`. That run is the merge gate.
+Pull-request CI (`.github/workflows/ci.yml`) runs `./eng/verify.sh`. That run is the merge gate.
 
 Deploy (`.github/workflows/deploy.yml`) runs on a push to `master`, or on `workflow_dispatch`. It
-runs `npm ci`, then `npm run build`, then publishes to GitHub Pages. Deploy does not run
-`npm run check`.
+runs `./eng/verify.sh`, then publishes `dist/` to GitHub Pages. See ADR #20.
 
 Lighthouse (`.github/workflows/lighthouse.yml`) runs on a push to `master`, or on
 `workflow_dispatch`. It measures the five URLs in `lighthouserc.json` once. It does not run on a
