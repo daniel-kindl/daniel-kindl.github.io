@@ -17,6 +17,10 @@ Astro build warning fails it. `npm run check` still runs the four source checks 
 
 Pull-request CI (`.github/workflows/ci.yml`) runs `./eng/verify.sh`. That run is the merge gate.
 
+The repo setting `sha_pinning_required` is on. A workflow that uses an action without a full
+commit SHA fails. Pin each new action to a full commit SHA and write the version in a comment.
+Dependabot updates the pins. See ADR #25 in `docs/tech-decisions.md`.
+
 Deploy (`.github/workflows/deploy.yml`) runs on a push to `master`, or on `workflow_dispatch`. It
 runs `./eng/verify.sh`, then publishes `dist/` to GitHub Pages. See ADR #20.
 
@@ -59,9 +63,20 @@ This site keeps one long-lived branch, `master`. There is no `dev` branch and no
    `master` and never merge their own pull requests. The protect-master ruleset enforces pull
    requests and squash merges.
 
+The `protect-master` ruleset lets the repository admin role bypass it, and it needs 0 approvals. So
+the gate relies on a convention: agents never push to `master`.
+
 Do not weaken a gate (lint rules, `astro check` severity, Lighthouse budgets, required checks) to
 get a pull request green. Propose the change in the pull request and record a durable change as an
 ADR.
+
+## Rollback
+
+- Open a revert pull request. The required checks run. The squash merge to `master` deploys the
+  revert.
+- Or re-run the last good `Production Deployment` run (`.github/workflows/deploy.yml`) in the
+  Actions tab. This path is not tested.
+- Deploy has no smoke check after it. Open the live site to confirm the rollback.
 
 ## Commit subjects
 
