@@ -7,8 +7,11 @@ import { test } from 'node:test';
 import {
   SITE_ORIGIN,
   draftIds,
+  expectedCanonical,
   findBrokenLinks,
   findFigureImageProblems,
+  findHeadMetadataProblems,
+  hasNoindex,
   listHtmlFiles,
   resolvePath,
   xmlTagValues,
@@ -21,19 +24,12 @@ test('dist exists (run npm run build first)', () => {
   assert.ok(existsSync(join(dist, 'index.html')), 'dist/index.html is missing');
 });
 
-// Known, harmless: the 404 page's canonical URL is /404/, which GitHub Pages serves from
-// 404.html, not a directory. Tracked as a follow-up; keep this list narrow.
-const KNOWN_BROKEN = new Set([`404.html: ${SITE_ORIGIN}/404/ (missing target)`]);
-
 test('internal links and anchors resolve', () => {
   const broken = [];
   for (const rel of listHtmlFiles(dist)) {
     broken.push(...findBrokenLinks(dist, rel, readFileSync(join(dist, rel), 'utf8')));
   }
-  assert.deepEqual(
-    broken.filter((b) => !KNOWN_BROKEN.has(b)),
-    [],
-  );
+  assert.deepEqual(broken, []);
 });
 
 test('RSS feed is well formed and every item points at a built page', () => {
@@ -80,6 +76,21 @@ test('every figure image has alt text and is not aria-hidden', () => {
   assert.deepEqual(problems, []);
 });
 
+test('every built page has a title, a description, one canonical URL, and one h1', () => {
+  const problems = [];
+  for (const rel of listHtmlFiles(dist)) {
+    problems.push(...findHeadMetadataProblems(rel, readFileSync(join(dist, rel), 'utf8')));
+  }
+  assert.deepEqual(problems, []);
+});
+
+test('only the 404 page is noindex', () => {
+  const noindex = listHtmlFiles(dist).filter((rel) =>
+    hasNoindex(readFileSync(join(dist, rel), 'utf8')),
+  );
+  assert.deepEqual(noindex, ['404.html']);
+});
+
 // Fixture tests: prove the checkers fail on known-bad input.
 function fixture() {
   const dir = mkdtempSync(join(tmpdir(), 'site-'));
@@ -121,4 +132,86 @@ test('figure image check reports an empty alt, a missing alt, and aria-hidden', 
     'p.html: figure image has no alt text',
     'p.html: figure image has no alt text',
   ]);
+});
+
+test('expected canonical URL follows the file path', () => {
+  assert.equal(expectedCanonical('index.html'), `${SITE_ORIGIN}/`);
+  assert.equal(expectedCanonical('about/index.html'), `${SITE_ORIGIN}/about/`);
+  assert.equal(
+    expectedCanonical('writing/tags/net/index.html'),
+    `${SITE_ORIGIN}/writing/tags/net/`,
+  );
+  assert.equal(expectedCanonical('404.html'), `${SITE_ORIGIN}/404.html`);
+});
+
+function head({
+  title = '<title>A page</title>',
+  description = '<meta name="description" content="About the page">',
+  canonical = `<link rel="canonical" href="${SITE_ORIGIN}/a/">`,
+  body = '<h1>A page</h1>',
+} = {}) {
+  return `<!doctype html><html><head>${title}${description}${canonical}</head><body>${body}</body></html>`;
+}
+
+test('head check accepts a complete page', () => {
+  assert.deepEqual(findHeadMetadataProblems('a/index.html', head()), []);
+});
+
+test('head check reports a missing or empty title and description', () => {
+  assert.deepEqual(findHeadMetadataProblems('a/index.html', head({ title: '' })), [
+    'a/index.html: expected one <title>, found 0',
+  ]);
+  assert.deepEqual(findHeadMetadataProblems('a/index.html', head({ title: '<title> </title>' })), [
+    'a/index.html: <title> is empty',
+  ]);
+  assert.deepEqual(findHeadMetadataProblems('a/index.html', head({ description: '' })), [
+    'a/index.html: expected one meta description, found 0',
+  ]);
+  assert.deepEqual(
+    findHeadMetadataProblems(
+      'a/index.html',
+      head({ description: '<meta name="description" content="">' }),
+    ),
+    ['a/index.html: meta description is empty'],
+  );
+});
+
+test('head check reports a missing, wrong, or repeated canonical', () => {
+  assert.deepEqual(findHeadMetadataProblems('a/index.html', head({ canonical: '' })), [
+    'a/index.html: expected one canonical link, found 0',
+  ]);
+  assert.deepEqual(
+    findHeadMetadataProblems(
+      'a/index.html',
+      head({ canonical: `<link rel="canonical" href="${SITE_ORIGIN}/b/">` }),
+    ),
+    [`a/index.html: canonical is ${SITE_ORIGIN}/b/, expected ${SITE_ORIGIN}/a/`],
+  );
+  const twice = `<link rel="canonical" href="${SITE_ORIGIN}/a/"><link rel="canonical" href="${SITE_ORIGIN}/a/">`;
+  assert.deepEqual(findHeadMetadataProblems('a/index.html', head({ canonical: twice })), [
+    'a/index.html: expected one canonical link, found 2',
+  ]);
+});
+
+test('head check reports a page with no h1 or two h1 elements', () => {
+  assert.deepEqual(findHeadMetadataProblems('a/index.html', head({ body: '<h2>x</h2>' })), [
+    'a/index.html: expected one <h1>, found 0',
+  ]);
+  assert.deepEqual(
+    findHeadMetadataProblems('a/index.html', head({ body: '<h1>a</h1><h1 class="x">b</h1>' })),
+    ['a/index.html: expected one <h1>, found 2'],
+  );
+  // Escaped markup in a code block is text, not a heading.
+  assert.deepEqual(
+    findHeadMetadataProblems('a/index.html', head({ body: '<h1>a</h1><pre>&lt;h1&gt;</pre>' })),
+    [],
+  );
+});
+
+test('noindex check reads the robots meta tag only', () => {
+  assert.equal(hasNoindex(head()), false);
+  assert.equal(hasNoindex('<meta name="robots" content="noindex, follow">'), true);
+  assert.equal(hasNoindex('<meta content="noindex" name="robots">'), true);
+  assert.equal(hasNoindex('<meta name="robots" content="index, follow">'), false);
+  assert.equal(hasNoindex('<p>noindex</p><meta name="description" content="noindex">'), false);
 });
