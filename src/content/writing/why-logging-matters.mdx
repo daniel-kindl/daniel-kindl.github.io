@@ -12,9 +12,9 @@ import architectureDark from '@assets/writing/logging-architecture-dark.svg';
 
 ## The fault you cannot reproduce
 
-Suppose a user reports that a payment page failed at 14:05. You open the code. It looks correct. You run the same steps on your machine. Everything works.
+Take this example. A user reports that a payment page failed at 14:05. You open the code. It looks correct. You run the same steps on your machine. Everything works.
 
-The failure happened once, in production, with data you do not have. You cannot replay it. You cannot attach a debugger to it. The only evidence is what the system wrote down at the time.
+The failure happened once, in production, with data you do not have. You cannot replay it. You should not stop a live system to debug it. The only evidence is what the system wrote down at the time.
 
 That record is the log. If the log is good, you find the fault in minutes. If the log is poor, you guess.
 
@@ -24,7 +24,7 @@ A log answers one question after the event: what happened?
 
 This is useful for five reasons.
 
-- You cannot attach a debugger to production. A debugger stops the program, and a live system cannot stop for you.
+- You should not stop a live system to attach a debugger. A debugger stops the program, and a live system must keep running.
 - Logs shorten the time to find a fault. You search a record and do not rebuild the event from memory.
 - Logs are the record for security and audit questions. Who did this, and when?
 - Logs show behavior that your tests did not predict. Tests check the cases you imagined. Production sends the cases you did not.
@@ -36,8 +36,8 @@ Log events that help you answer "what happened?" later. Four kinds cover most ne
 
 - **Requests and their result.** Record the status, the duration, and the caller.
 - **Errors, with cause and context.** "Operation failed" helps nobody. Record what the code tried to do, with which input type, and why it failed.
-- **Important business events.** An order is placed. A user changes a password. A job finishes. These events tell the story of the system.
-- **Calls to other systems.** Record the target, the duration, and the result. Most production faults sit at a boundary.
+- **Important business events.** An order is placed. A user changes a password. A job finishes. These events show what the system does.
+- **Calls to other systems.** Record the target, the duration, and the result. Faults often sit at a boundary.
 
 Never log secrets, tokens, passwords, or personal data. A log is copied, searched, and kept for a long time. Many people can read it. A secret in a log is a leak that you made yourself.
 
@@ -64,7 +64,7 @@ The way to control this is to keep the parts separate. Business code calls one s
 <Figure
   src={architectureLight}
   srcDark={architectureDark}
-  alt="Diagram of a logging flow in four steps. Application code writes structured logs with the same fields everywhere. A collector or platform log stream receives them. Storage keeps them with retention, hot and cold. From storage, an engineer searches and uses dashboards with a correlation ID, and alert rules send a notification to one channel that a person watches. A band below shows three guardrails: redact secrets and personal data before storage, sample noisy debug logs, and set a retention limit for stored logs."
+  alt="Diagram of a logging flow. Application code sends logs to a collector, then to storage. Storage feeds two branches: search and dashboards, and alert rules. A band below shows three guardrails: redaction, sampling, and a retention limit."
   caption="Logs flow from application code to a collector, then to storage. Storage feeds two branches: search for investigation, and alert rules for notification. Redaction, sampling, and a retention limit guard the flow."
 />
 
@@ -78,7 +78,7 @@ Read the figure from left to right.
 
 Three guardrails apply to the whole flow. Redact secrets and personal data before storage. Sample noisy debug logs. Set a retention limit.
 
-Redaction belongs at one place: the logging boundary. If every call site must remember to redact, one of them will forget.
+Redaction belongs at one place: the logging boundary. This boundary comes before storage. If every call site must remember to redact, one of them will forget.
 
 The figure answers four questions. What do we log? Where does it go? How do we search it? How do we alert on it?
 
@@ -97,7 +97,7 @@ Start with logs. They are the simplest and the most general. Add metrics and tra
 These mistakes appear again and again.
 
 - **Too little.** The line you need was never written.
-- **Too much.** Noise hides the signal, and storage costs grow.
+- **Too much.** Too many lines hide the useful ones, and storage costs grow.
 - **Unstructured text.** You can read it, but you cannot query it.
 - **Secrets or personal data in logs.** This creates a security problem and a legal problem.
 - **No correlation ID.** You cannot link the lines of one request.
@@ -118,6 +118,6 @@ You can apply these six items in one afternoon.
 
 ## Decide early
 
-Good logging is a design decision. You make it at the start, when the system is small. It costs little then. Adding it during an incident costs far more, because you must change code, deploy it, and wait for the fault to happen again.
+Good logging is a design decision. You make it at the start, when the system is small. It costs little then. Adding it during an incident costs far more. You must change code, deploy it, and wait for the fault to happen again.
 
-Write the logs that you will want to read on your worst day. You will read them on that day.
+Write the logs that you will need to read during an incident.
