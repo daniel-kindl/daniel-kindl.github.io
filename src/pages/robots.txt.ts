@@ -10,8 +10,6 @@ export function GET(context: APIContext) {
 User-agent: *
 Allow: /
 
-# Host & Sitemap Mapping Direction
-Host: ${origin}
 Sitemap: ${origin}/sitemap-index.xml
 `;
 
