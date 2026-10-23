@@ -93,13 +93,19 @@ const fonts = ['Space Grotesk', 'JetBrains Mono', 'IBM Plex Sans'];
         <Typography variant="h2">Visitor data</Typography>
       </div>
       <ul class="list-disc space-y-3 pl-5 text-sm leading-relaxed text-(--text-muted)">
-        <li>This site has no analytics.</li>
+        <li>
+          Cloudflare Web Analytics runs on this site. It loads a script from
+          <code>static.cloudflareinsights.com</code> and sends page-load data to Cloudflare.
+        </li>
         <li>This site sets no cookies.</li>
         <li>
           The site stores your theme choice in <code>localStorage</code>, in your browser only.
         </li>
         <li>Cloudflare sits in front of the site and processes each request to it.</li>
-        <li>Cloudflare adds a network error reporting header to its responses.</li>
+        <li>
+          Cloudflare sends a header that asks your browser to report failed connections to
+          Cloudflare.
+        </li>
       </ul>
     </section>
 

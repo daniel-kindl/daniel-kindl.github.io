@@ -68,8 +68,10 @@ ADR.
 
 ## Rollback
 
-- Open a revert pull request. The required checks run. The squash merge to `master` deploys the revert.
-- Or re-run the last good `Production Deployment` run (`.github/workflows/deploy.yml`) in the Actions tab. This path is not tested.
+- Open a revert pull request. The required checks run. The squash merge to `master` deploys the
+  revert.
+- Or re-run the last good `Production Deployment` run (`.github/workflows/deploy.yml`) in the
+  Actions tab. This path is not tested.
 - Deploy has no smoke check after it. Open the live site to confirm the rollback.
 
 ## Commit subjects
