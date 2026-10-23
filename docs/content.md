@@ -81,6 +81,11 @@ import phaseScreen from '@assets/projects/ocho-phase-screen.png';
   component throws at build time otherwise, so a missing caption fails CI rather than shipping.
 - **Images** go in `src/assets/` and must be imported, not referenced by URL string — that's what
   routes them through `astro:assets` for AVIF/WebP conversion and intrinsic dimensions.
+- **`srcDark`** is an optional second image for `src`. Use it when an image must look different in
+  the dark theme, for example a diagram with fixed colors. `Figure` renders both images and CSS
+  shows one for the current `data-theme`. Both images use the same `alt`, because the hidden image
+  is removed from the accessibility tree. `srcDark` needs `src`. A built-site check fails a figure
+  image with an empty alt or `aria-hidden`.
 - **No GIFs.** Use MP4/WebM via `Figure`'s `video` prop with a `poster`. A GIF of UI motion will
   fail the Lighthouse budget on `master` (`lighthouserc.json`). That check does not block the deploy.
 - **`Swatch`** renders a hex chip inline, including inside markdown table cells. Use it for color

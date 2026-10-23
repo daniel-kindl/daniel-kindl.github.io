@@ -8,6 +8,7 @@ import {
   SITE_ORIGIN,
   draftIds,
   findBrokenLinks,
+  findFigureImageProblems,
   listHtmlFiles,
   resolvePath,
   xmlTagValues,
@@ -71,6 +72,14 @@ test('draft posts are not in the production build, RSS, or sitemap', () => {
   }
 });
 
+test('every figure image has alt text and is not aria-hidden', () => {
+  const problems = [];
+  for (const rel of listHtmlFiles(dist)) {
+    problems.push(...findFigureImageProblems(rel, readFileSync(join(dist, rel), 'utf8')));
+  }
+  assert.deepEqual(problems, []);
+});
+
 // Fixture tests: prove the checkers fail on known-bad input.
 function fixture() {
   const dir = mkdtempSync(join(tmpdir(), 'site-'));
@@ -99,4 +108,17 @@ test('checker reports a missing page and a missing anchor', () => {
 test('draft detection finds only draft: true entries', () => {
   const { posts } = fixture();
   assert.deepEqual(draftIds(posts), ['wip']);
+});
+
+test('figure image check reports an empty alt, a missing alt, and aria-hidden', () => {
+  const html =
+    '<figure><img src="a.svg" alt="A diagram"><img src="b.svg" alt="" aria-hidden="true">' +
+    '<img src="c.svg" alt="  "><img src="d.svg"><figcaption>x</figcaption></figure>' +
+    '<img src="outside.svg"><figure><img src="e.svg" alt="ok"></figure>';
+  assert.deepEqual(findFigureImageProblems('p.html', html), [
+    'p.html: figure image has no alt text',
+    'p.html: figure image is aria-hidden',
+    'p.html: figure image has no alt text',
+    'p.html: figure image has no alt text',
+  ]);
 });

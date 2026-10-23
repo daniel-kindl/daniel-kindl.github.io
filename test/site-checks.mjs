@@ -83,3 +83,21 @@ export function draftIds(writingDir) {
 export function xmlTagValues(xml, tag) {
   return [...xml.matchAll(new RegExp(`<${tag}>([^<]*)</${tag}>`, 'g'))].map((m) => m[1]);
 }
+
+/**
+ * Return problems with images inside <figure> elements for one page. Every figure image needs
+ * a non-empty alt and must not be aria-hidden. A figure with a theme variant hides the inactive
+ * image with display: none, so each image carries the same alt.
+ */
+export function findFigureImageProblems(pageRel, html) {
+  const problems = [];
+  for (const figure of html.matchAll(/<figure[\s>][\s\S]*?<\/figure>/g)) {
+    for (const img of figure[0].matchAll(/<img\b[^>]*>/g)) {
+      const tag = img[0];
+      const alt = tag.match(/\salt(?:="([^"]*)")?/);
+      if (!alt || !alt[1]?.trim()) problems.push(`${pageRel}: figure image has no alt text`);
+      if (/\saria-hidden=/.test(tag)) problems.push(`${pageRel}: figure image is aria-hidden`);
+    }
+  }
+  return problems;
+}
