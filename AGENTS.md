@@ -17,6 +17,10 @@ Astro build warning fails it. `npm run check` still runs the four source checks 
 
 Pull-request CI (`.github/workflows/ci.yml`) runs `./eng/verify.sh`. That run is the merge gate.
 
+The repo setting `sha_pinning_required` is on. A workflow that uses an action without a full
+commit SHA fails. Pin each new action to a full commit SHA and write the version in a comment.
+Dependabot updates the pins. See ADR #25 in `docs/tech-decisions.md`.
+
 Deploy (`.github/workflows/deploy.yml`) runs on a push to `master`, or on `workflow_dispatch`. It
 runs `./eng/verify.sh`, then publishes `dist/` to GitHub Pages. See ADR #20.
 
