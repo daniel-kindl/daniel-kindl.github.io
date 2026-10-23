@@ -599,7 +599,7 @@ exists. Earlier ADRs that mention OneDev stay as written.
 
 **Context:** GitHub Pages hosts the site. The domain `danielkindl.dev` is on Cloudflare. The name
 servers and the apex records are Cloudflare's, and live responses carry `server: cloudflare`. No
-file, document, or earlier ADR said so. Three facts follow from this layer:
+file, document, or earlier ADR said so. Four facts follow from this layer:
 
 - GitHub Pages cannot set response headers. On 2026-10-23 the live site sent no
   `Strict-Transport-Security`, `Content-Security-Policy`, `X-Content-Type-Options`,
@@ -609,6 +609,10 @@ file, document, or earlier ADR said so. Three facts follow from this layer:
   `/cdn-cgi/l/email-protection` links that need JavaScript. CI tests `dist/`, not the live HTML,
   so it cannot see this. The address is public in `src/lib/siteConfig.ts`, so the rewrite
   protects nothing.
+- Cloudflare Web Analytics runs on the live site. Cloudflare injects a script from
+  `static.cloudflareinsights.com` (with a `data-cf-beacon` attribute) at the edge. The page then
+  sends a POST to `/cdn-cgi/rum`. The script is not in `src/` or `dist/`. A check of `dist/` or of
+  the origin HTML does not show it. CI tests `dist/`, not the live HTML, so CI cannot see it.
 - A strong Content Security Policy does not fit this site. Astro's `security.csp` option does not
   support `<ClientRouter />` or Shiki (Astro configuration reference, `security.csp`). The site
   uses both (`src/layouts/Layout.astro`, `astro.config.mjs`). The built pages have inline scripts,
@@ -619,10 +623,11 @@ file, document, or earlier ADR said so. Three facts follow from this layer:
 1. Cloudflare is part of the hosting. Its settings live in the Cloudflare dashboard, not in this
    repository. These settings are the intended state:
    - SSL/TLS mode: Full. On 2026-10-23 the mode was changed from Full (strict) to Full as a
-     safety net, because the GitHub Pages certificate stayed in the `bad_authz` state after the
-     custom domain was removed and added again. Return to Full (strict) after GitHub approves the
+     safety net. The GitHub Pages certificate stayed in the `bad_authz` state after the custom
+     domain was removed and added again. Return to Full (strict) after GitHub approves the
      Pages certificate, and record that in a new ADR entry. Never use Flexible: it loops when
-     HTTPS is enforced.
+     HTTPS is enforced. - Web Analytics: on, with automatic installation. Daniel chose to keep it on 2026-10-23. The
+     site has one third-party script, and it comes from Cloudflare.
    - Email Address Obfuscation: off. The `mailto:` links work without JavaScript.
    - Always Use HTTPS: on. Minimum TLS version: 1.2.
    - `X-Content-Type-Options: nosniff`: on, through the No-Sniff option in the HSTS panel of the
@@ -637,9 +642,8 @@ file, document, or earlier ADR said so. Three facts follow from this layer:
      After one week without a problem, raise it to `max-age=15552000` (6 months). This raise is a
      planned step of this decision, so it needs no new ADR entry. Do not add `includeSubDomains`
      or `preload`.
-2. Add no Content Security Policy. A policy with `'unsafe-inline'` gives little protection. A
-   policy built on hashes breaks when Astro or Shiki changes its inline output. The site has no
-   server-side input, no login, and no third-party script. The attack surface is small. The only
+2. Add no Content Security Policy. A policy with `'unsafe-inline'` gives little protection. A policy built on hashes breaks when Astro or Shiki changes its inline output. Both kinds of policy also need an allow rule for the beacon host and for `/cdn-cgi/rum`. The site has no
+   server-side input and no login. The only third-party script is the Cloudflare beacon. The attack surface is small. The only
    input is the search box, and Pagefind runs in the browser. Add no frame-protection header for
    the same reason. No page has an action that a frame can trick a visitor into.
 3. Rollback:
@@ -657,6 +661,6 @@ file, document, or earlier ADR said so. Three facts follow from this layer:
 record of the intended settings. Any change other than the planned HSTS raise needs a new ADR
 entry. The difference between this record and the live site is the drift risk. A check of the live
 headers after deploy is possible, but it is not needed now. The site has no CSP, and a scanner will
-report that. Add a CSP if the site gets server-side input, a login, or a third-party script. Add
+report that. Add a CSP if the site gets server-side input, a login, or a third-party script other than the Cloudflare beacon. Add
 one also if Astro supports both `<ClientRouter />` and Shiki in `security.csp`. A header rule in Cloudflare is not
 part of `dist/`. A move to another host needs the same headers set there.
