@@ -630,8 +630,13 @@ subset, which is a Modified Version.
 Sans 3.201 under the SIL OFL 1.1. The OFL texts for the three fonts are in
 `public/fonts/*-OFL.txt`.
 
-**Consequences:** Docs use "Kindl Sans" for the body font and keep the credit to IBM Plex Sans.
-The font choice in ADR #8 (Space Grotesk, JetBrains Mono, and a Plex-based body font) and its
-OFL 1.1 reasoning hold. ADR #8 stays as written and still names IBM Plex Sans.
+**Rejected options:** Ship the full upstream Plex file. It is larger than the
+subset and breaks the 96000 byte font budget (ADR #21). Ask IBM for permission to use the name
+"Plex" on a subset. A request has no date for an answer.
 
-This file has no ADR #24 on `master` yet. ADR #24 is a draft in PR #111.
+**Consequences:** Docs use "Kindl Sans" for the body font and keep the credit to IBM Plex Sans.
+The choice of Space Grotesk, JetBrains Mono, and a Plex-based body font in ADR #8 holds. Two
+statements in ADR #8 are wrong now. "No attribution required" is wrong: the OFL requires each
+font file to keep its copyright notice and license text, and the repo keeps them in
+`public/fonts/*-OFL.txt`. "No licensing risk" is wrong: the Reserved Font Name "Plex" was a
+risk, and this ADR is the fix. ADR #8 stays as written and still names IBM Plex Sans.
