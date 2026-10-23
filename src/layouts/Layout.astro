@@ -5,20 +5,25 @@ import Header from '@components/Header.astro';
 import Footer from '@components/Footer.astro';
 import '@styles/global.css';
 import { siteConfig } from '@lib/siteConfig';
+import { toIsoDate } from '@lib/formatDate';
 
 interface Props {
   title: string;
   description?: string;
+  /** Set on a blog post: `og:type` becomes `article` and `article:published_time` is added. */
+  article?: { publishedTime: Date };
   ogImage?: string;
 }
 
 const {
   title,
   description = 'Software engineer building and shipping useful software across platforms. I choose the tools that fit the problem.',
+  article,
   ogImage = '/assets/meta/og-default.png',
 }: Props = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const imageURL = new URL(ogImage, Astro.site);
 ---
 
 <!doctype html>
@@ -65,18 +70,24 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="description" content={description} />
 
     <!-- Open Graph protocols -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={new URL(ogImage, Astro.site)} />
+    <meta property="og:image" content={imageURL} />
+    {article && (
+      <meta property="article:published_time" content={toIsoDate(article.publishedTime)} />
+    )}
 
-    <!-- Twitter Platform Rules -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={canonicalURL} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={new URL(ogImage, Astro.site)} />
+    <!-- Twitter Platform Rules (these tags use name=, not property=) -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageURL} />
+
+    <!-- Page-specific head elements, for example JSON-LD -->
+    <slot name="head" />
   </head>
   <body class="flex min-h-screen flex-col bg-(--bg-primary) text-(--text-primary) antialiased selection:bg-(--accent)/30 selection:text-(--text-primary)">
     <!-- Skip to main content link for screen-readers -->
