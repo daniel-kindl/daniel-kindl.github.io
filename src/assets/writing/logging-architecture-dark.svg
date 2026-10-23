@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 392" width="800" height="392" role="img" aria-labelledby="t d">
+<title id="t">Logging architecture</title>
+<desc id="d">Application code writes structured logs to a collector, then to storage with retention. Storage feeds two branches: search and dashboards for investigation by correlation ID, and alert rules that notify one channel a person watches. Three guardrails apply: redact secrets and personal data before storage, sample noisy debug logs, and set a retention limit.</desc>
+<style>text{font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;font-size:12px} .t{font-weight:700;letter-spacing:.04em;font-size:11px} .e{font-size:11px;letter-spacing:.04em} .dash{stroke-dasharray:4 3} .ink{fill:#f5f5f5} .muted{fill:#a0a0a0} .box{fill:none;stroke:#a0a0a0;stroke-width:1} .rule{fill:none;stroke:#a0a0a0;stroke-width:1} .arrow{fill:#a0a0a0}</style>
+<text class="muted e" x="620" y="32">[03] HOW TO SEARCH</text>
+<text class="muted e" x="20" y="94">[01] WHAT TO LOG</text>
+<text class="muted e" x="220" y="94">[02] WHERE IT GOES</text>
+<text class="muted e" x="620" y="156">[04] HOW TO ALERT</text>
+<rect class="box" x="20.5" y="102.5" width="160" height="96"/><text class="ink t" x="32" y="124">APPLICATION CODE</text><line class="rule" x1="32" y1="134.5" x2="168" y2="134.5"/><text class="muted" x="32" y="154">Structured logs</text><text class="muted" x="32" y="170">Same fields</text><text class="muted" x="32" y="186">everywhere</text>
+<rect class="box" x="220.5" y="102.5" width="160" height="96"/><text class="ink t" x="232" y="124">COLLECTOR</text><line class="rule" x1="232" y1="134.5" x2="368" y2="134.5"/><text class="muted" x="232" y="154">or platform</text><text class="muted" x="232" y="170">log stream</text>
+<rect class="box" x="420.5" y="102.5" width="160" height="96"/><text class="ink t" x="432" y="124">STORAGE</text><line class="rule" x1="432" y1="134.5" x2="568" y2="134.5"/><text class="muted" x="432" y="154">With retention</text><text class="muted" x="432" y="170">Hot and cold</text>
+<rect class="box" x="620.5" y="40.5" width="160" height="96"/><text class="ink t" x="632" y="62">SEARCH, DASHBOARDS</text><line class="rule" x1="632" y1="72.5" x2="768" y2="72.5"/><text class="muted" x="632" y="92">Engineer</text><text class="muted" x="632" y="108">investigates by</text><text class="muted" x="632" y="124">correlation ID</text>
+<rect class="box" x="620.5" y="164.5" width="160" height="96"/><text class="ink t" x="632" y="186">ALERT RULES</text><line class="rule" x1="632" y1="196.5" x2="768" y2="196.5"/><text class="muted" x="632" y="216">Notification goes</text><text class="muted" x="632" y="232">to one channel</text><text class="muted" x="632" y="248">a person watches</text>
+<line class="rule" x1="181" y1="150.5" x2="213" y2="150.5"/><polygon class="arrow" points="219,150.5 212,147.5 212,154.5"/>
+<line class="rule" x1="381" y1="150.5" x2="413" y2="150.5"/><polygon class="arrow" points="419,150.5 412,147.5 412,154.5"/>
+<line class="rule" x1="581" y1="150.5" x2="600.5" y2="150.5"/>
+<line class="rule" x1="600.5" y1="88.5" x2="600.5" y2="212.5"/>
+<line class="rule" x1="600" y1="88.5" x2="613" y2="88.5"/><polygon class="arrow" points="619,88.5 612,85.5 612,92.5"/>
+<line class="rule" x1="600" y1="212.5" x2="613" y2="212.5"/><polygon class="arrow" points="619,212.5 612,209.5 612,216.5"/>
+<rect class="box dash" x="20.5" y="288.5" width="760" height="84"/>
+<text class="ink t" x="36" y="310">GUARDRAILS</text>
+<text class="muted" x="36" y="336">Redact secrets and personal</text>
+<text class="muted" x="36" y="352">data before storage</text>
+<text class="muted" x="276" y="336">Sample noisy</text>
+<text class="muted" x="276" y="352">debug logs</text>
+<text class="muted" x="516" y="336">Set a retention limit</text>
+<text class="muted" x="516" y="352">for stored logs</text>
+<line class="rule" x1="260.5" y1="322" x2="260.5" y2="362"/>
+<line class="rule" x1="500.5" y1="322" x2="500.5" y2="362"/>
+</svg>
