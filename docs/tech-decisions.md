@@ -626,7 +626,8 @@ file, document, or earlier ADR said so. Four facts follow from this layer:
      safety net. The GitHub Pages certificate stayed in the `bad_authz` state after the custom
      domain was removed and added again. Return to Full (strict) after GitHub approves the
      Pages certificate, and record that in a new ADR entry. Never use Flexible: it loops when
-     HTTPS is enforced. - Web Analytics: on, with automatic installation. Daniel chose to keep it on 2026-10-23. The
+     HTTPS is enforced.
+   - Web Analytics: on, with automatic installation. Daniel chose to keep it on 2026-10-23. The
      site has one third-party script, and it comes from Cloudflare.
    - Email Address Obfuscation: off. The `mailto:` links work without JavaScript.
    - Always Use HTTPS: on. Minimum TLS version: 1.2.
@@ -642,10 +643,13 @@ file, document, or earlier ADR said so. Four facts follow from this layer:
      After one week without a problem, raise it to `max-age=15552000` (6 months). This raise is a
      planned step of this decision, so it needs no new ADR entry. Do not add `includeSubDomains`
      or `preload`.
-2. Add no Content Security Policy. A policy with `'unsafe-inline'` gives little protection. A policy built on hashes breaks when Astro or Shiki changes its inline output. Both kinds of policy also need an allow rule for the beacon host and for `/cdn-cgi/rum`. The site has no
-   server-side input and no login. The only third-party script is the Cloudflare beacon. The attack surface is small. The only
-   input is the search box, and Pagefind runs in the browser. Add no frame-protection header for
-   the same reason. No page has an action that a frame can trick a visitor into.
+2. Add no Content Security Policy. A policy with `'unsafe-inline'` gives little protection. A
+   policy built on hashes breaks when Astro or Shiki changes its inline output. Both kinds of
+   policy also need `script-src` for `static.cloudflareinsights.com`. The POST to `/cdn-cgi/rum`
+   is same-origin, so `connect-src 'self'` covers it. The site has no server-side input and no
+   login. The only third-party script is the Cloudflare beacon. The attack surface is small. The
+   only input is the search box, and Pagefind runs in the browser. Add no frame-protection header
+   for the same reason. No page has an action that a frame can trick a visitor into.
 3. Rollback:
    - Bad content or code: open a revert pull request. The required checks run. A squash merge
      deploys the revert in about 40 seconds. A re-run of an old `Production Deployment` run is
@@ -660,10 +664,12 @@ file, document, or earlier ADR said so. Four facts follow from this layer:
 **Consequences:** Cloudflare changes are manual, and no pull request reviews them. This ADR is the
 record of the intended settings. Any change other than the planned HSTS raise needs a new ADR
 entry. The difference between this record and the live site is the drift risk. A check of the live
-headers after deploy is possible, but it is not needed now. The site has no CSP, and a scanner will
-report that. Add a CSP if the site gets server-side input, a login, or a third-party script other than the Cloudflare beacon. Add
-one also if Astro supports both `<ClientRouter />` and Shiki in `security.csp`. A header rule in Cloudflare is not
-part of `dist/`. A move to another host needs the same headers set there.
+headers after deploy is possible, but it is not needed now. A check of the live site must use a
+browser-like request. A plain `curl` does not show the beacon. The site has no CSP, and a scanner
+will report that. Add a CSP if the site gets server-side input, a login, or a third-party script
+other than the Cloudflare beacon. Add one also if Astro supports both `<ClientRouter />` and
+Shiki in `security.csp`. A header rule in Cloudflare is not part of `dist/`. A move to another
+host needs the same headers set there.
 
 ---
 
