@@ -116,6 +116,10 @@ These routes use `getStaticPaths()` and `getCollection()`:
 
 Tag pages come from each post's `tags`, through `src/lib/slug.ts`. There is no tags collection.
 `src/pages/rss.xml.ts` builds the feed with `@astrojs/rss`.
+`src/pages/writing/[id].astro` passes `article` to `Layout`. That sets `og:type` to `article` and
+adds `article:published_time`. The page also adds a `BlogPosting` JSON-LD block through the `head`
+slot, built by `src/lib/jsonLd.ts`. Only posts get these. `test/post-metadata.test.mjs` checks them
+in `dist/`.
 
 Path aliases in `tsconfig.json`: `@components/*`, `@layouts/*`, `@lib/*`, `@styles/*`,
 `@content/*`, `@assets/*`. Prefer an alias in new code.
