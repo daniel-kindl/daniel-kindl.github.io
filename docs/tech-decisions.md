@@ -618,13 +618,15 @@ file, document, or earlier ADR said so. Three facts follow from this layer:
 
 1. Cloudflare is part of the hosting. Its settings live in the Cloudflare dashboard, not in this
    repository. These settings are the intended state:
-   - SSL/TLS mode: Full (strict) while the GitHub Pages certificate is valid. If the certificate
-     cannot be fixed, the mode is Full, and a new ADR entry records the change. Never use
-     Flexible: it loops when HTTPS is enforced. On 2026-10-23 the mode was Full (strict), and the
-     Pages certificate state was `bad_authz`.
+   - SSL/TLS mode: Full. On 2026-10-23 the mode was changed from Full (strict) to Full as a
+     safety net, because the GitHub Pages certificate stayed in the `bad_authz` state after the
+     custom domain was removed and added again. Return to Full (strict) after GitHub approves the
+     Pages certificate, and record that in a new ADR entry. Never use Flexible: it loops when
+     HTTPS is enforced.
    - Email Address Obfuscation: off. The `mailto:` links work without JavaScript.
    - Always Use HTTPS: on. Minimum TLS version: 1.2.
-   - `X-Content-Type-Options: nosniff`: on, through the zone security header setting.
+   - `X-Content-Type-Options: nosniff`: on, through the No-Sniff option in the HSTS panel of the
+     dashboard, with HSTS itself off.
    - One response-header rule for all paths of `danielkindl.dev`. It sets
      `Referrer-Policy: strict-origin-when-cross-origin`,
      `Permissions-Policy: camera=(), microphone=(), geolocation=()`, and
@@ -656,5 +658,5 @@ record of the intended settings. Any change other than the planned HSTS raise ne
 entry. The difference between this record and the live site is the drift risk. A check of the live
 headers after deploy is possible, but it is not needed now. The site has no CSP, and a scanner will
 report that. Add a CSP if the site gets server-side input, a login, or a third-party script. Add
-one also if Astro supports `<ClientRouter />` in `security.csp`. A header rule in Cloudflare is not
+one also if Astro supports both `<ClientRouter />` and Shiki in `security.csp`. A header rule in Cloudflare is not
 part of `dist/`. A move to another host needs the same headers set there.
