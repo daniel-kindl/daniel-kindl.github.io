@@ -101,3 +101,58 @@ export function findFigureImageProblems(pageRel, html) {
   }
   return problems;
 }
+
+/** Return the URL a built page must declare as canonical. */
+export function expectedCanonical(pageRel) {
+  if (pageRel === 'index.html') return `${SITE_ORIGIN}/`;
+  if (pageRel.endsWith('/index.html'))
+    return `${SITE_ORIGIN}/${pageRel.slice(0, -'index.html'.length)}`;
+  return `${SITE_ORIGIN}/${pageRel}`;
+}
+
+function attributes(tag) {
+  const attrs = {};
+  for (const m of tag.matchAll(/\s([a-zA-Z-]+)="([^"]*)"/g)) attrs[m[1].toLowerCase()] = m[2];
+  return attrs;
+}
+
+function metaTags(html, name) {
+  return [...html.matchAll(/<meta\b[^>]*>/g)]
+    .map((m) => attributes(m[0]))
+    .filter((a) => a.name?.toLowerCase() === name);
+}
+
+/** Return problems with the head metadata and the h1 count of one built page. */
+export function findHeadMetadataProblems(pageRel, html) {
+  const problems = [];
+  const titles = [...html.matchAll(/<title>([\s\S]*?)<\/title>/g)];
+  if (titles.length !== 1)
+    problems.push(`${pageRel}: expected one <title>, found ${titles.length}`);
+  else if (!titles[0][1].trim()) problems.push(`${pageRel}: <title> is empty`);
+
+  const descriptions = metaTags(html, 'description');
+  if (descriptions.length !== 1) {
+    problems.push(`${pageRel}: expected one meta description, found ${descriptions.length}`);
+  } else if (!descriptions[0].content?.trim())
+    problems.push(`${pageRel}: meta description is empty`);
+
+  const canonicals = [...html.matchAll(/<link\b[^>]*>/g)]
+    .map((m) => attributes(m[0]))
+    .filter((a) => a.rel?.toLowerCase() === 'canonical');
+  if (canonicals.length !== 1) {
+    problems.push(`${pageRel}: expected one canonical link, found ${canonicals.length}`);
+  } else if (canonicals[0].href !== expectedCanonical(pageRel)) {
+    problems.push(
+      `${pageRel}: canonical is ${canonicals[0].href}, expected ${expectedCanonical(pageRel)}`,
+    );
+  }
+
+  const h1Count = [...html.matchAll(/<h1[\s>]/g)].length;
+  if (h1Count !== 1) problems.push(`${pageRel}: expected one <h1>, found ${h1Count}`);
+  return problems;
+}
+
+/** True when the page has a robots meta tag that contains noindex. */
+export function hasNoindex(html) {
+  return metaTags(html, 'robots').some((a) => /\bnoindex\b/i.test(a.content ?? ''));
+}
