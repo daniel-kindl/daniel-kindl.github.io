@@ -13,7 +13,7 @@ const UPSTREAM_COPYRIGHT = {
     'Copyright 2020 The Space Grotesk Project Authors (https://github.com/floriankarsten/space-grotesk)',
   'JetBrainsMono-OFL.txt':
     'Copyright 2020 The JetBrains Mono Project Authors (https://github.com/JetBrains/JetBrainsMono)',
-  'IBMPlexSans-OFL.txt': 'Copyright © 2017 IBM Corp. with Reserved Font Name "Plex"',
+  'KindlSans-OFL.txt': 'Copyright © 2017 IBM Corp. with Reserved Font Name "Plex"',
 };
 
 const fontFiles = () => readdirSync(fontsDir).filter((file) => file.endsWith('.woff2'));

@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Kindl Sans', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
 }
@@ -82,8 +82,8 @@
 
   /* Local font faces with swap to avoid FOIT */
   @font-face {
-    font-family: 'IBM Plex Sans';
-    src: url('/fonts/IBMPlexSans-VariableFont_wdth,wght.woff2') format('woff2');
+    font-family: 'Kindl Sans';
+    src: url('/fonts/KindlSans-VariableFont_wght.woff2') format('woff2');
     font-weight: 400 700;
     font-style: normal;
     font-display: swap;
