@@ -319,6 +319,19 @@
     background-color: var(--bg-primary);
   }
 
+  /* A figure with a dark variant shows one image per theme. The dark image has alt="". */
+  .prose figure img.figure-dark {
+    display: none;
+  }
+
+  :root[data-theme='dark'] .prose figure img.figure-dark {
+    display: block;
+  }
+
+  :root[data-theme='dark'] .prose figure img.figure-light {
+    display: none;
+  }
+
   .prose figcaption {
     margin-top: 0.5rem;
     font-family: var(--font-mono);

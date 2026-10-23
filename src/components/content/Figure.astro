@@ -11,6 +11,8 @@ import type { ImageMetadata } from 'astro';
 interface Props {
   /** Imported image asset. Mutually exclusive with `video`. */
   src?: ImageMetadata;
+  /** Optional dark-theme variant of `src`. Shown instead of `src` when `data-theme` is dark. */
+  srcDark?: ImageMetadata;
   /** Path to an MP4/WebM under public/. Mutually exclusive with `src`. */
   video?: string;
   /** Poster frame for `video`, so the first paint isn't an empty box. */
@@ -21,7 +23,7 @@ interface Props {
   /** Constrains a tall portrait asset (e.g. a phone screenshot) so it doesn't dominate the column. */
   maxWidth?: string;
 }
-const { src, video, poster, alt, caption, maxWidth }: Props = Astro.props;
+const { src, srcDark, video, poster, alt, caption, maxWidth }: Props = Astro.props;
 
 if (!src && !video) {
   throw new Error('Figure requires either `src` (image) or `video`.');
@@ -29,13 +31,34 @@ if (!src && !video) {
 if (src && video) {
   throw new Error('Figure takes `src` or `video`, not both.');
 }
+if (srcDark && !src) {
+  throw new Error('Figure `srcDark` needs `src`.');
+}
 if (src && alt === undefined) {
   throw new Error('Figure with an image requires `alt`.');
 }
 ---
 
 <figure style={maxWidth ? `max-width: ${maxWidth}` : undefined}>
-  {src && <Image src={src} alt={alt!} loading="lazy" decoding="async" />}
+  {src && (
+    <Image
+      src={src}
+      alt={alt!}
+      loading="lazy"
+      decoding="async"
+      class={srcDark ? 'figure-light' : undefined}
+    />
+  )}
+  {srcDark && (
+    <Image
+      src={srcDark}
+      alt=""
+      aria-hidden="true"
+      loading="lazy"
+      decoding="async"
+      class="figure-dark"
+    />
+  )}
   {video && (
     <video
       src={video}
