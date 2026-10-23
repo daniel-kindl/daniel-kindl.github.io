@@ -612,3 +612,5 @@ Actions permissions API.
 changes on purpose. A workflow that uses an action without a full commit SHA fails when it runs.
 Each new action needs a full commit SHA. The rest of ADR #1 (Node 24 LTS, `.nvmrc`, when to
 revisit) holds. ADR #1 stays as written.
+
+This file has no ADR #24 on `master` yet. ADR #24 is a draft in PR #111 and lands there.
