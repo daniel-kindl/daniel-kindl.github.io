@@ -590,3 +590,60 @@ truth.
 and `src/content/writing/started-homelab.mdx` describe Daniel's homelab and skills, not this
 repository, and stay as history. Delete that scheduled task on the Windows machine if it still
 exists. Earlier ADRs that mention OneDev stay as written.
+
+---
+
+## 24. Cloudflare in front of GitHub Pages: headers, no CSP, rollback
+
+**Status:** Accepted, 2026-10-23 (adds to #13 and #16)
+
+**Context:** GitHub Pages hosts the site. The domain `danielkindl.dev` is on Cloudflare: the name
+servers and the apex records are Cloudflare's, and live responses carry `server: cloudflare`. No
+file, document, or earlier ADR says so. Three facts follow from this layer:
+
+- GitHub Pages cannot set response headers. On 2026-10-23 the live site sent no
+  `Strict-Transport-Security`, `Content-Security-Policy`, `X-Content-Type-Options`,
+  `Referrer-Policy`, or `Permissions-Policy` header.
+- Cloudflare changes the live HTML. With Email Address Obfuscation on, it adds an `email-decode`
+  script and rewrites the `mailto:` link in the footer to a `/cdn-cgi/l/email-protection` link that
+  needs JavaScript. CI tests `dist/`, not the live HTML, so it cannot see this. The address is
+  public in `src/lib/siteConfig.ts`, so the rewrite protects nothing.
+- A strong Content Security Policy does not fit this site. Astro's `security.csp` option does not
+  support `<ClientRouter />` or Shiki (Astro configuration reference, `security.csp`). The site uses
+  both (`src/layouts/Layout.astro`, `astro.config.mjs`). `ThemeScript.astro` is an inline script,
+  and Shiki writes inline styles.
+
+**Decision:**
+
+1. Cloudflare is part of the hosting. Its settings live in the Cloudflare dashboard, not in this
+   repository. These settings are the intended state:
+   - SSL/TLS mode: Full (strict). The GitHub Pages certificate must stay valid for this mode.
+   - Email Address Obfuscation: off. The `mailto:` link works without JavaScript.
+   - One response-header rule for all paths of `danielkindl.dev`, with these headers:
+     `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`,
+     `Permissions-Policy: camera=(), microphone=(), geolocation=()`, and
+     `Strict-Transport-Security`.
+   - HSTS starts with `max-age=86400`. Raise it to `max-age=15552000` (6 months) after one week
+     without a problem. Do not add `includeSubDomains` or `preload`.
+2. Add no Content Security Policy. A policy with `'unsafe-inline'` gives little protection. A policy
+   built on hashes breaks when Astro or Shiki changes its inline output. The site has no user input,
+   no login, and no third-party script, so the attack surface is small. Add no frame-protection
+   header for the same reason: no page holds a state-changing action that a frame can trick a
+   visitor into.
+3. Rollback:
+   - Bad content or code: open a revert pull request. The required checks run, and a squash merge
+     deploys the revert in about 40 seconds. Re-running the last good run of the `Production
+Deployment` workflow is the second option.
+   - Bad header rule or setting: disable the rule or restore the setting in the Cloudflare
+     dashboard. The change takes effect at once. A browser keeps an HSTS value until its `max-age`
+     ends, so the staged `max-age` limits the damage.
+   - Cloudflare outage or a bad proxy state: set the DNS records to "DNS only" in Cloudflare. The
+     site then serves from GitHub Pages directly, without the header rule.
+
+**Consequences:** Cloudflare changes are manual and no pull request reviews them. This ADR is the
+record of the intended settings, so a change to a setting needs a new ADR entry. The visible
+differences between this record and the live site are the drift risk. A check of the live headers
+after deploy is possible, but it is not needed now. The site gets no CSP, and a scanner will report
+that. Add a CSP again if the site gets user input, a login, a third-party script, or if Astro
+supports `<ClientRouter />` in `security.csp`. A header rule in Cloudflare is not part of `dist/`,
+so a move to another host needs the same headers set there.
