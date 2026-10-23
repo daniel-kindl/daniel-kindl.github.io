@@ -150,7 +150,10 @@ rendering. CI runs the same script on the pull request.
 
 ## Voice
 
-Write for a hiring manager or a technical recruiter.
+Write for a hiring manager or a technical recruiter. A writing post has a second reader: a working
+engineer who wants to learn a method. For a post, state the problem, the reason, and a trade-off
+where one is real. Use "I" only for work you did, and add no incident or number that you cannot
+show.
 
 Use plain, specific sentences. Name a deliverable, a date, a test count, or a link the visitor can
 open. Leave a fact out when you do not have it. Do not add a testimonial, a client logo, a usage
