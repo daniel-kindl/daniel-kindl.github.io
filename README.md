@@ -59,6 +59,21 @@ Commit subjects stay a writing convention (`type: description`, with `content:` 
 `src/content/`). No Git hook rejects a subject. The `pr-title` check rejects a non-conventional pull-request title,
 which becomes the squash commit subject. See ADR #17 and ADR #22.
 
+## License
+
+Different parts of this repository have different licenses.
+
+- Code is under the MIT License. See [`LICENSE`](LICENSE).
+- Blog posts in `src/content/writing` are under CC BY 4.0. See [`LICENSE-CONTENT.md`](LICENSE-CONTENT.md).
+
+These items are not licensed for reuse. All rights are reserved:
+
+- The CV text and the bio.
+- Personal images.
+- The logo.
+
+The fonts keep their own license, SIL OFL 1.1.
+
 ## Documentation
 
 - [`AGENTS.md`](AGENTS.md): repository rules for coding agents. This is the canonical copy.
