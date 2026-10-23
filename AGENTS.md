@@ -37,7 +37,7 @@ Stop it with `astro dev stop`. Read status with `astro dev status`. Read logs wi
 `npm test` runs Node's test runner on `src/lib/*.test.ts`. The tests cover pure helpers that do
 not import `astro:content` values. `src/lib/content.ts` is out of scope. `./eng/verify.sh` also runs
 `node --test "test/*.test.mjs"` after the build. Those tests check `dist/`: internal links and
-anchors, RSS and sitemap URLs, and that no `draft: true` post ships. They need a fresh build. The directory-sync tool
+anchors, the head metadata of every page (title, description, canonical, one `h1`, `noindex` only on 404), RSS and sitemap URLs, and that no `draft: true` post ships. They need a fresh build. The directory-sync tool
 named in the project content is a separate C# repository.
 
 ## Agent workflow
@@ -133,8 +133,8 @@ No island framework is installed. To add an interactive component, run `npx astr
 write the component with Svelte 5 runes (`$state`). Hydrate only with an explicit `client:*`
 directive. The Lighthouse script budget is 30 KB.
 
-`src/layouts/Layout.astro` is the page shell. Pass `title`. `description` and `ogImage` are
-optional. The default share image is `/assets/meta/og-default.png`.
+`src/layouts/Layout.astro` is the page shell. Pass `title`. `description`, `ogImage`,
+`canonicalPath` and `noindex` are optional. Only the 404 page sets `canonicalPath` and `noindex`. The default share image is `/assets/meta/og-default.png`.
 
 `src/data/cv.ts` exports `technicalProfile`. Only `src/pages/about.astro` reads it.
 

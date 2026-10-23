@@ -10,15 +10,21 @@ interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  /** Canonical path when it differs from the URL path (the 404 page). */
+  canonicalPath?: string;
+  /** Ask search engines to skip this page. */
+  noindex?: boolean;
 }
 
 const {
   title,
   description = 'Software engineer building and shipping useful software across platforms. I choose the tools that fit the problem.',
   ogImage = '/assets/meta/og-default.png',
+  canonicalPath = Astro.url.pathname,
+  noindex = false,
 }: Props = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const canonicalURL = new URL(canonicalPath, Astro.site);
 ---
 
 <!doctype html>
@@ -63,6 +69,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <!-- Meta Indexing Titles -->
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
 
     <!-- Open Graph protocols -->
     <meta property="og:type" content="website" />

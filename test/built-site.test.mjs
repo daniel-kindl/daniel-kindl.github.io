@@ -24,19 +24,12 @@ test('dist exists (run npm run build first)', () => {
   assert.ok(existsSync(join(dist, 'index.html')), 'dist/index.html is missing');
 });
 
-// Known, harmless: the 404 page's canonical URL is /404/, which GitHub Pages serves from
-// 404.html, not a directory. Tracked as a follow-up; keep this list narrow.
-const KNOWN_BROKEN = new Set([`404.html: ${SITE_ORIGIN}/404/ (missing target)`]);
-
 test('internal links and anchors resolve', () => {
   const broken = [];
   for (const rel of listHtmlFiles(dist)) {
     broken.push(...findBrokenLinks(dist, rel, readFileSync(join(dist, rel), 'utf8')));
   }
-  assert.deepEqual(
-    broken.filter((b) => !KNOWN_BROKEN.has(b)),
-    [],
-  );
+  assert.deepEqual(broken, []);
 });
 
 test('RSS feed is well formed and every item points at a built page', () => {
