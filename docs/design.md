@@ -19,7 +19,7 @@ typography:
     lineHeight: 1
     letterSpacing: '-0.025em'
   body:
-    fontFamily: 'IBM Plex Sans, ui-sans-serif, system-ui, sans-serif'
+    fontFamily: 'Kindl Sans, ui-sans-serif, system-ui, sans-serif'
     fontSize: '1rem'
     fontWeight: 400
     lineHeight: 1.625
@@ -124,7 +124,7 @@ rejected in favor of legibility and evidence.
   card surface distinct from the page background
 - One accent color, used only at interaction/focus moments, never decoratively
 - Two-register typography: Space Grotesk for structure (headings, eyebrows), JetBrains Mono for
-  system/control chrome (nav, buttons, tags, metadata), IBM Plex Sans for reading body copy
+  system/control chrome (nav, buttons, tags, metadata), Kindl Sans for reading body copy
 
 ## Colors
 
@@ -160,13 +160,13 @@ decorative surface. Its rarity is what makes it register as a signal rather than
 ## Typography
 
 **Display Font:** Space Grotesk (with ui-sans-serif, system-ui fallback)
-**Body Font:** IBM Plex Sans (with ui-sans-serif, system-ui fallback)
+**Body Font:** Kindl Sans (with ui-sans-serif, system-ui fallback). Kindl Sans is a Modified Version of IBM Plex Sans 3.201 under the SIL OFL 1.1.
 **Label/Mono Font:** JetBrains Mono (with ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas
 fallback)
 
 **Character:** Space Grotesk carries every heading and eyebrow label — bold, uppercase, tight
 tracking, geometric and structural. JetBrains Mono carries anything that behaves like system
-output: navigation, buttons, tags, dates, build metadata, bracketed status text. IBM Plex Sans is
+output: navigation, buttons, tags, dates, build metadata, bracketed status text. Kindl Sans is
 reserved for actual reading — paragraph body copy only.
 
 ### Hierarchy
@@ -362,8 +362,8 @@ all the communicative work.
   Label Rule) — `[Copy]`, `[Copied]`, `[Light]`/`[Dark]`.
 - **Do** separate every region with a single hairline border (bottom rule or left rail), never a
   card background or shadow.
-- **Do** keep headings uppercase, bold, and tight-tracked in Space Grotesk; keep body copy in IBM
-  Plex Sans at comfortable `leading-relaxed`.
+- **Do** keep headings uppercase, bold, and tight-tracked in Space Grotesk; keep body copy in
+  Kindl Sans at comfortable `leading-relaxed`.
 - **Do** invert primary-button colors fully on hover (`ink`↔`paper`), not a partial tint.
 - **Do** keep every interactive target at least `44×44px`.
 

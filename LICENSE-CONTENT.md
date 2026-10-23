@@ -32,10 +32,17 @@ All other content stays all rights reserved by Daniel Kindl. This includes:
 ## Fonts
 
 The fonts keep their own license, SIL Open Font License 1.1 (SIL OFL 1.1). Neither the MIT license
-nor CC BY 4.0 changes this. The font files are in `public/fonts`:
+nor CC BY 4.0 changes this. The font files and their license files are in `public/fonts`:
 
-- `SpaceGrotesk-VariableFont_wght.woff2`
-- `JetBrainsMono-VariableFont_wght.woff2`
-- `IBMPlexSans-VariableFont_wdth,wght.woff2`
+| Font file                               | License file            |
+| --------------------------------------- | ----------------------- |
+| `SpaceGrotesk-VariableFont_wght.woff2`  | `SpaceGrotesk-OFL.txt`  |
+| `JetBrainsMono-VariableFont_wght.woff2` | `JetBrainsMono-OFL.txt` |
+| `KindlSans-VariableFont_wght.woff2`     | `KindlSans-OFL.txt`     |
 
-This repository holds no copy of the SIL OFL 1.1 text. Read it at <https://openfontlicense.org/>.
+Each license file is the upstream SIL OFL 1.1 text with the upstream copyright line, with no change except line ends.
+
+Kindl Sans is a Modified Version of IBM Plex Sans 3.201 under the SIL OFL 1.1. It is based on IBM
+Plex Sans by IBM Corp. It is a subset with a new name, because the OFL does not let a Modified
+Version use the Reserved Font Name "Plex". `KindlSans-OFL.txt` is the IBM Plex license text. The
+steps that made the file are in `public/fonts/KindlSans-README.txt`.

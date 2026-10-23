@@ -614,3 +614,29 @@ Each new action needs a full commit SHA. The rest of ADR #1 (Node 24 LTS, `.nvmr
 revisit) holds. ADR #1 stays as written.
 
 This file has no ADR #24 on `master` yet. ADR #24 is a draft in PR #111 and lands there.
+
+---
+
+## 26. Body font renamed to Kindl Sans, updating ADR #8
+
+**Status:** Accepted, 2026-10-23 (updates the body font in #8)
+
+**Context:** ADR #8 chose IBM Plex Sans for body text. "Plex" is a Reserved Font Name under the
+SIL OFL 1.1. A Modified Version of the font cannot keep that name. The body font file is a
+subset, which is a Modified Version.
+
+**Decision:** The body font family is "Kindl Sans". The file is
+`public/fonts/KindlSans-VariableFont_wght.woff2`. Kindl Sans is a Modified Version of IBM Plex
+Sans 3.201 under the SIL OFL 1.1. The OFL texts for the three fonts are in
+`public/fonts/*-OFL.txt`.
+
+**Rejected options:** Ship the full upstream Plex file. It is larger than the
+subset and breaks the 96000 byte font budget (ADR #21). Ask IBM for permission to use the name
+"Plex" on a subset. A request has no date for an answer.
+
+**Consequences:** Docs use "Kindl Sans" for the body font and keep the credit to IBM Plex Sans.
+The choice of Space Grotesk, JetBrains Mono, and a Plex-based body font in ADR #8 holds. Two
+statements in ADR #8 are wrong now. "No attribution required" is wrong: the OFL requires each
+font file to keep its copyright notice and license text, and the repo keeps them in
+`public/fonts/*-OFL.txt`. "No licensing risk" is wrong: the Reserved Font Name "Plex" was a
+risk, and this ADR is the fix. ADR #8 stays as written and still names IBM Plex Sans.

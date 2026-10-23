@@ -72,7 +72,7 @@ These items are not licensed for reuse. All rights are reserved:
 - Personal images.
 - The logo.
 
-The fonts keep their own license, SIL OFL 1.1.
+The fonts keep their own license, SIL OFL 1.1. The license texts are in `public/fonts/*-OFL.txt`.
 
 ## Documentation
 
