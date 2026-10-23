@@ -590,3 +590,27 @@ truth.
 and `src/content/writing/started-homelab.mdx` describe Daniel's homelab and skills, not this
 repository, and stay as history. Delete that scheduled task on the Windows machine if it still
 exists. Earlier ADRs that mention OneDev stay as written.
+
+---
+
+## 25. Node range below 25 and required action pinning, updating ADR #1
+
+**Status:** Accepted, 2026-10-23 (updates the `engines.node` value in #1)
+
+**Context:** ADR #1 set `engines.node` to `">=24.0.0"`. That range has no upper bound, so a Node
+major version that the project does not test would satisfy it. `.nvmrc` and every workflow use
+Node 24. Separately, all 10 `uses:` lines in the workflow files pin an action to a full commit
+SHA, and Dependabot has a `github-actions` entry that updates the pins.
+
+**Decision:** `package.json` and `package-lock.json` set `engines.node` to `">=24.0.0 <25"`.
+`.nvmrc` (`24`) and each `node-version` in the workflows stay at `24`.
+`test/node-version.test.mjs` checks that they agree with the range. The repo setting
+`sha_pinning_required` is on. It is a repo setting, not a file, and it was set through the GitHub
+Actions permissions API.
+
+**Consequences:** A change to Node 25 in `.nvmrc` or in a workflow fails the test until the range
+changes on purpose. A workflow that uses an action without a full commit SHA fails when it runs.
+Each new action needs a full commit SHA. The rest of ADR #1 (Node 24 LTS, `.nvmrc`, when to
+revisit) holds. ADR #1 stays as written.
+
+This file has no ADR #24 on `master` yet. ADR #24 is a draft in PR #111 and lands there.
