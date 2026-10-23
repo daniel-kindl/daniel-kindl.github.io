@@ -617,14 +617,19 @@ file, document, or earlier ADR says so. Three facts follow from this layer:
 
 1. Cloudflare is part of the hosting. Its settings live in the Cloudflare dashboard, not in this
    repository. These settings are the intended state:
-   - SSL/TLS mode: Full (strict). The GitHub Pages certificate must stay valid for this mode.
+   - SSL/TLS mode: Full (strict) while the GitHub Pages certificate is valid. If the certificate
+     cannot be fixed, the mode is Full, and a later ADR entry records the change. On 2026-10-23
+     the mode was Full (strict) and the Pages certificate state was `bad_authz`.
    - Email Address Obfuscation: off. The `mailto:` link works without JavaScript.
+   - Always Use HTTPS: on. Minimum TLS version: 1.2.
+   - `X-Content-Type-Options: nosniff`: on, through the zone security header setting.
    - One response-header rule for all paths of `danielkindl.dev`, with these headers:
-     `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`,
+     `Referrer-Policy: strict-origin-when-cross-origin`,
      `Permissions-Policy: camera=(), microphone=(), geolocation=()`, and
      `Strict-Transport-Security`.
-   - HSTS starts with `max-age=86400`. Raise it to `max-age=15552000` (6 months) after one week
-     without a problem. Do not add `includeSubDomains` or `preload`.
+   - HSTS starts with `max-age=86400`, and only after the certificate state is fixed. Raise it to
+     `max-age=15552000` (6 months) after one week without a problem. Do not add
+     `includeSubDomains` or `preload`.
 2. Add no Content Security Policy. A policy with `'unsafe-inline'` gives little protection. A policy
    built on hashes breaks when Astro or Shiki changes its inline output. The site has no user input,
    no login, and no third-party script, so the attack surface is small. Add no frame-protection
@@ -638,7 +643,8 @@ Deployment` workflow is the second option.
      dashboard. The change takes effect at once. A browser keeps an HSTS value until its `max-age`
      ends, so the staged `max-age` limits the damage.
    - Cloudflare outage or a bad proxy state: set the DNS records to "DNS only" in Cloudflare. The
-     site then serves from GitHub Pages directly, without the header rule.
+     site then serves from GitHub Pages directly, without the header rule. This step is not tested
+     yet.
 
 **Consequences:** Cloudflare changes are manual and no pull request reviews them. This ADR is the
 record of the intended settings, so a change to a setting needs a new ADR entry. The visible
