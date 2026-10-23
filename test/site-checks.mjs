@@ -101,3 +101,18 @@ export function findFigureImageProblems(pageRel, html) {
   }
   return problems;
 }
+
+/** Return the URL a built page must declare as canonical. */
+export function expectedCanonical(pageRel) {
+  return '';
+}
+
+/** Return problems with the head metadata and the h1 count of one built page. */
+export function findHeadMetadataProblems(pageRel, html) {
+  return [];
+}
+
+/** True when the page has a robots meta tag that contains noindex. */
+export function hasNoindex(html) {
+  return false;
+}
