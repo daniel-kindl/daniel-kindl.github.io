@@ -59,9 +59,20 @@ This site keeps one long-lived branch, `master`. There is no `dev` branch and no
    `master` and never merge their own pull requests. The protect-master ruleset enforces pull
    requests and squash merges.
 
+The `protect-master` ruleset lets the repository admin role bypass it, and it needs 0 approvals. So
+the gate relies on a convention: agents never push to `master`.
+
 Do not weaken a gate (lint rules, `astro check` severity, Lighthouse budgets, required checks) to
 get a pull request green. Propose the change in the pull request and record a durable change as an
 ADR.
+
+## Rollback
+
+- Open a revert pull request. The required checks run. The squash merge to `master` deploys the
+  revert.
+- Or re-run the last good `Production Deployment` run (`.github/workflows/deploy.yml`) in the
+  Actions tab. This path is not tested.
+- Deploy has no smoke check after it. Open the live site to confirm the rollback.
 
 ## Commit subjects
 
