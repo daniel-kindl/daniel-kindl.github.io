@@ -1,6 +1,7 @@
 // Each self-hosted font must ship with its SIL OFL 1.1 text and the upstream copyright line.
 // The OFL asks that the license and the copyright notice travel with every copy of the font.
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { test } from 'node:test';
@@ -15,6 +16,16 @@ const UPSTREAM_COPYRIGHT = {
     'Copyright 2020 The JetBrains Mono Project Authors (https://github.com/JetBrains/JetBrainsMono)',
   'KindlSans-OFL.txt': 'Copyright © 2017 IBM Corp. with Reserved Font Name "Plex"',
 };
+
+// sha256 of the OFL 1.1 body in every upstream file, from the line `SIL OPEN FONT LICENSE` to the
+// end, with CRLF changed to LF. The three upstream files have the same body.
+const OFL_BODY_SHA256 = 'f19c674290e5dc79f02e8efe16139ab56a06a7128876f5b1579ffd0db5bc897e';
+
+function oflBody(text) {
+  const lines = text.replace(/\r\n/g, '\n').split('\n');
+  const start = lines.findIndex((line) => line.startsWith('SIL OPEN FONT LICENSE'));
+  return start < 0 ? '' : lines.slice(start).join('\n');
+}
 
 const fontFiles = () => readdirSync(fontsDir).filter((file) => file.endsWith('.woff2'));
 
@@ -62,5 +73,19 @@ test('each license file starts with the pinned upstream copyright line', () => {
     assert.ok(existsSync(path), `${license} is missing`);
     const [first] = readFileSync(path, 'utf8').split('\n');
     assert.equal(first, UPSTREAM_COPYRIGHT[license], `${license}: line 1`);
+  }
+});
+
+test('oflBody returns the text from the title line to the end, with LF line ends', () => {
+  const text = 'Copyright\r\n\r\n---\r\nSIL OPEN FONT LICENSE V\r\nbody\r\n';
+  assert.equal(oflBody(text), 'SIL OPEN FONT LICENSE V\nbody\n');
+  assert.equal(oflBody('no title here'), '');
+});
+
+test('the OFL body of each license file is the same as the pinned upstream text', () => {
+  for (const license of new Set(fontFiles().map(licenseFileFor))) {
+    const body = oflBody(readFileSync(join(fontsDir, license), 'utf8'));
+    const hash = createHash('sha256').update(body).digest('hex');
+    assert.equal(hash, OFL_BODY_SHA256, `${license}: the OFL body text changed`);
   }
 });

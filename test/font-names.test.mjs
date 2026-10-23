@@ -6,7 +6,10 @@ import assert from 'node:assert/strict';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { test } from 'node:test';
-import { familyName, readNameRecords } from './woff2.mjs';
+import { tmpdir } from 'node:os';
+import { brotliCompressSync } from 'node:zlib';
+import { mkdtempSync, writeFileSync } from 'node:fs';
+import { familyName, readBase128, readNameRecords } from './woff2.mjs';
 
 const root = join(import.meta.dirname, '..');
 const fontsDir = join(root, 'public', 'fonts');
@@ -46,6 +49,23 @@ test('the body font name table uses Kindl Sans and no record uses the reserved n
   assert.deepEqual(reserved, [], 'a name record uses the reserved name');
   const branded = records.filter((r) => !NOTICE_IDS.has(r.nameID) && /\bIBM/.test(r.text));
   assert.deepEqual(branded, [], 'a font name record names IBM');
+});
+
+// OFL FAQ 3.1: do not remove the copyright statement from a font file. Name ID 0 is that record.
+const IBM_COPYRIGHT = 'Copyright 2019 IBM Corp.';
+const hasIbmCopyright = (records) =>
+  records.some((r) => r.nameID === 0 && r.platformID === 3 && r.text.includes(IBM_COPYRIGHT));
+
+test('hasIbmCopyright needs name ID 0 with the IBM copyright text', () => {
+  const ibm = { nameID: 0, platformID: 3, text: `${IBM_COPYRIGHT} All rights reserved.` };
+  assert.equal(hasIbmCopyright([ibm]), true);
+  assert.equal(hasIbmCopyright([]), false, 'name ID 0 removed');
+  assert.equal(hasIbmCopyright([{ ...ibm, text: 'Copyright 2026 Kindl' }]), false);
+  assert.equal(hasIbmCopyright([{ ...ibm, nameID: 7 }]), false, 'text in another record');
+});
+
+test('the body font keeps the IBM copyright record (name ID 0)', () => {
+  assert.ok(hasIbmCopyright(readNameRecords(join(fontsDir, BODY_FILE))));
 });
 
 test('every font file in public/fonts has no reserved name in its name table', () => {
@@ -102,4 +122,37 @@ test('the built site ships Kindl Sans: CSS, preload and font file in dist', () =
   assert.equal(face.url, `/fonts/${BODY_FILE}`);
   assert.ok(existsSync(join(dist, 'fonts', BODY_FILE)), `dist/fonts/${BODY_FILE} is missing`);
   assert.equal(familyName(join(dist, 'fonts', BODY_FILE)), BODY_FAMILY);
+});
+
+test('the colophon font list names the families of the font files, not the old family', () => {
+  const source = read('src/pages/colophon.astro');
+  const list = source.match(/const fonts = \[([^\]]*)\]/)?.[1];
+  assert.ok(list, 'no `const fonts = [...]` line in colophon.astro');
+  const names = [...list.matchAll(/'([^']+)'/g)].map((m) => m[1]);
+  assert.deepEqual(
+    names.toSorted(),
+    fontFiles()
+      .map((file) => familyName(join(fontsDir, file)))
+      .toSorted(),
+  );
+  assert.doesNotMatch(list, RESERVED);
+});
+
+test('readBase128 rejects a leading zero byte (WOFF2 spec section 5.1)', () => {
+  assert.equal(readBase128(Buffer.from([0x05]), { at: 0 }), 5);
+  assert.throws(() => readBase128(Buffer.from([0x80, 0x05]), { at: 0 }), /leading zero/);
+});
+
+test('the WOFF2 reader stops a Brotli stream that expands past the size limit', () => {
+  // One `name` table entry, with a tiny Brotli stream that expands to 64 MiB of zeros.
+  const stream = brotliCompressSync(Buffer.alloc(64 * 1024 * 1024));
+  const header = Buffer.alloc(48);
+  header.write('wOF2', 0, 'latin1');
+  header.writeUInt16BE(1, 12); // numTables
+  header.writeUInt32BE(stream.length, 20); // totalCompressedSize
+  const entry = Buffer.from([5, 0xa0, 0x80, 0x80, 0x00]); // `name`, no transform, 64 MiB
+  const dir = mkdtempSync(join(tmpdir(), 'woff2-'));
+  const file = join(dir, 'bomb.woff2');
+  writeFileSync(file, Buffer.concat([header, entry, stream]));
+  assert.throws(() => readNameRecords(file), /larger than|limit|Cannot create a Buffer/i);
 });
