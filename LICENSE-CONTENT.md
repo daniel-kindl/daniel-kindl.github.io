@@ -40,7 +40,7 @@ nor CC BY 4.0 changes this. The font files and their license files are in `publi
 | `JetBrainsMono-VariableFont_wght.woff2` | `JetBrainsMono-OFL.txt` |
 | `KindlSans-VariableFont_wght.woff2`     | `KindlSans-OFL.txt`     |
 
-Each license file is the upstream SIL OFL 1.1 text with the upstream copyright line, with no change.
+Each license file is the upstream SIL OFL 1.1 text with the upstream copyright line, with no change except line ends.
 
 Kindl Sans is a Modified Version of IBM Plex Sans 3.201 under the SIL OFL 1.1. It is based on IBM
 Plex Sans by IBM Corp. It is a subset with a new name, because the OFL does not let a Modified

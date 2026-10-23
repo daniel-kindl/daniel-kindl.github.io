@@ -3,6 +3,9 @@
 import { readFileSync } from 'node:fs';
 import { brotliDecompressSync } from 'node:zlib';
 
+// The fonts are files in this repository. A stream that expands past this size is not a font.
+const MAX_TABLE_BYTES = 8 * 1024 * 1024;
+
 // Table tags in the order of the WOFF2 known-tag index (spec section 5.1).
 const KNOWN_TAGS = (
   'cmap head hhea hmtx maxp name OS/2 post cvt_ fpgm glyf loca prep CFF_ VORG EBDT EBLC gasp ' +
@@ -13,10 +16,11 @@ const KNOWN_TAGS = (
   .split(' ')
   .map((tag) => tag.replace('_', ' '));
 
-function readBase128(buf, pos) {
+export function readBase128(buf, pos) {
   let value = 0;
   for (let i = 0; i < 5; i++) {
     const byte = buf[pos.at++];
+    if (i === 0 && byte === 0x80) throw new Error('UIntBase128 has a leading zero byte');
     value = value * 128 + (byte & 0x7f);
     if ((byte & 0x80) === 0) return value;
   }
@@ -47,7 +51,9 @@ function tableData(buf, wantedTag) {
     offset += length;
   }
   if (!found) throw new Error(`no ${wantedTag} table`);
-  const data = brotliDecompressSync(buf.subarray(pos.at, pos.at + compressedSize));
+  const data = brotliDecompressSync(buf.subarray(pos.at, pos.at + compressedSize), {
+    maxOutputLength: MAX_TABLE_BYTES,
+  });
   return data.subarray(found.offset, found.offset + found.length);
 }
 
