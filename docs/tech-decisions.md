@@ -593,6 +593,96 @@ exists. Earlier ADRs that mention OneDev stay as written.
 
 ---
 
+## 24. Cloudflare in front of GitHub Pages: headers, no CSP, rollback
+
+**Status:** Accepted, 2026-10-24 (adds to #13 and #16)
+
+**Context:** GitHub Pages hosts the site. The domain `danielkindl.dev` is on Cloudflare. The name
+servers and the apex records are Cloudflare's, and live responses carry `server: cloudflare`. No
+file, document, or earlier ADR said so. Four facts follow from this layer:
+
+- GitHub Pages cannot set response headers. On 2026-10-23 the live site sent no
+  `Strict-Transport-Security`, `Content-Security-Policy`, `X-Content-Type-Options`,
+  `Referrer-Policy`, or `Permissions-Policy` header. Cloudflare adds its own `nel` and
+  `report-to` headers for Network Error Logging, with the endpoint `a.nel.cloudflare.com`.
+- Cloudflare can change the live HTML. With Email Address Obfuscation on, it added an
+  `email-decode` script. It also rewrote the `mailto:` links in the footer and on the home page to
+  `/cdn-cgi/l/email-protection` links that need JavaScript. CI tests `dist/`, not the live HTML,
+  so it cannot see this. The address is public in `src/lib/siteConfig.ts`, so the rewrite
+  protects nothing.
+- Cloudflare Web Analytics runs on the live site. Cloudflare injects a script from
+  `static.cloudflareinsights.com` (with a `data-cf-beacon` attribute) at the edge. The page then
+  sends a POST to `/cdn-cgi/rum`. The script is not in `src/` or `dist/`. A check of `dist/` or of
+  the origin HTML does not show it. CI tests `dist/`, not the live HTML, so CI cannot see it.
+- A strong Content Security Policy does not fit this site. Astro's `security.csp` option does not
+  support `<ClientRouter />` or Shiki (Astro configuration reference, `security.csp`). The site
+  uses both (`src/layouts/Layout.astro`, `astro.config.mjs`). The built pages have inline scripts,
+  for example `ThemeScript.astro`, and Shiki writes inline styles.
+
+**Decision:**
+
+1. Cloudflare is part of the hosting. Its settings live in the Cloudflare dashboard, not in this
+   repository. These settings are the intended state:
+   - SSL/TLS mode: Full, as the permanent mode (Daniel, 2026-10-24). The GitHub Pages
+     certificate is stuck in the `bad_authz` state. It stayed in that state after the custom
+     domain was removed and added again, and it expires on 2026-10-29. There is no support ticket
+     to fix it. Full does not validate the origin certificate, so an expired certificate still
+     works (Cloudflare SSL/TLS docs, "Full"). Visitors get the Cloudflare edge certificate. On
+     2026-10-24 it was from Google Trust Services and valid to 2026-12-27.
+   - Enforce HTTPS in the GitHub Pages settings: off. It was on when checked on 2026-10-23 and off
+     when checked on 2026-10-24. GitHub turned it off when the custom domain was removed and added
+     again. It cannot come back while the Pages certificate is not valid. This changes ADR #13. In
+     Full mode, Cloudflare connects to GitHub Pages with the same scheme as the visitor request.
+     Always Use HTTPS sends visitors to HTTPS, so Cloudflare also uses HTTPS to GitHub Pages. Never
+     use Flexible: Cloudflare then uses plain HTTP to GitHub Pages. If Enforce HTTPS is on again,
+     Flexible also makes the site loop.
+   - Web Analytics: on, with automatic installation. Daniel chose to keep it on 2026-10-23. The
+     site has one third-party script, and it comes from Cloudflare.
+   - Email Address Obfuscation: off. The `mailto:` links work without JavaScript.
+   - Always Use HTTPS: on. Minimum TLS version: 1.2.
+   - `X-Content-Type-Options: nosniff`: on, through the No-Sniff option in the HSTS panel of the
+     dashboard, with HSTS itself off.
+   - One response-header rule for all paths of `danielkindl.dev`. It sets
+     `Referrer-Policy: strict-origin-when-cross-origin` and
+     `Permissions-Policy: camera=(), microphone=(), geolocation=()`.
+   - HSTS: off, by decision. The HSTS setting in the dashboard stays off, and no rule sends
+     `Strict-Transport-Security`. If a visitor reaches GitHub Pages directly, its certificate
+     is not valid. With HSTS, the visitor cannot pass that error. Always Use HTTPS still sends
+     HTTP requests to HTTPS.
+2. Add no Content Security Policy. A policy with `'unsafe-inline'` gives little protection. A
+   policy built on hashes breaks when Astro or Shiki changes its inline output. Both kinds of
+   policy also need `script-src` for `static.cloudflareinsights.com`. The POST to `/cdn-cgi/rum`
+   is same-origin, so `connect-src 'self'` covers it. The site has no server-side input and no
+   login. The only third-party script is the Cloudflare beacon. The attack surface is small. The
+   only input is the search box, and Pagefind runs in the browser. Add no frame-protection header
+   for the same reason. No page has an action that a frame can trick a visitor into.
+3. Rollback:
+   - Bad content or code: open a revert pull request. The required checks run. A squash merge
+     deploys the revert in about 40 seconds. A re-run of an old `Production Deployment` run is
+     another option, but it is not tested.
+   - Bad header rule or setting: disable the rule or restore the setting in the Cloudflare
+     dashboard. If the dashboard is down, no change is possible until it returns.
+   - Bad proxy state: turn off the Cloudflare feature that causes the problem, such as Web
+     Analytics. Do not set the DNS records to "DNS only", and do not pause Cloudflare. Visitors then
+     reach GitHub Pages directly. After 2026-10-29 they get a certificate error there. The site has
+     no path around Cloudflare until GitHub issues a valid Pages certificate.
+
+**Consequences:** Cloudflare changes are manual, and no pull request reviews them. This ADR is the
+record of the intended settings. Any change to a setting needs a new ADR entry. The difference
+between this record and the live site is the drift risk. A check of the live headers after deploy is
+possible, but it is not needed now. A check of the live site must use a browser-like request. A
+plain `curl` does not show the beacon. Full mode encrypts the connection from Cloudflare to GitHub
+Pages but does not authenticate GitHub Pages. A party on that path could show its own certificate.
+This risk is accepted for a static site with no login. The site depends on Cloudflare for HTTPS. A
+move away from Cloudflare needs a valid Pages certificate first. A return to Full (strict) or to
+HSTS needs a valid Pages certificate and a new ADR entry. The site has no CSP, and a scanner will
+report that. Add a CSP if the site gets server-side input, a login, or a third-party script other
+than the Cloudflare beacon. Add one also if Astro supports both `<ClientRouter />` and Shiki in
+`security.csp`. A header rule in Cloudflare is not part of `dist/`. A move to another host needs the
+same headers set there.
+
+---
+
 ## 25. Node range below 25 and required action pinning, updating ADR #1
 
 **Status:** Accepted, 2026-10-23 (updates the `engines.node` value in #1)
@@ -612,8 +702,6 @@ Actions permissions API.
 changes on purpose. A workflow that uses an action without a full commit SHA fails when it runs.
 Each new action needs a full commit SHA. The rest of ADR #1 (Node 24 LTS, `.nvmrc`, when to
 revisit) holds. ADR #1 stays as written.
-
-This file has no ADR #24 on `master` yet. ADR #24 is a draft in PR #111 and lands there.
 
 ---
 
