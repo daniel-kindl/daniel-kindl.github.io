@@ -603,7 +603,8 @@ file, document, or earlier ADR said so. Four facts follow from this layer:
 
 - GitHub Pages cannot set response headers. On 2026-10-23 the live site sent no
   `Strict-Transport-Security`, `Content-Security-Policy`, `X-Content-Type-Options`,
-  `Referrer-Policy`, or `Permissions-Policy` header.
+  `Referrer-Policy`, or `Permissions-Policy` header. Cloudflare adds its own `nel` and
+  `report-to` headers for Network Error Logging, with the endpoint `a.nel.cloudflare.com`.
 - Cloudflare can change the live HTML. With Email Address Obfuscation on, it added an
   `email-decode` script. It also rewrote the `mailto:` links in the footer and on the home page to
   `/cdn-cgi/l/email-protection` links that need JavaScript. CI tests `dist/`, not the live HTML,
@@ -627,8 +628,13 @@ file, document, or earlier ADR said so. Four facts follow from this layer:
      domain was removed and added again, and it expires on 2026-10-29. There is no support ticket
      to fix it. Full does not validate the origin certificate, so an expired certificate still
      works (Cloudflare SSL/TLS docs, "Full"). Visitors get the Cloudflare edge certificate. On
-     2026-10-24 it was from Google Trust Services and valid to 2026-12-27. Never use Flexible: it
-     loops when HTTPS is enforced.
+     2026-10-24 it was from Google Trust Services and valid to 2026-12-27.
+   - Enforce HTTPS in the GitHub Pages settings: off. It was on 2026-10-23 and off on 2026-10-24,
+     after the custom domain was removed and added again. This changes ADR #13. In Full mode,
+     Cloudflare uses the scheme of the visitor request to GitHub Pages. Always Use HTTPS sends
+     visitors to HTTPS, so Cloudflare also uses HTTPS to GitHub Pages. Never use Flexible:
+     Cloudflare then uses plain HTTP to GitHub Pages. If Enforce HTTPS is on again, Flexible
+     also makes the site loop.
    - Web Analytics: on, with automatic installation. Daniel chose to keep it on 2026-10-23. The
      site has one third-party script, and it comes from Cloudflare.
    - Email Address Obfuscation: off. The `mailto:` links work without JavaScript.
@@ -639,8 +645,9 @@ file, document, or earlier ADR said so. Four facts follow from this layer:
      `Referrer-Policy: strict-origin-when-cross-origin` and
      `Permissions-Policy: camera=(), microphone=(), geolocation=()`.
    - HSTS: off, by decision. The HSTS setting in the dashboard stays off, and no rule sends
-     `Strict-Transport-Security`. With HSTS, a visitor cannot pass a certificate error, and
-     the Pages certificate is not valid. Always Use HTTPS still sends HTTP requests to HTTPS.
+     `Strict-Transport-Security`. If a visitor reaches GitHub Pages directly, its certificate
+     is not valid. With HSTS, the visitor cannot pass that error. Always Use HTTPS still sends
+     HTTP requests to HTTPS.
 2. Add no Content Security Policy. A policy with `'unsafe-inline'` gives little protection. A
    policy built on hashes breaks when Astro or Shiki changes its inline output. Both kinds of
    policy also need `script-src` for `static.cloudflareinsights.com`. The POST to `/cdn-cgi/rum`
