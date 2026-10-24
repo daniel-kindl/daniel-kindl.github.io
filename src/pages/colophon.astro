@@ -6,7 +6,7 @@ import Tag from '@components/ui/Tag.astro';
 import { pageTitle } from '@lib/siteConfig';
 
 const stack = ['Astro 7', 'TypeScript (strict)', 'Tailwind CSS 4', 'Pagefind'];
-const fonts = ['Space Grotesk', 'JetBrains Mono', 'IBM Plex Sans'];
+const fonts = ['Space Grotesk', 'JetBrains Mono', 'Kindl Sans'];
 ---
 
 <Layout
@@ -109,6 +109,24 @@ const fonts = ['Space Grotesk', 'JetBrains Mono', 'IBM Plex Sans'];
       </ul>
     </section>
 
+    <section class="mb-16 max-w-3xl">
+      <div class="mb-8">
+        <Typography variant="eyebrow">Reuse</Typography>
+        <Typography variant="h2">License</Typography>
+      </div>
+      <ul class="list-disc space-y-3 pl-5 text-sm leading-relaxed text-(--text-muted)">
+        <li>The code of this site is under the MIT License.</li>
+        <li>
+          The blog posts are under the Creative Commons Attribution 4.0 license (CC BY 4.0). You can
+          share and adapt them if you give credit.
+        </li>
+        <li>
+          The CV text, the bio, the personal images, and the logo are not licensed for reuse. All
+          rights are reserved.
+        </li>
+      </ul>
+    </section>
+
     <section class="max-w-3xl">
       <div class="mb-8">
         <Typography variant="eyebrow">Typefaces</Typography>
@@ -120,7 +138,8 @@ const fonts = ['Space Grotesk', 'JetBrains Mono', 'IBM Plex Sans'];
         ))}
       </div>
       <p class="mt-4 text-sm leading-relaxed text-(--text-muted)">
-        All three are SIL OFL licensed and self-hosted as variable fonts, no Google Fonts CDN.
+        All three are SIL OFL licensed and self-hosted as variable fonts, no Google Fonts CDN. Kindl
+        Sans is a Modified Version of IBM Plex Sans 3.201 under the SIL OFL 1.1.
       </p>
     </section>
   </Container>

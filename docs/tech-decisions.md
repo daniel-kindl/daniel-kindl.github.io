@@ -595,7 +595,7 @@ exists. Earlier ADRs that mention OneDev stay as written.
 
 ## 24. Cloudflare in front of GitHub Pages: headers, no CSP, rollback
 
-**Status:** Accepted, 2026-10-23 (adds to #13 and #16)
+**Status:** Accepted, 2026-10-24 (adds to #13 and #16)
 
 **Context:** GitHub Pages hosts the site. The domain `danielkindl.dev` is on Cloudflare. The name
 servers and the apex records are Cloudflare's, and live responses carry `server: cloudflare`. No
@@ -622,11 +622,13 @@ file, document, or earlier ADR said so. Four facts follow from this layer:
 
 1. Cloudflare is part of the hosting. Its settings live in the Cloudflare dashboard, not in this
    repository. These settings are the intended state:
-   - SSL/TLS mode: Full. On 2026-10-23 the mode was changed from Full (strict) to Full as a
-     safety net. The GitHub Pages certificate stayed in the `bad_authz` state after the custom
-     domain was removed and added again. Return to Full (strict) after GitHub approves the
-     Pages certificate, and record that in a new ADR entry. Never use Flexible: it loops when
-     HTTPS is enforced.
+   - SSL/TLS mode: Full, as the permanent mode (Daniel, 2026-10-24). The GitHub Pages
+     certificate is stuck in the `bad_authz` state. It stayed in that state after the custom
+     domain was removed and added again, and it expires on 2026-10-29. There is no support ticket
+     to fix it. Full does not validate the origin certificate, so an expired certificate still
+     works (Cloudflare SSL/TLS docs, "Full"). Visitors get the Cloudflare edge certificate. On
+     2026-10-24 it was from Google Trust Services and valid to 2026-12-27. Never use Flexible: it
+     loops when HTTPS is enforced.
    - Web Analytics: on, with automatic installation. Daniel chose to keep it on 2026-10-23. The
      site has one third-party script, and it comes from Cloudflare.
    - Email Address Obfuscation: off. The `mailto:` links work without JavaScript.
@@ -634,15 +636,11 @@ file, document, or earlier ADR said so. Four facts follow from this layer:
    - `X-Content-Type-Options: nosniff`: on, through the No-Sniff option in the HSTS panel of the
      dashboard, with HSTS itself off.
    - One response-header rule for all paths of `danielkindl.dev`. It sets
-     `Referrer-Policy: strict-origin-when-cross-origin`,
-     `Permissions-Policy: camera=(), microphone=(), geolocation=()`, and
-     `Strict-Transport-Security`.
-   - The HSTS setting in the Cloudflare dashboard stays off. Only the header rule sends HSTS, so
-     one place holds the value.
-   - The HSTS rule starts with `max-age=86400`, and only after the certificate state is fixed.
-     After one week without a problem, raise it to `max-age=15552000` (6 months). This raise is a
-     planned step of this decision, so it needs no new ADR entry. Do not add `includeSubDomains`
-     or `preload`.
+     `Referrer-Policy: strict-origin-when-cross-origin` and
+     `Permissions-Policy: camera=(), microphone=(), geolocation=()`.
+   - HSTS: off, by decision. The HSTS setting in the dashboard stays off, and no rule sends
+     `Strict-Transport-Security`. With HSTS, a visitor cannot pass a certificate error, and
+     the Pages certificate is not valid. Always Use HTTPS still sends HTTP requests to HTTPS.
 2. Add no Content Security Policy. A policy with `'unsafe-inline'` gives little protection. A
    policy built on hashes breaks when Astro or Shiki changes its inline output. Both kinds of
    policy also need `script-src` for `static.cloudflareinsights.com`. The POST to `/cdn-cgi/rum`
@@ -655,21 +653,25 @@ file, document, or earlier ADR said so. Four facts follow from this layer:
      deploys the revert in about 40 seconds. A re-run of an old `Production Deployment` run is
      another option, but it is not tested.
    - Bad header rule or setting: disable the rule or restore the setting in the Cloudflare
-     dashboard. A browser keeps an HSTS value until its `max-age` ends. The staged `max-age` limits
-     that damage. If the dashboard is down, no header change is possible until it returns.
-   - Bad proxy state: set the DNS records to "DNS only" in Cloudflare. The site then serves from
-     GitHub Pages without the header rule. This step needs a valid Pages certificate, and it is
-     not tested. With HSTS on and a bad certificate, browsers show a hard error.
+     dashboard. If the dashboard is down, no change is possible until it returns.
+   - Bad proxy state: turn off the Cloudflare feature that causes the problem, such as Web
+     Analytics. Do not set the DNS records to "DNS only", and do not pause Cloudflare. Visitors then
+     reach GitHub Pages directly. After 2026-10-29 they get a certificate error there. The site has
+     no path around Cloudflare until GitHub issues a valid Pages certificate.
 
 **Consequences:** Cloudflare changes are manual, and no pull request reviews them. This ADR is the
-record of the intended settings. Any change other than the planned HSTS raise needs a new ADR
-entry. The difference between this record and the live site is the drift risk. A check of the live
-headers after deploy is possible, but it is not needed now. A check of the live site must use a
-browser-like request. A plain `curl` does not show the beacon. The site has no CSP, and a scanner
-will report that. Add a CSP if the site gets server-side input, a login, or a third-party script
-other than the Cloudflare beacon. Add one also if Astro supports both `<ClientRouter />` and
-Shiki in `security.csp`. A header rule in Cloudflare is not part of `dist/`. A move to another
-host needs the same headers set there.
+record of the intended settings. Any change to a setting needs a new ADR entry. The difference
+between this record and the live site is the drift risk. A check of the live headers after deploy is
+possible, but it is not needed now. A check of the live site must use a browser-like request. A
+plain `curl` does not show the beacon. Full mode encrypts the connection from Cloudflare to GitHub
+Pages but does not authenticate GitHub Pages. A party on that path could show its own certificate.
+This risk is accepted for a static site with no login. The site depends on Cloudflare for HTTPS. A
+move away from Cloudflare needs a valid Pages certificate first. A return to Full (strict) or to
+HSTS needs a valid Pages certificate and a new ADR entry. The site has no CSP, and a scanner will
+report that. Add a CSP if the site gets server-side input, a login, or a third-party script other
+than the Cloudflare beacon. Add one also if Astro supports both `<ClientRouter />` and Shiki in
+`security.csp`. A header rule in Cloudflare is not part of `dist/`. A move to another host needs the
+same headers set there.
 
 ---
 
@@ -692,3 +694,55 @@ Actions permissions API.
 changes on purpose. A workflow that uses an action without a full commit SHA fails when it runs.
 Each new action needs a full commit SHA. The rest of ADR #1 (Node 24 LTS, `.nvmrc`, when to
 revisit) holds. ADR #1 stays as written.
+
+---
+
+## 26. Body font renamed to Kindl Sans, updating ADR #8
+
+**Status:** Accepted, 2026-10-23 (updates the body font in #8)
+
+**Context:** ADR #8 chose IBM Plex Sans for body text. "Plex" is a Reserved Font Name under the
+SIL OFL 1.1. A Modified Version of the font cannot keep that name. The body font file is a
+subset, which is a Modified Version.
+
+**Decision:** The body font family is "Kindl Sans". The file is
+`public/fonts/KindlSans-VariableFont_wght.woff2`. Kindl Sans is a Modified Version of IBM Plex
+Sans 3.201 under the SIL OFL 1.1. The OFL texts for the three fonts are in
+`public/fonts/*-OFL.txt`.
+
+**Rejected options:** Ship the full upstream Plex file. It is larger than the
+subset and breaks the 96000 byte font budget (ADR #21). Ask IBM for permission to use the name
+"Plex" on a subset. A request has no date for an answer.
+
+**Consequences:** Docs use "Kindl Sans" for the body font and keep the credit to IBM Plex Sans.
+The choice of Space Grotesk, JetBrains Mono, and a Plex-based body font in ADR #8 holds. Two
+statements in ADR #8 are wrong now. "No attribution required" is wrong: the OFL requires each
+font file to keep its copyright notice and license text, and the repo keeps them in
+`public/fonts/*-OFL.txt`. "No licensing risk" is wrong: the Reserved Font Name "Plex" was a
+risk, and this ADR is the fix. ADR #8 stays as written and still names IBM Plex Sans.
+
+---
+
+## 27. Runtime moves to Node 26, updating ADR #1 and ADR #25
+
+**Status:** Accepted, 2026-10-24 (updates the Node version in #1 and the `engines.node` range in #25)
+
+**Context:** ADR #1 says to revisit the runtime when Node 24 moves to Maintenance LTS. Node 24 moved
+to Maintenance LTS on 2026-10-20, so that trigger is met. Node 24 has support until 2028-04-30. Node
+26 becomes Active LTS on 2026-10-28 and has support until 2029-04-30. Node 25 reached end of life on
+2026-06-01. These dates come from the `nodejs/Release` schedule. `./eng/verify.sh` passes on Node
+26.12.1 with the changes below.
+
+**Decision:** `package.json` and `package-lock.json` set `engines.node` to `">=26.3.0 <27"`. The
+lower bound is 26.3.0 because `astro-eslint-parser` 3.0.0 and `eslint-plugin-astro` 3.2.1 require
+Node 26.3.0 or later on the 26 line. `.nvmrc` is `26`. Each `node-version` in `ci.yml`,
+`deploy.yml`, and `lighthouse.yml` is `26`. `test/node-version.test.mjs` checks the range, the major
+version 26 in `.nvmrc` and in each workflow, and the root entry in `package-lock.json`.
+
+**Rejected options:** Stay on Node 24 until near its end of life on 2028-04-30. That is safe and
+needs no work now, but Node 26 has support for one more year. Use Node 25. It is end of life.
+
+**Consequences:** Contributors install Node 26.3.0 or a later 26.x release to work on the repo. A
+change to Node 27 in `.nvmrc` or in a workflow fails the test until the range and the `NODE_MAJOR`
+constant in the test change on purpose. The rest of ADR #25 (`sha_pinning_required`) holds. ADR #1
+and ADR #25 stay as written.

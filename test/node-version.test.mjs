@@ -20,31 +20,85 @@ function allows(range, major) {
   return parsed !== null && major >= parsed.min && major < parsed.below;
 }
 
-/** `node-version` values in workflow text, as major numbers. */
-function workflowMajors(text) {
-  return [...text.matchAll(/node-version:\s*['"]?(\d+)/g)].map((m) => Number(m[1]));
+const indentOf = (line) => line.length - line.trimStart().length;
+
+/** The value of a YAML scalar with its quotes and its trailing comment removed. */
+function scalar(value) {
+  const text = value.replace(/\s+#.*$/, '').trim();
+  const quoted = /^(['"])(.*)\1$/.exec(text);
+  return quoted ? quoted[2] : text;
 }
 
+/**
+ * Problems with the actions/setup-node steps in one workflow file. An empty list means each
+ * setup-node step sets `node-version` to exactly `major` (no file, alias, expression, range or
+ * minor version), and no `node-version` key is outside a setup-node step.
+ */
+function setupNodeProblems(text, major) {
+  const lines = text.split('\n');
+  const problems = [];
+  const inSetupStep = new Set();
+  lines.forEach((line, i) => {
+    if (!/^\s*(-\s+)?uses:\s*actions\/setup-node@/.test(line)) return;
+    // The step starts at the nearest `- ` line at a lower indent (or at this line).
+    let start = i;
+    while (start >= 0 && !/^\s*-\s/.test(lines[start])) start--;
+    const dash = indentOf(lines[start]);
+    let end = start + 1;
+    while (end < lines.length && (lines[end].trim() === '' || indentOf(lines[end]) > dash)) end++;
+    const versions = [];
+    for (let j = start; j < end; j++) {
+      inSetupStep.add(j);
+      const key = /^\s*(?:-\s+)?(node-version(?:-file)?):\s*(.*)$/.exec(lines[j]);
+      if (!key) continue;
+      if (key[1] === 'node-version-file') problems.push(`line ${j + 1}: node-version-file`);
+      else versions.push([j, scalar(key[2])]);
+    }
+    if (versions.length !== 1) {
+      problems.push(`line ${i + 1}: setup-node has ${versions.length} node-version keys`);
+    }
+    for (const [j, value] of versions) {
+      if (value !== String(major)) problems.push(`line ${j + 1}: node-version "${value}"`);
+    }
+  });
+  lines.forEach((line, i) => {
+    if (/^\s*(?:-\s+)?node-version(?:-file)?:/.test(line) && !inSetupStep.has(i)) {
+      problems.push(`line ${i + 1}: node-version outside a setup-node step`);
+    }
+  });
+  return problems;
+}
+
+// The supported Node major (ADR #27). Change it here and in all the files that the tests below read.
+const NODE_MAJOR = 26;
+// The lowest 26.x that all non-optional dependencies accept: astro-eslint-parser 3.0.0 and
+// eslint-plugin-astro 3.2.1 need >=26.3.0 on the 26 line.
+const NODE_MIN = `${NODE_MAJOR}.3.0`;
+const EXPECTED_RANGE = `>=${NODE_MIN} <${NODE_MAJOR + 1}`;
+
 const range = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).engines.node;
+const lockRange = JSON.parse(readFileSync(join(root, 'package-lock.json'), 'utf8')).packages['']
+  .engines?.node;
+
+test(`engines.node in package.json and package-lock.json is ${EXPECTED_RANGE}`, () => {
+  assert.equal(range, EXPECTED_RANGE, 'package.json engines.node');
+  assert.equal(lockRange, EXPECTED_RANGE, 'package-lock.json root engines.node');
+});
+
+test(`.nvmrc is ${NODE_MAJOR}`, () => {
+  assert.equal(readFileSync(join(root, '.nvmrc'), 'utf8').trim(), String(NODE_MAJOR));
+});
 
 test('engines.node has a lower and an upper bound', () => {
-  assert.ok(parseRange(range), `engines.node is "${range}", expected a range like ">=24.0.0 <25"`);
+  assert.ok(
+    parseRange(range),
+    `engines.node is "${range}", expected a range like "${EXPECTED_RANGE}"`,
+  );
 });
 
 test('.nvmrc is inside the engines.node range', () => {
   const major = Number.parseInt(readFileSync(join(root, '.nvmrc'), 'utf8'), 10);
   assert.ok(allows(range, major), `.nvmrc ${major} is outside "${range}"`);
-});
-
-test('every workflow node-version is inside the engines.node range', () => {
-  const dir = join(root, '.github', 'workflows');
-  const found = readdirSync(dir)
-    .filter((f) => /\.ya?ml$/.test(f))
-    .flatMap((f) => workflowMajors(readFileSync(join(dir, f), 'utf8')).map((major) => [f, major]));
-  assert.ok(found.length >= 1, 'no node-version found in the workflows');
-  for (const [file, major] of found) {
-    assert.ok(allows(range, major), `${file}: node-version ${major} is outside "${range}"`);
-  }
 });
 
 test('range checks accept a capped range and reject open or unknown ranges', () => {
@@ -56,7 +110,54 @@ test('range checks accept a capped range and reject open or unknown ranges', () 
   assert.equal(allows('^24.0.0', 24), false, 'unsupported form');
 });
 
-test('workflow majors read quoted and plain values', () => {
-  const text = 'with:\n  node-version: 24\n  node-version: "25.1"\n  cache: npm\n';
-  assert.deepEqual(workflowMajors(text), [24, 25]);
+const SETUP = 'uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0';
+const steps = (...lines) => `jobs:\n  build:\n    steps:\n${lines.join('\n')}\n`;
+const setupStep = (...withLines) =>
+  [
+    '      - name: Setup Node.js',
+    `        ${SETUP}`,
+    ...(withLines.length ? ['        with:', ...withLines.map((l) => `          ${l}`)] : []),
+  ].join('\n');
+
+test('setup-node check accepts node-version equal to the major, plain or quoted', () => {
+  const ok = steps(
+    '      - uses: actions/checkout@3d3c42e # v7.0.1',
+    setupStep('node-version: 26', 'cache: npm'),
+    `      - ${SETUP}\n        with:\n          node-version: '26' # comment`,
+    '      - run: npm ci',
+  );
+  assert.deepEqual(setupNodeProblems(ok, 26), []);
+  assert.deepEqual(setupNodeProblems('jobs:\n  a:\n    steps:\n      - run: echo\n', 26), []);
+});
+
+test('setup-node check rejects weak or wrong Node settings', () => {
+  const bad = {
+    'node-version-file': setupStep('node-version-file: .nvmrc'),
+    'lts alias': setupStep("node-version: 'lts/*'"),
+    expression: setupStep('node-version: ${{ matrix.node }}'),
+    latest: setupStep('node-version: latest'),
+    'major.minor': setupStep('node-version: 26.0'),
+    'full version': setupStep('node-version: 26.12.1'),
+    'range form': setupStep('node-version: 26.x'),
+    'other major': setupStep('node-version: 24'),
+    'no with': setupStep(),
+    'with but no node-version': setupStep('cache: npm'),
+    'two node-version keys': setupStep('node-version: 26', 'node-version: 24'),
+    'node-version outside a setup-node step': `${setupStep('node-version: 26')}\n      - uses: other/action@abc\n        with:\n          node-version: 26`,
+  };
+  const accepted = Object.entries(bad)
+    .filter(([, step]) => setupNodeProblems(steps(step), 26).length === 0)
+    .map(([name]) => name);
+  assert.deepEqual(accepted, [], 'these bad forms must fail');
+});
+
+test('every actions/setup-node step in every workflow sets node-version to the major', () => {
+  const dir = join(root, '.github', 'workflows');
+  let setupSteps = 0;
+  for (const file of readdirSync(dir).filter((f) => /\.ya?ml$/.test(f))) {
+    const text = readFileSync(join(dir, file), 'utf8');
+    setupSteps += text.match(/uses:\s*actions\/setup-node@/g)?.length ?? 0;
+    assert.deepEqual(setupNodeProblems(text, NODE_MAJOR), [], file);
+  }
+  assert.ok(setupSteps >= 1, 'no actions/setup-node step found in the workflows');
 });
