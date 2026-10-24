@@ -640,3 +640,25 @@ statements in ADR #8 are wrong now. "No attribution required" is wrong: the OFL 
 font file to keep its copyright notice and license text, and the repo keeps them in
 `public/fonts/*-OFL.txt`. "No licensing risk" is wrong: the Reserved Font Name "Plex" was a
 risk, and this ADR is the fix. ADR #8 stays as written and still names IBM Plex Sans.
+
+---
+
+## 27. Runtime moves to Node 26 LTS, updating ADR #1 and ADR #25
+
+**Status:** Accepted, 2026-10-24 (updates the Node version in #1 and the `engines.node` range in #25)
+
+**Context:** ADR #1 says to revisit the runtime when Node 24 moves to Maintenance LTS. Node 24
+moved to Maintenance LTS on 2026-10-20, so that trigger is met. Node 24 has support until
+2028-04-30. Node 26 becomes Active LTS on 2026-10-28 and has support until 2029-04-30. Node 25 is
+end of life since 2026-06-01. `./eng/verify.sh` passes on Node 26.12.1 with the changes below.
+
+**Decision:** `package.json` and `package-lock.json` set `engines.node` to `">=26.0.0 <27"`.
+`.nvmrc` is `26`. Each `node-version` in `ci.yml`, `deploy.yml`, and `lighthouse.yml` is `26`.
+`test/node-version.test.mjs` checks that they agree with the range.
+
+**Rejected options:** Stay on Node 24 until near its end of life on 2028-04-30. That is safe and
+needs no work now, but Node 26 has support for one more year. Use Node 25. It is end of life.
+
+**Consequences:** Contributors install Node 26 to work on the repo. A change to Node 27 in
+`.nvmrc` or in a workflow fails the test until the range changes on purpose. The rest of ADR #25
+(`sha_pinning_required`) holds. ADR #1 and ADR #25 stay as written.
