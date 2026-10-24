@@ -43,7 +43,10 @@ test(`.nvmrc is ${NODE_MAJOR}`, () => {
 });
 
 test('engines.node has a lower and an upper bound', () => {
-  assert.ok(parseRange(range), `engines.node is "${range}", expected a range like ">=24.0.0 <25"`);
+  assert.ok(
+    parseRange(range),
+    `engines.node is "${range}", expected a range like "${EXPECTED_RANGE}"`,
+  );
 });
 
 test('.nvmrc is inside the engines.node range', () => {
