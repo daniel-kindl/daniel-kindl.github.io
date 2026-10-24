@@ -20,19 +20,53 @@ function allows(range, major) {
   return parsed !== null && major >= parsed.min && major < parsed.below;
 }
 
-/** `node-version` values in workflow text, as major numbers. */
-function workflowMajors(text) {
-  return [...text.matchAll(/node-version:\s*['"]?(\d+)/g)].map((m) => Number(m[1]));
+const indentOf = (line) => line.length - line.trimStart().length;
+
+/** The value of a YAML scalar with its quotes and its trailing comment removed. */
+function scalar(value) {
+  const text = value.replace(/\s+#.*$/, '').trim();
+  const quoted = /^(['"])(.*)\1$/.exec(text);
+  return quoted ? quoted[2] : text;
 }
 
 /**
  * Problems with the actions/setup-node steps in one workflow file. An empty list means each
- * setup-node step sets `node-version` to exactly `major`.
+ * setup-node step sets `node-version` to exactly `major` (no file, alias, expression, range or
+ * minor version), and no `node-version` key is outside a setup-node step.
  */
 function setupNodeProblems(text, major) {
-  return workflowMajors(text)
-    .filter((found) => found !== major)
-    .map((found) => `node-version ${found}`);
+  const lines = text.split('\n');
+  const problems = [];
+  const inSetupStep = new Set();
+  lines.forEach((line, i) => {
+    if (!/^\s*(-\s+)?uses:\s*actions\/setup-node@/.test(line)) return;
+    // The step starts at the nearest `- ` line at a lower indent (or at this line).
+    let start = i;
+    while (start >= 0 && !/^\s*-\s/.test(lines[start])) start--;
+    const dash = indentOf(lines[start]);
+    let end = start + 1;
+    while (end < lines.length && (lines[end].trim() === '' || indentOf(lines[end]) > dash)) end++;
+    const versions = [];
+    for (let j = start; j < end; j++) {
+      inSetupStep.add(j);
+      const key = /^\s*(?:-\s+)?(node-version(?:-file)?):\s*(.*)$/.exec(lines[j]);
+      if (!key) continue;
+      if (key[1] === 'node-version-file') problems.push(`line ${j + 1}: node-version-file`);
+      else versions.push([j, scalar(key[2])]);
+    }
+    if (versions.length !== 1) {
+      problems.push(`line ${i + 1}: setup-node has ${versions.length} node-version keys`);
+    }
+    for (const [j, value] of versions) {
+      if (value !== String(major)) problems.push(`line ${j + 1}: node-version "${value}"`);
+    }
+  });
+  lines.forEach((line, i) => {
+    if (/^\s*(?:-\s+)?node-version(?:-file)?:/.test(line) && !inSetupStep.has(i)) {
+      problems.push(`line ${i + 1}: node-version outside a setup-node step`);
+    }
+  });
+  return problems;
 }
 
 // The supported Node major (ADR #27). Change it here and in all the files that the tests below read.
@@ -67,18 +101,6 @@ test('.nvmrc is inside the engines.node range', () => {
   assert.ok(allows(range, major), `.nvmrc ${major} is outside "${range}"`);
 });
 
-test('every workflow node-version is inside the engines.node range and is the supported major', () => {
-  const dir = join(root, '.github', 'workflows');
-  const found = readdirSync(dir)
-    .filter((f) => /\.ya?ml$/.test(f))
-    .flatMap((f) => workflowMajors(readFileSync(join(dir, f), 'utf8')).map((major) => [f, major]));
-  assert.ok(found.length >= 1, 'no node-version found in the workflows');
-  for (const [file, major] of found) {
-    assert.ok(allows(range, major), `${file}: node-version ${major} is outside "${range}"`);
-    assert.equal(major, NODE_MAJOR, `${file}: node-version ${major}, expected ${NODE_MAJOR}`);
-  }
-});
-
 test('range checks accept a capped range and reject open or unknown ranges', () => {
   assert.ok(allows('>=24.0.0 <25', 24));
   assert.ok(allows('>=24.0.0 <25.0.0', 24));
@@ -86,11 +108,6 @@ test('range checks accept a capped range and reject open or unknown ranges', () 
   assert.equal(allows('>=24.0.0 <25', 23), false);
   assert.equal(allows('>=24.0.0', 24), false, 'no upper bound');
   assert.equal(allows('^24.0.0', 24), false, 'unsupported form');
-});
-
-test('workflow majors read quoted and plain values', () => {
-  const text = 'with:\n  node-version: 24\n  node-version: "25.1"\n  cache: npm\n';
-  assert.deepEqual(workflowMajors(text), [24, 25]);
 });
 
 const SETUP = 'uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0';
