@@ -6,7 +6,7 @@
 [![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)](https://astro.build)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-[![Node](https://img.shields.io/badge/node-%3E%3D24%20%3C25-339933?logo=node.js&logoColor=white)](https://nodejs.org)
+[![Node](https://img.shields.io/badge/node-%3E%3D26.3.0%20%3C27-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 
 Production portfolio site at [danielkindl.dev](https://danielkindl.dev), built with Astro 7,
 TypeScript (strict), and Tailwind CSS 4. No island framework is installed. See ADR #15.
@@ -22,7 +22,7 @@ TypeScript (strict), and Tailwind CSS 4. No island framework is installed. See A
 
 ## Setup
 
-Requires Node.js 24. Node 25 and newer are not supported.
+Requires Node.js 26.3.0 or a later 26.x release. Node 27 and newer are not supported.
 
 ```
 npm install
