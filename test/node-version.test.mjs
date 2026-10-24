@@ -25,7 +25,22 @@ function workflowMajors(text) {
   return [...text.matchAll(/node-version:\s*['"]?(\d+)/g)].map((m) => Number(m[1]));
 }
 
+// The supported Node major (ADR #27). Change it here and in all the files that the tests below read.
+const NODE_MAJOR = 26;
+const EXPECTED_RANGE = `>=${NODE_MAJOR}.0.0 <${NODE_MAJOR + 1}`;
+
 const range = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).engines.node;
+const lockRange = JSON.parse(readFileSync(join(root, 'package-lock.json'), 'utf8')).packages['']
+  .engines?.node;
+
+test(`engines.node in package.json and package-lock.json is ${EXPECTED_RANGE}`, () => {
+  assert.equal(range, EXPECTED_RANGE, 'package.json engines.node');
+  assert.equal(lockRange, EXPECTED_RANGE, 'package-lock.json root engines.node');
+});
+
+test(`.nvmrc is ${NODE_MAJOR}`, () => {
+  assert.equal(readFileSync(join(root, '.nvmrc'), 'utf8').trim(), String(NODE_MAJOR));
+});
 
 test('engines.node has a lower and an upper bound', () => {
   assert.ok(parseRange(range), `engines.node is "${range}", expected a range like ">=24.0.0 <25"`);
@@ -36,7 +51,7 @@ test('.nvmrc is inside the engines.node range', () => {
   assert.ok(allows(range, major), `.nvmrc ${major} is outside "${range}"`);
 });
 
-test('every workflow node-version is inside the engines.node range', () => {
+test('every workflow node-version is inside the engines.node range and is the supported major', () => {
   const dir = join(root, '.github', 'workflows');
   const found = readdirSync(dir)
     .filter((f) => /\.ya?ml$/.test(f))
@@ -44,6 +59,7 @@ test('every workflow node-version is inside the engines.node range', () => {
   assert.ok(found.length >= 1, 'no node-version found in the workflows');
   for (const [file, major] of found) {
     assert.ok(allows(range, major), `${file}: node-version ${major} is outside "${range}"`);
+    assert.equal(major, NODE_MAJOR, `${file}: node-version ${major}, expected ${NODE_MAJOR}`);
   }
 });
 
