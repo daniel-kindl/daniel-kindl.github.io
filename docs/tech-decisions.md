@@ -629,12 +629,13 @@ file, document, or earlier ADR said so. Four facts follow from this layer:
      to fix it. Full does not validate the origin certificate, so an expired certificate still
      works (Cloudflare SSL/TLS docs, "Full"). Visitors get the Cloudflare edge certificate. On
      2026-10-24 it was from Google Trust Services and valid to 2026-12-27.
-   - Enforce HTTPS in the GitHub Pages settings: off. It was on 2026-10-23 and off on 2026-10-24,
-     after the custom domain was removed and added again. This changes ADR #13. In Full mode,
-     Cloudflare uses the scheme of the visitor request to GitHub Pages. Always Use HTTPS sends
-     visitors to HTTPS, so Cloudflare also uses HTTPS to GitHub Pages. Never use Flexible:
-     Cloudflare then uses plain HTTP to GitHub Pages. If Enforce HTTPS is on again, Flexible
-     also makes the site loop.
+   - Enforce HTTPS in the GitHub Pages settings: off. It was on when checked on 2026-10-23 and off
+     when checked on 2026-10-24. GitHub turned it off when the custom domain was removed and added
+     again. It cannot come back while the Pages certificate is not valid. This changes ADR #13. In
+     Full mode, Cloudflare connects to GitHub Pages with the same scheme as the visitor request.
+     Always Use HTTPS sends visitors to HTTPS, so Cloudflare also uses HTTPS to GitHub Pages. Never
+     use Flexible: Cloudflare then uses plain HTTP to GitHub Pages. If Enforce HTTPS is on again,
+     Flexible also makes the site loop.
    - Web Analytics: on, with automatic installation. Daniel chose to keep it on 2026-10-23. The
      site has one third-party script, and it comes from Cloudflare.
    - Email Address Obfuscation: off. The `mailto:` links work without JavaScript.
