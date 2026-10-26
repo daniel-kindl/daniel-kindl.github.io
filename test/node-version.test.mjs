@@ -207,6 +207,41 @@ test('setup-node check rejects a version under env and a step it cannot find', (
   assert.deepEqual(accepted, [], 'these bad forms must fail');
 });
 
+test('setup-node check accepts comment and blank lines between with and node-version', () => {
+  const ok = steps(
+    [
+      '      - name: Setup Node.js',
+      `        ${SETUP}`,
+      '        with: # inputs',
+      '        # The Node major is set in ADR #27.',
+      '',
+      '# A comment at column 0.',
+      '          node-version: 26',
+      '          cache: npm',
+    ].join('\n'),
+  );
+  assert.deepEqual(setupNodeProblems(ok, 26), []);
+});
+
+test('setup-node check rejects node-version under a nested or inline with', () => {
+  // A flow map or a block scalar on the with line is not read as a key. The check rejects it, as
+  // it rejects `with: { node-version: 24 }`, because a step that it cannot read must fail.
+  const bad = {
+    'with under env': [
+      setupStep(),
+      '        env:',
+      '          with:',
+      '            node-version: 26',
+    ],
+    'flow map with': [setupStep(), '        with: {node-version: 26}'],
+    'block scalar with': [setupStep(), '        with: |', '          node-version: 26'],
+  };
+  const accepted = Object.entries(bad)
+    .filter(([, lines]) => setupNodeProblems(steps(lines.join('\n')), 26).length === 0)
+    .map(([name]) => name);
+  assert.deepEqual(accepted, [], 'these bad forms must fail');
+});
+
 test('every actions/setup-node step in every workflow sets node-version to the major', () => {
   const dir = join(root, '.github', 'workflows');
   let setupSteps = 0;
