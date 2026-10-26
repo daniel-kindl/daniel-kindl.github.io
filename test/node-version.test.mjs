@@ -22,6 +22,9 @@ function allows(range, major) {
 
 const indentOf = (line) => line.length - line.trimStart().length;
 
+/** A blank line or a comment line. YAML ignores its indent. */
+const isBlankOrComment = (line) => /^\s*(#|$)/.test(line);
+
 /** The value of a YAML scalar with its quotes and its trailing comment removed. */
 function scalar(value) {
   const text = value.replace(/\s+#.*$/, '').trim();
@@ -29,33 +32,58 @@ function scalar(value) {
   return quoted ? quoted[2] : text;
 }
 
+/** The indent of the key on a line, after a leading `- ` if there is one. */
+const keyIndent = (line) => indentOf(line) + (/^\s*(-\s+)?/.exec(line)[1]?.length ?? 0);
+
+/** A `uses:` line for actions/setup-node. The value can be quoted, and the case can differ. */
+const SETUP_NODE_USES = /^\s*(?:-\s+)?uses:\s*['"]?actions\/setup-node@/i;
+
 /**
  * Problems with the actions/setup-node steps in one workflow file. An empty list means each
  * setup-node step sets `node-version` to exactly `major` (no file, alias, expression, range or
- * minor version), and no `node-version` key is outside a setup-node step.
+ * minor version) directly under the `with:` line of the step, and no `node-version` key is in
+ * another place.
  */
 function setupNodeProblems(text, major) {
   const lines = text.split('\n');
   const problems = [];
   const inSetupStep = new Set();
   lines.forEach((line, i) => {
-    if (!/^\s*(-\s+)?uses:\s*actions\/setup-node@/.test(line)) return;
+    if (!SETUP_NODE_USES.test(line)) return;
     // The step starts at the nearest `- ` line at a lower indent (or at this line).
     let start = i;
     while (start >= 0 && !/^\s*-\s/.test(lines[start])) start--;
     const dash = indentOf(lines[start]);
+    const stepKeys = keyIndent(lines[start]);
     let end = start + 1;
-    while (end < lines.length && (lines[end].trim() === '' || indentOf(lines[end]) > dash)) end++;
+    while (end < lines.length && (isBlankOrComment(lines[end]) || indentOf(lines[end]) > dash)) {
+      end++;
+    }
     const versions = [];
     for (let j = start; j < end; j++) {
       inSetupStep.add(j);
       const key = /^\s*(?:-\s+)?(node-version(?:-file)?):\s*(.*)$/.exec(lines[j]);
       if (!key) continue;
+      // The parent is the nearest line above with a lower key indent (not blank, not a comment).
+      let parent = j - 1;
+      while (
+        parent >= start &&
+        (isBlankOrComment(lines[parent]) || keyIndent(lines[parent]) >= keyIndent(lines[j]))
+      ) {
+        parent--;
+      }
+      const underWith =
+        parent >= start &&
+        keyIndent(lines[parent]) === stepKeys &&
+        /^\s*(?:-\s+)?with:\s*(#.*)?$/.test(lines[parent]);
       if (key[1] === 'node-version-file') problems.push(`line ${j + 1}: node-version-file`);
+      else if (!underWith) problems.push(`line ${j + 1}: node-version is not under with`);
       else versions.push([j, scalar(key[2])]);
     }
     if (versions.length !== 1) {
-      problems.push(`line ${i + 1}: setup-node has ${versions.length} node-version keys`);
+      problems.push(
+        `line ${i + 1}: setup-node has ${versions.length} node-version keys under with`,
+      );
     }
     for (const [j, value] of versions) {
       if (value !== String(major)) problems.push(`line ${j + 1}: node-version "${value}"`);
@@ -69,7 +97,8 @@ function setupNodeProblems(text, major) {
   return problems;
 }
 
-// The supported Node major (ADR #27). Change it here and in all the files that the tests below read.
+// The supported Node major (ADR #27). Change it here and in all the files that the tests below
+// read.
 const NODE_MAJOR = 26;
 // The lowest 26.x that all non-optional dependencies accept: astro-eslint-parser 3.0.0 and
 // eslint-plugin-astro 3.2.1 need >=26.3.0 on the 26 line.
@@ -112,12 +141,15 @@ test('range checks accept a capped range and reject open or unknown ranges', () 
 
 const SETUP = 'uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0';
 const steps = (...lines) => `jobs:\n  build:\n    steps:\n${lines.join('\n')}\n`;
-const setupStep = (...withLines) =>
+const PIN = '949feb2413d6458794dcd2491c4babbbce0c15c1';
+// A setup-node step with the given `uses:` line and, if there are lines, a `with:` block.
+const stepWith = (uses, ...withLines) =>
   [
     '      - name: Setup Node.js',
-    `        ${SETUP}`,
+    `        ${uses}`,
     ...(withLines.length ? ['        with:', ...withLines.map((l) => `          ${l}`)] : []),
   ].join('\n');
+const setupStep = (...withLines) => stepWith(SETUP, ...withLines);
 
 test('setup-node check accepts node-version equal to the major, plain or quoted', () => {
   const ok = steps(
@@ -143,10 +175,74 @@ test('setup-node check rejects weak or wrong Node settings', () => {
     'no with': setupStep(),
     'with but no node-version': setupStep('cache: npm'),
     'two node-version keys': setupStep('node-version: 26', 'node-version: 24'),
-    'node-version outside a setup-node step': `${setupStep('node-version: 26')}\n      - uses: other/action@abc\n        with:\n          node-version: 26`,
+    'node-version outside a setup-node step': [
+      setupStep('node-version: 26'),
+      '      - uses: other/action@abc',
+      '        with:',
+      '          node-version: 26',
+    ].join('\n'),
   };
   const accepted = Object.entries(bad)
     .filter(([, step]) => setupNodeProblems(steps(step), 26).length === 0)
+    .map(([name]) => name);
+  assert.deepEqual(accepted, [], 'these bad forms must fail');
+});
+
+test('setup-node check finds a quoted or other-case uses value', () => {
+  const forms = [
+    `uses: "actions/setup-node@${PIN}"`,
+    `uses: 'actions/setup-node@${PIN}'`,
+    `uses: Actions/Setup-Node@${PIN}`,
+  ];
+  for (const uses of forms) {
+    assert.deepEqual(setupNodeProblems(steps(stepWith(uses, 'node-version: 26')), 26), [], uses);
+  }
+});
+
+test('setup-node check rejects a version under env and a step it cannot find', () => {
+  const bad = {
+    'node-version under env, no with': `${setupStep()}\n        env:\n          node-version: 26`,
+    'double-quoted uses, no node-version': stepWith(`uses: "actions/setup-node@${PIN}"`),
+    'single-quoted uses, no node-version': stepWith(`uses: 'actions/setup-node@${PIN}'`),
+    'other-case uses, no node-version': stepWith(`uses: Actions/Setup-Node@${PIN}`),
+  };
+  const accepted = Object.entries(bad)
+    .filter(([, step]) => setupNodeProblems(steps(step), 26).length === 0)
+    .map(([name]) => name);
+  assert.deepEqual(accepted, [], 'these bad forms must fail');
+});
+
+test('setup-node check accepts comment and blank lines between with and node-version', () => {
+  const ok = steps(
+    [
+      '      - name: Setup Node.js',
+      `        ${SETUP}`,
+      '        with: # inputs',
+      '        # The Node major is set in ADR #27.',
+      '',
+      '# A comment at column 0.',
+      '          node-version: 26',
+      '          cache: npm',
+    ].join('\n'),
+  );
+  assert.deepEqual(setupNodeProblems(ok, 26), []);
+});
+
+test('setup-node check rejects node-version under a nested or inline with', () => {
+  // A flow map or a block scalar on the with line is not read as a key. The check rejects it, as
+  // it rejects `with: { node-version: 24 }`, because a step that it cannot read must fail.
+  const bad = {
+    'with under env': [
+      setupStep(),
+      '        env:',
+      '          with:',
+      '            node-version: 26',
+    ],
+    'flow map with': [setupStep(), '        with: {node-version: 26}'],
+    'block scalar with': [setupStep(), '        with: |', '          node-version: 26'],
+  };
+  const accepted = Object.entries(bad)
+    .filter(([, lines]) => setupNodeProblems(steps(lines.join('\n')), 26).length === 0)
     .map(([name]) => name);
   assert.deepEqual(accepted, [], 'these bad forms must fail');
 });
@@ -156,7 +252,7 @@ test('every actions/setup-node step in every workflow sets node-version to the m
   let setupSteps = 0;
   for (const file of readdirSync(dir).filter((f) => /\.ya?ml$/.test(f))) {
     const text = readFileSync(join(dir, file), 'utf8');
-    setupSteps += text.match(/uses:\s*actions\/setup-node@/g)?.length ?? 0;
+    setupSteps += text.split('\n').filter((line) => SETUP_NODE_USES.test(line)).length;
     assert.deepEqual(setupNodeProblems(text, NODE_MAJOR), [], file);
   }
   assert.ok(setupSteps >= 1, 'no actions/setup-node step found in the workflows');
