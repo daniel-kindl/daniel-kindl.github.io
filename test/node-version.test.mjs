@@ -112,12 +112,15 @@ test('range checks accept a capped range and reject open or unknown ranges', () 
 
 const SETUP = 'uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0';
 const steps = (...lines) => `jobs:\n  build:\n    steps:\n${lines.join('\n')}\n`;
-const setupStep = (...withLines) =>
+const PIN = '949feb2413d6458794dcd2491c4babbbce0c15c1';
+// A setup-node step with the given `uses:` line and, if there are lines, a `with:` block.
+const stepWith = (uses, ...withLines) =>
   [
     '      - name: Setup Node.js',
-    `        ${SETUP}`,
+    `        ${uses}`,
     ...(withLines.length ? ['        with:', ...withLines.map((l) => `          ${l}`)] : []),
   ].join('\n');
+const setupStep = (...withLines) => stepWith(SETUP, ...withLines);
 
 test('setup-node check accepts node-version equal to the major, plain or quoted', () => {
   const ok = steps(
@@ -144,6 +147,30 @@ test('setup-node check rejects weak or wrong Node settings', () => {
     'with but no node-version': setupStep('cache: npm'),
     'two node-version keys': setupStep('node-version: 26', 'node-version: 24'),
     'node-version outside a setup-node step': `${setupStep('node-version: 26')}\n      - uses: other/action@abc\n        with:\n          node-version: 26`,
+  };
+  const accepted = Object.entries(bad)
+    .filter(([, step]) => setupNodeProblems(steps(step), 26).length === 0)
+    .map(([name]) => name);
+  assert.deepEqual(accepted, [], 'these bad forms must fail');
+});
+
+test('setup-node check finds a quoted or other-case uses value', () => {
+  const forms = [
+    `uses: "actions/setup-node@${PIN}"`,
+    `uses: 'actions/setup-node@${PIN}'`,
+    `uses: Actions/Setup-Node@${PIN}`,
+  ];
+  for (const uses of forms) {
+    assert.deepEqual(setupNodeProblems(steps(stepWith(uses, 'node-version: 26')), 26), [], uses);
+  }
+});
+
+test('setup-node check rejects a version under env and a step it cannot find', () => {
+  const bad = {
+    'node-version under env, no with': `${setupStep()}\n        env:\n          node-version: 26`,
+    'double-quoted uses, no node-version': stepWith(`uses: "actions/setup-node@${PIN}"`),
+    'single-quoted uses, no node-version': stepWith(`uses: 'actions/setup-node@${PIN}'`),
+    'other-case uses, no node-version': stepWith(`uses: Actions/Setup-Node@${PIN}`),
   };
   const accepted = Object.entries(bad)
     .filter(([, step]) => setupNodeProblems(steps(step), 26).length === 0)
