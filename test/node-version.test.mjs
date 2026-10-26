@@ -29,21 +29,29 @@ function scalar(value) {
   return quoted ? quoted[2] : text;
 }
 
+/** The indent of the key on a line, after a leading `- ` if there is one. */
+const keyIndent = (line) => indentOf(line) + (/^\s*(-\s+)?/.exec(line)[1]?.length ?? 0);
+
+/** A `uses:` line for actions/setup-node. The value can be quoted, and the case can differ. */
+const SETUP_NODE_USES = /^\s*(?:-\s+)?uses:\s*['"]?actions\/setup-node@/i;
+
 /**
  * Problems with the actions/setup-node steps in one workflow file. An empty list means each
  * setup-node step sets `node-version` to exactly `major` (no file, alias, expression, range or
- * minor version), and no `node-version` key is outside a setup-node step.
+ * minor version) directly under the `with:` line of the step, and no `node-version` key is in
+ * another place.
  */
 function setupNodeProblems(text, major) {
   const lines = text.split('\n');
   const problems = [];
   const inSetupStep = new Set();
   lines.forEach((line, i) => {
-    if (!/^\s*(-\s+)?uses:\s*actions\/setup-node@/.test(line)) return;
+    if (!SETUP_NODE_USES.test(line)) return;
     // The step starts at the nearest `- ` line at a lower indent (or at this line).
     let start = i;
     while (start >= 0 && !/^\s*-\s/.test(lines[start])) start--;
     const dash = indentOf(lines[start]);
+    const stepKeys = keyIndent(lines[start]);
     let end = start + 1;
     while (end < lines.length && (lines[end].trim() === '' || indentOf(lines[end]) > dash)) end++;
     const versions = [];
@@ -51,11 +59,26 @@ function setupNodeProblems(text, major) {
       inSetupStep.add(j);
       const key = /^\s*(?:-\s+)?(node-version(?:-file)?):\s*(.*)$/.exec(lines[j]);
       if (!key) continue;
+      // The parent is the nearest line above with a lower key indent (not blank, not a comment).
+      let parent = j - 1;
+      while (
+        parent >= start &&
+        (/^\s*(#|$)/.test(lines[parent]) || keyIndent(lines[parent]) >= keyIndent(lines[j]))
+      ) {
+        parent--;
+      }
+      const underWith =
+        parent >= start &&
+        keyIndent(lines[parent]) === stepKeys &&
+        /^\s*(?:-\s+)?with:\s*(#.*)?$/.test(lines[parent]);
       if (key[1] === 'node-version-file') problems.push(`line ${j + 1}: node-version-file`);
+      else if (!underWith) problems.push(`line ${j + 1}: node-version is not under with`);
       else versions.push([j, scalar(key[2])]);
     }
     if (versions.length !== 1) {
-      problems.push(`line ${i + 1}: setup-node has ${versions.length} node-version keys`);
+      problems.push(
+        `line ${i + 1}: setup-node has ${versions.length} node-version keys under with`,
+      );
     }
     for (const [j, value] of versions) {
       if (value !== String(major)) problems.push(`line ${j + 1}: node-version "${value}"`);
@@ -183,7 +206,7 @@ test('every actions/setup-node step in every workflow sets node-version to the m
   let setupSteps = 0;
   for (const file of readdirSync(dir).filter((f) => /\.ya?ml$/.test(f))) {
     const text = readFileSync(join(dir, file), 'utf8');
-    setupSteps += text.match(/uses:\s*actions\/setup-node@/g)?.length ?? 0;
+    setupSteps += text.split('\n').filter((line) => SETUP_NODE_USES.test(line)).length;
     assert.deepEqual(setupNodeProblems(text, NODE_MAJOR), [], file);
   }
   assert.ok(setupSteps >= 1, 'no actions/setup-node step found in the workflows');
