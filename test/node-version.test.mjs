@@ -92,7 +92,8 @@ function setupNodeProblems(text, major) {
   return problems;
 }
 
-// The supported Node major (ADR #27). Change it here and in all the files that the tests below read.
+// The supported Node major (ADR #27). Change it here and in all the files that the tests below
+// read.
 const NODE_MAJOR = 26;
 // The lowest 26.x that all non-optional dependencies accept: astro-eslint-parser 3.0.0 and
 // eslint-plugin-astro 3.2.1 need >=26.3.0 on the 26 line.
@@ -169,7 +170,12 @@ test('setup-node check rejects weak or wrong Node settings', () => {
     'no with': setupStep(),
     'with but no node-version': setupStep('cache: npm'),
     'two node-version keys': setupStep('node-version: 26', 'node-version: 24'),
-    'node-version outside a setup-node step': `${setupStep('node-version: 26')}\n      - uses: other/action@abc\n        with:\n          node-version: 26`,
+    'node-version outside a setup-node step': [
+      setupStep('node-version: 26'),
+      '      - uses: other/action@abc',
+      '        with:',
+      '          node-version: 26',
+    ].join('\n'),
   };
   const accepted = Object.entries(bad)
     .filter(([, step]) => setupNodeProblems(steps(step), 26).length === 0)
