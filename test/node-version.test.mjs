@@ -22,6 +22,9 @@ function allows(range, major) {
 
 const indentOf = (line) => line.length - line.trimStart().length;
 
+/** A blank line or a comment line. YAML ignores its indent. */
+const isBlankOrComment = (line) => /^\s*(#|$)/.test(line);
+
 /** The value of a YAML scalar with its quotes and its trailing comment removed. */
 function scalar(value) {
   const text = value.replace(/\s+#.*$/, '').trim();
@@ -53,7 +56,9 @@ function setupNodeProblems(text, major) {
     const dash = indentOf(lines[start]);
     const stepKeys = keyIndent(lines[start]);
     let end = start + 1;
-    while (end < lines.length && (lines[end].trim() === '' || indentOf(lines[end]) > dash)) end++;
+    while (end < lines.length && (isBlankOrComment(lines[end]) || indentOf(lines[end]) > dash)) {
+      end++;
+    }
     const versions = [];
     for (let j = start; j < end; j++) {
       inSetupStep.add(j);
@@ -63,7 +68,7 @@ function setupNodeProblems(text, major) {
       let parent = j - 1;
       while (
         parent >= start &&
-        (/^\s*(#|$)/.test(lines[parent]) || keyIndent(lines[parent]) >= keyIndent(lines[j]))
+        (isBlankOrComment(lines[parent]) || keyIndent(lines[parent]) >= keyIndent(lines[j]))
       ) {
         parent--;
       }
