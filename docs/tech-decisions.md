@@ -767,13 +767,18 @@ had to merge each one. The protect-master ruleset requires those three checks, 0
 squash merges.
 
 **Decision:** Add `.github/workflows/dependabot-auto-merge.yml`, a copy of the dkstack template. It
-runs on `pull_request` to `master`. The job runs only when `dependabot[bot]` opened the pull
-request and sent the event. It reads the update type with `dependabot/fetch-metadata`, pinned to a
-full commit SHA. For a patch or a minor update it runs `gh pr merge --auto --squash`. A major
-update waits for Daniel. The job has `contents: write` and `pull-requests: write`, uses
-`GITHUB_TOKEN`, no checkout, and no secret. It turns on auto-merge only when the ruleset blocks the
-merge (merge state `BLOCKED` or `BEHIND`), so the required checks always gate the merge. It is not
-in the bypass list. The repo setting "Allow auto-merge" is on.
+runs on `pull_request` to `master` (opened, synchronize, reopened). The `auto-merge` job runs only
+when `dependabot[bot]` opened the pull request and sent the event. It reads the update types with
+`dependabot/fetch-metadata`, pinned to a full commit SHA. If each update is a patch or a minor
+update, it runs `gh pr merge --auto --squash --match-head-commit`. A major update, or a group with
+one update of another type, waits for Daniel. Before the merge call, the job reads
+`rules/branches/master` and stops with an error if no ruleset requires a status check, because
+without a required check `gh` merges at once. The `disable-auto-merge` job runs when another
+actor pushes to or reopens a Dependabot pull request, and turns auto-merge off. A push by a person
+or an agent with write access does not turn it off by itself. Both jobs have `contents: write` and
+`pull-requests: write`, use `GITHUB_TOKEN`, no checkout, and no secret. The workflow is not in the
+bypass list. The repo setting "Allow auto-merge" is on, and the allowed actions include the pinned
+`dependabot/fetch-metadata` SHA.
 
 **Consequences:** A merge by `GITHUB_TOKEN` does not start a `push` workflow. So `deploy.yml` and
 the `lighthouse` run on `master` do not run after a Dependabot merge. The update goes live with the

@@ -31,7 +31,8 @@ See ADR #18 and ADR #21 in `docs/tech-decisions.md`.
 
 Dependabot auto-merge (`.github/workflows/dependabot-auto-merge.yml`) turns on auto-merge for a
 Dependabot pull request with a patch or a minor update. The required checks still gate the merge. A
-major update waits for Daniel. The merge does not start `deploy.yml`. See ADR #28.
+major update waits for Daniel. A push by another actor turns auto-merge off. The merge does not
+start `deploy.yml`. See ADR #28.
 
 Start the dev server in the background:
 
