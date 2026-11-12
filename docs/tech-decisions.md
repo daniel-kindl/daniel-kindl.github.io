@@ -754,3 +754,29 @@ needs no work now, but Node 26 has support for one more year. Use Node 25. It is
 change to Node 27 in `.nvmrc` or in a workflow fails the test until the range and the `NODE_MAJOR`
 constant in the test change on purpose. The rest of ADR #25 (`sha_pinning_required`) holds. ADR #1
 and ADR #25 stay as written.
+
+---
+
+## 28. Dependabot auto-merge for patch and minor updates
+
+**Status:** Accepted, 2026-11-12 (Daniel's decision, relayed by Pip on 2026-11-12)
+
+**Context:** Dependabot opens weekly pull requests for npm and GitHub Actions. Most are patch or
+minor updates that pass `validate`, `lighthouse`, and `pr-title` with no change. A person still
+had to merge each one. The protect-master ruleset requires those three checks, 0 approvals, and
+squash merges.
+
+**Decision:** Add `.github/workflows/dependabot-auto-merge.yml`, a copy of the dkstack template. It
+runs on `pull_request` to `master`. The job runs only when `dependabot[bot]` opened the pull
+request and sent the event. It reads the update type with `dependabot/fetch-metadata`, pinned to a
+full commit SHA. For a patch or a minor update it runs `gh pr merge --auto --squash`. A major
+update waits for Daniel. The job has `contents: write` and `pull-requests: write`, uses
+`GITHUB_TOKEN`, no checkout, and no secret. It turns on auto-merge only when the ruleset blocks the
+merge (merge state `BLOCKED` or `BEHIND`), so the required checks always gate the merge. It is not
+in the bypass list. The repo setting "Allow auto-merge" is on.
+
+**Consequences:** A merge by `GITHUB_TOKEN` does not start a `push` workflow. So `deploy.yml` and
+the `lighthouse` run on `master` do not run after a Dependabot merge. The update goes live with the
+next merge by a person, or when Daniel runs `Production Deployment` by hand. This keeps the rule
+that only Daniel starts a production deploy. Dependabot titles start with `chore: bump`, so
+`pr-title` accepts them. `pr-title` has no length limit, so a long title does not block the merge.
