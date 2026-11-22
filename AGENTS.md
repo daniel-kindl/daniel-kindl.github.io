@@ -1,14 +1,66 @@
 # AGENTS.md
 
+Read and follow the guidelines in dkstack.
+
+> Read and follow https://raw.githubusercontent.com/daniel-kindl/dkstack/v1/AGENTS.md
+
+Start with the triage skill in that repository. It maps tasks to the relevant sections and skills.
+
+dkstack owns all other rules. Record project exceptions and project facts below.
+
+## Exceptions
+
+A project can differ from a dkstack rule only through an exception here. See
+[Precedence](https://raw.githubusercontent.com/daniel-kindl/dkstack/v1/AGENTS.md#precedence).
+Add one entry for each exception:
+
+- dkstack rule: <the dkstack page and the rule>
+- Project rule: <what this project does in place of it>
+- Reason: <why this project needs the exception>
+
+### Default branch
+
+- dkstack rule: all pages, the default branch is `main`.
+- Project rule: the default branch is `master`. Read each dkstack rule about `main` as a rule
+  about `master`.
+- Reason: GitHub Pages and the workflows of this repository use `master`.
+
+### Commit subjects
+
+- dkstack rule: version-control/index.md, the allowed types, and extra detail in the body when
+  needed.
+- Project rule: the types also include `content:` for a change under `src/content/`. A commit has
+  one subject line and no body or trailer. See Commit subjects under Project facts. The limit of
+  50 characters still applies.
+- Reason: content changes are most of the history of this site. ADR #17 and ADR #22 in
+  `docs/tech-decisions.md` record the format.
+
+### Decision records
+
+- dkstack rule: architecture/adrs.md, one file for each ADR in `docs/adr/NNNN-short-title.md`, with
+  `Status:` and `Affects:` lines, only when all three criteria are true.
+- Project rule: append a dated entry to `docs/tech-decisions.md` when one or more of the
+  properties in [Documents](#documents) is true.
+- Reason: the code and the docs refer to the entries by number, for example ADR #18.
+
+### Issues
+
+- dkstack rule: workflow/review-and-merge.md and workflow/issues.md, implement each change from an
+  issue with acceptance criteria.
+- Project rule: a trivial content fix can skip the issue when the person who asked says so.
+- Reason: a typo fix in a post does not need an issue.
+
+## Project facts
+
 This file is the instruction source for agents that work in this repository. `CLAUDE.md` imports
 this file.
 
-## Project
+### Project
 
 Daniel Kindl's portfolio site uses Astro 7, TypeScript (strict), and Tailwind CSS 4. No island
 framework is installed. The build output is static. GitHub Pages serves the site.
 
-## Commands
+### Commands
 
 Run `./eng/verify.sh` before you open a pull request. It is the one local and CI entry point. It
 runs `npm ci` (in CI, or when `node_modules` is missing), the linter, the format check, the type
@@ -45,7 +97,7 @@ anchors, the head metadata of every page (title, description, canonical, one `h1
 on 404), RSS and sitemap URLs, and that no `draft: true` post ships. They need a fresh build. The
 directory-sync tool named in the project content is a separate C# repository.
 
-## Agent workflow
+### Agent workflow
 
 This site keeps one long-lived branch, `master`. There is no `dev` branch and no SemVer.
 
@@ -59,9 +111,9 @@ This site keeps one long-lived branch, `master`. There is no `dev` branch and no
    what changed, and the verify output.
 5. Sentinel reviews the pull request. Fix review items on the same branch with new commits. Do not
    force-push a branch under review. Merge `master` into the branch to resolve conflicts.
-6. A human or the coordinating agent merges after the required checks pass. Agents never push to
-   `master` and never merge their own pull requests. The protect-master ruleset enforces pull
-   requests and squash merges.
+6. Only the owner merges, after the review passes and the required checks pass. A merge to
+   `master` starts the production deploy. Agents never push to `master` and never merge a pull
+   request. The protect-master ruleset enforces pull requests and squash merges.
 
 The `protect-master` ruleset lets the repository admin role bypass it, and it needs 0 approvals. So
 the gate relies on a convention: agents never push to `master`.
@@ -70,7 +122,7 @@ Do not weaken a gate (lint rules, `astro check` severity, Lighthouse budgets, re
 get a pull request green. Propose the change in the pull request and record a durable change as an
 ADR.
 
-## Rollback
+### Rollback
 
 - Open a revert pull request. The required checks run. The squash merge to `master` deploys the
   revert.
@@ -78,7 +130,7 @@ ADR.
   Actions tab. This path is not tested.
 - Deploy has no smoke check after it. Open the live site to confirm the rollback.
 
-## Commit subjects
+### Commit subjects
 
 Use one line: `type: short imperative description`. You may add `(#issueNumber)` at the end. Do not
 add a body or a trailer. Use `content:` for a change under `src/content/`. Use `feat:` or `fix:`
@@ -86,7 +138,7 @@ for a change to the site. No Git hook rejects a subject. The `pr-title` check re
 title that does not match, and the squash merge uses that title. See ADR #17 and ADR #22 in
 `docs/tech-decisions.md`.
 
-## Documents
+### Documents
 
 Read `docs/content.md` before you add or edit a project or a writing entry. Read `docs/design.md`
 before you change color, type, layout, or figures.
@@ -110,7 +162,7 @@ These changes do not get an entry:
 - a formatting choice
 - an implementation detail that the code already shows
 
-## Architecture
+### Architecture
 
 Two Zod collections live in `src/content.config.ts`. Files live in
 `src/content/{projects,writing}/*.{md,mdx}`. Every entry is `.mdx`.
@@ -162,7 +214,7 @@ The default share image is `/assets/meta/og-default.png`.
 Icons and the share image are committed files under `public/`. Keep them as static files. `og:title`
 and `og:description` already change per page. See ADR #19 in `docs/tech-decisions.md`.
 
-## Copy
+### Copy
 
 Visitor-facing copy follows the Voice section in `docs/content.md`. That includes pages outside
 the content collections.
