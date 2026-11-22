@@ -150,10 +150,19 @@ const readout = [
           <div>
             <dt class="mb-1 font-mono text-xs text-(--text-muted) uppercase">On the side</dt>
             <dd>
-              <Typography variant="body">{focus.sideIntro}</Typography>
-              <ul class="mt-2 list-disc space-y-1 pl-5 text-(--text-primary)">
+              <ul class="list-disc space-y-1 pl-5 text-(--text-primary)">
                 {focus.side.map((item) => (
-                  <li>{item}</li>
+                  <li>
+                    {item.text}
+                    {item.link && (
+                      <>
+                        {' '}
+                        <ExternalLink href={item.link.href} variant="link">
+                          {item.link.label}
+                        </ExternalLink>
+                      </>
+                    )}
+                  </li>
                 ))}
               </ul>
               <Typography variant="body" class="mt-3 text-(--text-muted)">

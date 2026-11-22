@@ -93,13 +93,13 @@ export const technicalProfile = {
     work: 'I’m responsible for the complete frontend, UI and UX, of the new generation of industrial test software at SPS software.',
     exploring:
       'A software factory: infrastructure where AI agents do the work on their own, inside strict guardrails and a verification engine. A person steps in only when something blocks the work, or when a change would be hard to revert.',
-    sideIntro: 'I build games and tools that are not public yet:',
     side: [
-      'a roguelike tower-defence game',
-      'a game about running a software startup, in C# with no game engine',
-      'a platform for PC game discovery and price comparison',
-      'an offline editor for plain text, Markdown and Textile',
-    ],
+      { text: 'A roguelike tower-defence game, not public yet' },
+      {
+        text: 'A YouTube channel about .NET:',
+        link: { label: '@danielkindldev', href: 'https://www.youtube.com/@danielkindldev' },
+      },
+    ] as { text: string; link?: EvidenceLink }[],
   },
   employer: {
     name: 'SPS software s.r.o.',
