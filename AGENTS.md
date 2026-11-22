@@ -1,22 +1,10 @@
 # AGENTS.md
 
-Read and follow the guidelines in dkstack.
-
 > Read and follow https://raw.githubusercontent.com/daniel-kindl/dkstack/v1/AGENTS.md
 
-Start with the triage skill in that repository. It maps tasks to the relevant sections and skills.
-
-dkstack owns all other rules. Record project exceptions and project facts below.
+dkstack owns all rules. This file has only the project exceptions and the project facts.
 
 ## Exceptions
-
-A project can differ from a dkstack rule only through an exception here. See
-[Precedence](https://raw.githubusercontent.com/daniel-kindl/dkstack/v1/AGENTS.md#precedence).
-Add one entry for each exception:
-
-- dkstack rule: <the dkstack page and the rule>
-- Project rule: <what this project does in place of it>
-- Reason: <why this project needs the exception>
 
 ### Default branch
 
@@ -30,191 +18,62 @@ Add one entry for each exception:
 - dkstack rule: version-control/index.md, the allowed types, and extra detail in the body when
   needed.
 - Project rule: the types also include `content:` for a change under `src/content/`. A commit has
-  one subject line and no body or trailer. See Commit subjects under Project facts. The limit of
-  50 characters still applies.
-- Reason: content changes are most of the history of this site. ADR #17 and ADR #22 in
-  `docs/tech-decisions.md` record the format.
+  one subject line of 50 characters or fewer, with an optional `(#issue)`. It has no body and no
+  trailer.
+- Reason: content changes are most of the history of this site. See ADR #17 and ADR #22.
 
 ### Decision records
 
-- dkstack rule: architecture/adrs.md, one file for each ADR in `docs/adr/NNNN-short-title.md`, with
-  `Status:` and `Affects:` lines, only when all three criteria are true.
-- Project rule: append a dated entry to `docs/tech-decisions.md` when one or more of the
-  properties in [Documents](#documents) is true.
+- dkstack rule: architecture/adrs.md, one file for each ADR in `docs/adr/`.
+- Project rule: append a dated entry to `docs/tech-decisions.md`. Do not change an existing entry.
 - Reason: the code and the docs refer to the entries by number, for example ADR #18.
 
 ### Issues
 
-- dkstack rule: workflow/review-and-merge.md and workflow/issues.md, implement each change from an
-  issue with acceptance criteria.
+- dkstack rule: workflow/issues.md, implement each change from an issue.
 - Project rule: a trivial content fix can skip the issue when the person who asked says so.
 - Reason: a typo fix in a post does not need an issue.
 
 ## Project facts
 
-This file is the instruction source for agents that work in this repository. `CLAUDE.md` imports
-this file.
+### Stack
 
-### Project
-
-Daniel Kindl's portfolio site uses Astro 7, TypeScript (strict), and Tailwind CSS 4. No island
-framework is installed. The build output is static. GitHub Pages serves the site.
+Astro 7, TypeScript (strict) and Tailwind CSS 4. The build output is static. GitHub Pages serves
+it. No island framework is installed. For an interactive component, run `npx astro add svelte` and
+use Svelte 5 runes with an explicit `client:*` directive. The Lighthouse script budget is 30 KB.
 
 ### Commands
 
-Run `./eng/verify.sh` before you open a pull request. It is the one local and CI entry point. It
-runs `npm ci` (in CI, or when `node_modules` is missing), the linter, the format check, the type
-check, the tests, and the production build. A lint warning, an `astro check` warning or hint, or an
-Astro build warning fails it. `npm run check` still runs the four source checks without the build.
+- `./eng/verify.sh` is the one gate, local and in CI. Run it before you open a pull request. A
+  lint warning, an `astro check` hint or an Astro build warning fails it.
+- `npm run check` runs the source checks without the build.
+- `npm test` runs `src/lib/*.test.ts`. The tests in `test/*.test.mjs` check `dist/` and need a
+  fresh build. `./eng/verify.sh` runs both.
+- `astro dev --background` starts the dev server. Use `astro dev stop`, `status` and `logs`.
 
-Pull-request CI (`.github/workflows/ci.yml`) runs `./eng/verify.sh`. That run is the merge gate.
+### Workflow
 
-The repo setting `sha_pinning_required` is on. A workflow that uses an action without a full
-commit SHA fails. Pin each new action to a full commit SHA and write the version in a comment.
-Dependabot updates the pins. See ADR #25 in `docs/tech-decisions.md`.
+- Branch from `master` as `type/<issue>-slug`, for example `content/149-update-projects`.
+- Fill in `.github/pull_request_template.md`. The pull request title is the squash commit subject.
+- Sentinel reviews each pull request. The required checks are `validate`, `lighthouse` and `pr-title`.
+- A merge to `master` deploys to production. Rollback: see ADR #24.
+- The repo setting `sha_pinning_required` is on. Pin each action to a full commit SHA, with the
+  version in a comment. See ADR #25.
 
-Deploy (`.github/workflows/deploy.yml`) runs on a push to `master`, or on `workflow_dispatch`. It
-runs `./eng/verify.sh`, then publishes `dist/` to GitHub Pages. See ADR #20.
+### Code
 
-Lighthouse (`.github/workflows/lighthouse.yml`) runs on a pull request to `master`, on a push to
-`master`, and on `workflow_dispatch`. It measures the five URLs in `lighthouserc.json` once. The
-`lighthouse` check is required on a pull request. A failure on `master` does not block the deploy.
-See ADR #18 and ADR #21 in `docs/tech-decisions.md`.
-
-Start the dev server in the background:
-
-```
-astro dev --background
-```
-
-Stop it with `astro dev stop`. Read status with `astro dev status`. Read logs with
-`astro dev logs`.
-
-`npm test` runs Node's test runner on `src/lib/*.test.ts`. The tests cover pure helpers that do
-not import `astro:content` values. `src/lib/content.ts` is out of scope. `./eng/verify.sh` also runs
-`node --test "test/*.test.mjs"` after the build. Those tests check `dist/`: internal links and
-anchors, the head metadata of every page (title, description, canonical, one `h1`, `noindex` only
-on 404), RSS and sitemap URLs, and that no `draft: true` post ships. They need a fresh build. The
-directory-sync tool named in the project content is a separate C# repository.
-
-### Agent workflow
-
-This site keeps one long-lived branch, `master`. There is no `dev` branch and no SemVer.
-
-1. Start from an issue. Read the issue and its acceptance criteria. A trivial content fix may skip
-   the issue when the person who asked says so.
-2. Branch from `master` as `type/<issue>-slug` (for example `chore/86-verify-script`). Use the
-   commit-subject types below.
-3. Run `./eng/verify.sh`. Mark anything you could not run as NOT RUN.
-4. Open a pull request against `master`. Use a Conventional Commits title (the `pr-title` check
-   enforces it; the squash commit uses it). Fill in `.github/pull_request_template.md`: `Closes #n`,
-   what changed, and the verify output.
-5. Sentinel reviews the pull request. Fix review items on the same branch with new commits. Do not
-   force-push a branch under review. Merge `master` into the branch to resolve conflicts.
-6. Only the owner merges, after the review passes and the required checks pass. A merge to
-   `master` starts the production deploy. Agents never push to `master` and never merge a pull
-   request. The protect-master ruleset enforces pull requests and squash merges.
-
-The `protect-master` ruleset lets the repository admin role bypass it, and it needs 0 approvals. So
-the gate relies on a convention: agents never push to `master`.
-
-Do not weaken a gate (lint rules, `astro check` severity, Lighthouse budgets, required checks) to
-get a pull request green. Propose the change in the pull request and record a durable change as an
-ADR.
-
-### Rollback
-
-- Open a revert pull request. The required checks run. The squash merge to `master` deploys the
-  revert.
-- Or re-run the last good `Production Deployment` run (`.github/workflows/deploy.yml`) in the
-  Actions tab. This path is not tested.
-- Deploy has no smoke check after it. Open the live site to confirm the rollback.
-
-### Commit subjects
-
-Use one line: `type: short imperative description`. You may add `(#issueNumber)` at the end. Do not
-add a body or a trailer. Use `content:` for a change under `src/content/`. Use `feat:` or `fix:`
-for a change to the site. No Git hook rejects a subject. The `pr-title` check rejects a pull-request
-title that does not match, and the squash merge uses that title. See ADR #17 and ADR #22 in
-`docs/tech-decisions.md`.
+- Theme colors are CSS variables in `src/styles/global.css`, under `:root` and
+  `:root[data-theme='dark']`. Use them through Tailwind arbitrary values, for example
+  `bg-(--bg-primary)`. Do not hard-code a theme color.
+- Prefer the path aliases in `tsconfig.json`, for example `@components/*`.
+- The collection schemas are in `src/content.config.ts`. A `draft: true` post is not in the
+  production build or RSS. `npm run dev` still shows it.
 
 ### Documents
 
-Read `docs/content.md` before you add or edit a project or a writing entry. Read `docs/design.md`
-before you change color, type, layout, or figures.
-
-Append an entry to `docs/tech-decisions.md` only for a durable decision. A durable decision has
-one or more of these properties:
-
-- The choice is architectural.
-- The choice is a tooling or platform choice with a real trade-off.
-- The choice is costly to reverse.
-- A later reader is likely to question the choice.
-- A future contributor needs the reason.
-
-Leave existing entries unchanged. When a decision changes, append a new dated entry.
-
-These changes do not get an entry:
-
-- a routine refactor
-- a content change
-- a dependency bump
-- a formatting choice
-- an implementation detail that the code already shows
-
-### Architecture
-
-Two Zod collections live in `src/content.config.ts`. Files live in
-`src/content/{projects,writing}/*.{md,mdx}`. Every entry is `.mdx`.
-
-`projects` fields: title, summary, role, stack, links (`production`, `repository`, `release`),
-status (`development | finished | maintaining | archived`), dates (`start`, `end`), and `weight`.
-`release` renders a third "View Release" button when the URL is present. A higher `weight` sorts
-first on the homepage.
-
-`writing` fields: title, summary, date, tags, and draft. A draft post is absent from the production
-build and from RSS. `npm run dev` still renders it (`import.meta.env.DEV`).
-
-These routes use `getStaticPaths()` and `getCollection()`:
-
-- `src/pages/projects/[id].astro`
-- `src/pages/writing/[id].astro`
-- `src/pages/writing/tags/[tag].astro`
-
-Tag pages come from each post's `tags`, through `src/lib/slug.ts`. There is no tags collection.
-`src/pages/rss.xml.ts` builds the feed with `@astrojs/rss`.
-`src/pages/writing/[id].astro` passes `article` to `Layout`. That sets `og:type` to `article` and
-adds `article:published_time`. The page also adds a `BlogPosting` JSON-LD block through the `head`
-slot, built by `src/lib/jsonLd.ts`. Only posts get these. `test/post-metadata.test.mjs` checks them
-in `dist/`.
-
-Path aliases in `tsconfig.json`: `@components/*`, `@layouts/*`, `@lib/*`, `@styles/*`,
-`@content/*`, `@assets/*`. Prefer an alias in new code.
-
-UI primitives live in `src/components/ui/`. Portfolio composites live in
-`src/components/portfolio/`. Content components live in `src/components/content/` (`Figure`,
-`Swatch`). A figure is evidence. Read the Media & Figures section in `docs/design.md` before you
-add one.
-
-The theme uses a `data-theme` attribute. `ThemeScript.astro` and the script in `Header.astro` read
-and write `document.documentElement.dataset.theme` and `localStorage.theme`. CSS variables live in
-`src/styles/global.css` under `:root` and `:root[data-theme='dark']`. Use Tailwind arbitrary values
-such as `bg-(--bg-primary)` and `text-(--text-primary)`. Keep theme colors on those variables.
-
-No island framework is installed. To add an interactive component, run `npx astro add svelte`, then
-write the component with Svelte 5 runes (`$state`). Hydrate only with an explicit `client:*`
-directive. The Lighthouse script budget is 30 KB.
-
-`src/layouts/Layout.astro` is the page shell. Pass `title`. `description`, `ogImage`,
-`canonicalPath` and `noindex` are optional. Only the 404 page sets `canonicalPath` and `noindex`.
-The default share image is `/assets/meta/og-default.png`.
-
-`src/data/cv.ts` exports `technicalProfile`. Only `src/pages/about.astro` reads it.
-
-Icons and the share image are committed files under `public/`. Keep them as static files. `og:title`
-and `og:description` already change per page. See ADR #19 in `docs/tech-decisions.md`.
-
-### Copy
-
-Visitor-facing copy follows the Voice section in `docs/content.md`. That includes pages outside
-the content collections.
+- Read `docs/content.md` before you add or change a project or a post.
+- Read `docs/design.md` before you change color, type, layout or figures.
+- Visitor-facing copy follows the Voice section in `docs/content.md`, on every page.
+- Add an entry to `docs/tech-decisions.md` only for a durable decision: an architectural choice, a
+  tooling choice with a real trade-off, a choice that is costly to reverse, or a choice that a later
+  reader will question. A content change, a refactor or a dependency bump gets no entry.
