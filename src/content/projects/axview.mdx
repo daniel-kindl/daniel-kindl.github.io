@@ -1,0 +1,86 @@
+---
+title: 'AxView'
+summary: 'Live preview of one Avalonia AXAML file on the runtime and Avalonia version of your own app, with a control gallery and a PNG snapshot mode for scripts and CI.'
+role: 'Solo Developer'
+stack: ['C#', '.NET 10', 'Avalonia', 'xUnit', 'GitHub Actions']
+links:
+  repository: 'https://github.com/daniel-kindl/axview'
+status: 'development'
+dates:
+  start: 2026-10-01
+  end: null
+weight: 40
+---
+
+## Context
+
+AxView shows a live preview of one AXAML file from any Avalonia project, and loads it again each time
+you save the file. The preview runs on the runtime and the Avalonia version of your app, Avalonia 11
+or 12, so what you see uses the same assemblies that the app ships with.
+
+A change to a C# file of the project starts a build, then the preview starts again. A change to
+`App.axaml` or to a `StyleInclude` or `ResourceInclude` file updates the preview. A broken file shows
+an error panel and keeps the last good preview on screen.
+
+## One host build for each Avalonia major version
+
+The preview host loads the Avalonia assemblies of the target app. Avalonia 12 breaks the binary API
+of Avalonia 11. For example, the indexer `AvaloniaObject[IndexerDescriptor]` takes a different
+binding type. A host compiled against Avalonia 11 then fails with `MissingMethodException` inside an
+Avalonia 12 app.
+
+So the launcher ships two host builds from one set of sources: `AxView.Host` against Avalonia 11.0
+and `AxView.Host12` against Avalonia 12.0. It reads the Avalonia version from the app's deps file
+and starts the matching host.
+
+I rejected two alternatives:
+
+- One host that binds each changed API by reflection. The compiler cannot find the binary breaks,
+  and only a crash at run time shows them.
+- `#if` blocks for each version. Two code paths in one file are hard to read and to test.
+
+The launcher and the hosts share their protocol as linked source files, not as a shared assembly.
+The host runs with the target app's deps file, and a shared assembly would not be in it.
+
+## Previewing while the app builds
+
+The preview runs in a copy of the app's build output, so a new build can replace the real files
+while a preview is open. The first start copies the full output. Later starts copy only the changed
+files.
+
+## Snapshots for scripts and agents
+
+The same host renders without a window:
+
+- `--snapshot` writes one PNG. `--snapshot-all` writes a PNG for each AXAML file of the project and
+  a `summary.txt` with one `ok` or `FAIL` line for each file. A failed file does not stop the run.
+- `--size` and `--theme` set the viewport (Phone, Tablet, Desktop, or a custom size) and the
+  light or dark variant. `--fit-content` crops to the content.
+- `--tree` writes the visual tree as JSON, with bounds, classes, text, and the DataContext type.
+- `--report` writes the result, the load time, the error with its line and column, and the
+  Avalonia binding warnings.
+- Exit codes separate a render error (1), invalid options (2), and a preview that cannot be
+  prepared (4).
+
+The control gallery shows the common controls in the app's own styles. It has one row for each style
+class and each keyed control theme of the app, and one column for each state: normal, pointer over,
+pressed, focus, disabled, and error.
+
+## Trade-offs
+
+The test project runs against the Avalonia 12 host only. The Avalonia 11 host is checked by the
+compiler, not by tests.
+
+The gallery sets pseudo-classes in place of real input. It cannot show a state that needs a real
+popup or real focus, such as an open `ComboBox` or a focus adorner.
+
+The shared protocol files can use no package references, because the host cannot ship package
+runtime assets next to the target app.
+
+## Outcome
+
+Tagged `v1.0.0` on 2026-10-02 and `v1.1.0` on 2026-10-06. The second release added the Avalonia 12
+host, the control gallery, `--size`, `--theme`, `--tree`, and `--report`. Later work added
+`--fit-content` and the copy of the build output. CI builds, tests, and checks the format on every
+pull request and every push to `main`, and a NuGet audit fails the build on a high or critical
+advisory.

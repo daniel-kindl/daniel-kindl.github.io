@@ -1,0 +1,89 @@
+---
+title: 'Folium'
+summary: 'Offline-first Android app for a personal book library, built with .NET 10 and Avalonia, with Open Library import, shelves, local backups, and signed APK releases outside Google Play.'
+role: 'Solo Developer'
+stack: ['C#', '.NET 10', 'Avalonia', 'Android', 'xUnit', 'GitHub Actions']
+links:
+  repository: 'https://github.com/daniel-kindl/folium'
+  release: 'https://github.com/daniel-kindl/folium/releases/latest'
+status: 'development'
+dates:
+  start: 2026-11-03
+  end: null
+weight: 50
+---
+
+## Context
+
+Folium keeps a personal book library on one Android device. You add, edit, and remove books, mark
+each one as to read, reading, or finished, and group books on named shelves. A book can be on more
+than one shelf. The library needs no account and no server, and it works offline.
+
+It is written in C# on .NET 10 with Avalonia for the UI, and it needs Android 12 (API 31) or later.
+
+## Storage that survives an interrupted save
+
+The library is one private JSON file, `library.json`, now at storage version 3. Covers are separate
+files that the metadata references by SHA-256 hash. Identical cover bytes share one file, and
+editing a title or a reading status does not rewrite an unchanged cover.
+
+A save writes and flushes the covers first, then atomically replaces the metadata document. If the
+save is interrupted, the previous document is still there. Unused cover files are removed only
+after the new document is in place.
+
+Older formats stay readable. Version 1 and 2 libraries migrate on the first successful save, and
+Folium first keeps an exact copy as `library.json.v1.bak` or `library.json.v2.bak`. A missing cover
+file or a hash mismatch stops the library from opening. Folium leaves the files unchanged and offers
+**Restore backup** in place of guessing.
+
+## Open Library without a backend
+
+You can search [Open Library](https://openlibrary.org/) by title, browse the editions of a work, and
+import one as a book after you review and edit its metadata. The client needs no API key and no
+backend of its own. Requests start only after a user action, run at most once per second, honor
+`Retry-After`, and are never retried automatically. Successful responses stay in a bounded session
+cache.
+
+Saving a cover is a separate choice. The permission checkbox starts unchecked on every import,
+because an image that the API serves does not come with an open license. Folium does not decide
+per-image rights, and it never uploads a saved cover.
+
+## Backups and updates
+
+**Export backup** writes the books, shelves, reading status, and saved covers to a file that you
+choose. The format is versioned, Folium reads backups of up to 32 MiB, and restore asks for
+confirmation before it replaces the library. Nothing is uploaded.
+
+Folium checks GitHub for stable releases once a day and installs signed APKs through the Android
+package installer. You can turn the check off. It sends no account details, no device identifiers,
+and no telemetry.
+
+## Quality gates
+
+CI runs on every pull request and every push to `main`:
+
+- A NuGet audit that fails on a high or critical advisory.
+- `dotnet format` and a Release build with the Meziantou and Roslynator analyzers.
+- xUnit tests with a minimum of 80% line coverage and 70% branch coverage.
+- Mutation testing with Stryker.NET on the domain and storage code.
+- A method-level CRAP threshold.
+
+One release workflow, started from `main`, works out the next version, writes the changelog, signs
+the APK, and publishes the GitHub release only after signing succeeds.
+
+## Trade-offs
+
+Folium is not on Google Play. Every user installs the APK by hand, and Android can ask for
+permission to install an app from an unknown source.
+
+Storage version 3 cannot be read by older app versions. A downgrade needs a backup from the current
+app, or the matching `.bak` file put back by hand.
+
+Backups have a 32 MiB limit. A larger library cannot be exported or restored in the current version.
+
+## Outcome
+
+Three releases so far: `v0.1.0` on 2026-11-11, `v0.2.0` on 2026-11-13 with update checks and a
+one-click signed release, and `v0.3.0` on 2026-11-22 with shelves and version 2 backups. The APK is
+on the [latest GitHub release](https://github.com/daniel-kindl/folium/releases/latest). Folium is
+MIT-licensed.

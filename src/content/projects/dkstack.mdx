@@ -1,0 +1,79 @@
+---
+title: 'dkstack'
+summary: 'Versioned rules, skills, and check scripts for AI coding agents. A project points its AGENTS.md at one URL and gets compatible updates through a v1 release branch.'
+role: 'Solo Developer'
+stack: ['Markdown', 'JavaScript', 'Node.js', 'GitHub Actions']
+links:
+  repository: 'https://github.com/daniel-kindl/dkstack'
+  release: 'https://github.com/daniel-kindl/dkstack/releases/latest'
+status: 'development'
+dates:
+  start: 2026-10-26
+  end: null
+weight: 30
+---
+
+## Context
+
+dkstack keeps the rules for AI coding agents in one repository: architecture, code, tests, UI,
+commits, versions, writing, and the review workflow. It is guidance only. It runs no service and
+changes nothing in a project by itself. A project's `AGENTS.md` points at one raw URL, the agent
+starts with a triage skill, and triage picks the rules that a task needs.
+
+The aim is to update a rule once and have every consumer get it. This site is one consumer. So are
+Folium and AxView.
+
+## How consumers follow versions
+
+"Update once, all repos follow" conflicts with "a breaking change must not reach every repo at
+once". The first ADR compares three ways to resolve it:
+
+| Option               | Update                     | Rollback                  | Cost                                        |
+| -------------------- | -------------------------- | ------------------------- | ------------------------------------------- |
+| Follow `main`        | Nothing to do              | Only the owner can revert | A merge is a release, and nothing is pinned |
+| Pin a `vX.Y.Z` tag   | One edit in each consumer  | Each consumer, by itself  | Consumers drift to old versions             |
+| Follow a `v1` branch | Nothing, for MINOR / PATCH | Pin the last good tag     | One more release step and one more ruleset  |
+
+I chose the `v1` branch. Each compatible release moves `v1` forward with a fast-forward push, and
+each release also gets a fixed `vX.Y.Z` tag. A breaking release starts `v2`. A moving `v1` tag was
+rejected, because moving a tag needs a force-push, and the project never force-pushes.
+
+This also separates merging from releasing. A merge to `main` reaches nobody until a release moves
+`v1`.
+
+## Breaking changes for documents
+
+SemVer for a set of documents needs its own definitions. In dkstack, MAJOR means a removed or renamed
+skill, page, or linked anchor, or a new hard limit. MINOR means a new skill, page, or duty. PATCH
+means a wording change only. A release that needs a consumer to act has a "Consumer action:" line in
+the changelog.
+
+## Checks
+
+The `validate` workflow runs on every pull request and every push to `main`. It checks:
+
+- Conventional Commits titles.
+- The folder and frontmatter of each skill.
+- That relative links and links into the repository resolve, including anchors.
+- That workflows pin their actions and set permissions.
+- The changelog entry for the version in `package.json`.
+- The format of the maps, the glossary, and new ADRs.
+
+The unit tests for the check scripts must cover at least 95% of the lines and 90% of the branches.
+The rules are written in ASD-STE100 Simplified Technical English. A writing check warns about long
+sentences and long steps.
+
+## Trade-offs
+
+The `v1` branch works only if version numbers are correct. A breaking change released as MINOR
+reaches every consumer at once. Twice, the owner decided to ship breaking changes on `v1` on purpose,
+and each decision is recorded as a dated amendment to the ADR.
+
+A release is one workflow run, and no agent can start it, tag a version, or move `v1`. Only I start
+the run, and its write job waits for my approval in a protected environment after I read the planned
+version.
+
+## Outcome
+
+Eleven releases from `v1.0.0` on 2026-10-28 to `v1.6.0` on 2026-11-21. The repository has 29
+skills, from `triage` and `start-issue` to `code-review` and `release`. dkstack is MIT-licensed.
