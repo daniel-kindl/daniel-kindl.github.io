@@ -35,6 +35,9 @@ export const technicalProfile = {
   name: 'Daniel Kindl',
   role: 'Software Engineer',
   location: 'Czechia',
+  experienceYears: years,
+  coreStack: ['C#', '.NET', 'Avalonia UI'],
+  now: 'Frontend of the new-generation test software at SPS software',
   /** Meta description and the CV summary line. */
   summary: `Software engineer in Czechia. C# and .NET first, across desktop, web, mobile, backend services and developer tools. ${years} years of professional experience.`,
   intro: [

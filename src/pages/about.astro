@@ -6,6 +6,7 @@ import Timeline from '@components/ui/Timeline.astro';
 import TimelineEvent from '@components/ui/TimelineEvent.astro';
 import Tag from '@components/ui/Tag.astro';
 import Button from '@components/ui/Button.astro';
+import ExternalLink from '@components/ui/ExternalLink.astro';
 import { technicalProfile } from '../data/cv';
 import { mailto, pageTitle, siteConfig } from '@lib/siteConfig';
 import { buttonVariants } from '@lib/buttonStyles';
@@ -22,32 +23,73 @@ const experience = technicalProfile.experience.map((item, index, all) => {
 });
 
 const linkClass = buttonVariants.link;
+
+const readout = [
+  { label: 'Role', value: role },
+  { label: 'Based in', value: location },
+  { label: 'Experience', value: `${technicalProfile.experienceYears} years` },
+  { label: 'Core stack', value: technicalProfile.coreStack.join(' · ') },
+  { label: 'Now', value: technicalProfile.now },
+];
 ---
 
 <Layout title={pageTitle('About')} description={summary}>
   <Container class="py-12 md:py-20" data-pagefind-body>
     <header class="mb-16 border-b border-(--border-color) pb-12">
       <Typography variant="eyebrow">About</Typography>
-      <Typography variant="h1" class="mb-2">
+      <Typography variant="h1" class="mb-8">
         {name}
       </Typography>
-      <p class="mb-8 font-mono text-xs tracking-tight text-(--text-muted) uppercase">
-        {role} · {location}
-      </p>
-      <div class="max-w-2xl space-y-4">
-        {intro.map((paragraph, index) => (
-          <Typography variant="body" class={index === 0 ? 'text-lg' : ''}>
-            {paragraph}
-          </Typography>
-        ))}
-      </div>
-      <div class="mt-8 flex flex-wrap gap-4">
-        <Button href="/cv" variant="primary">
-          View CV
-        </Button>
-        <Button href={mailto} variant="secondary">
-          {siteConfig.email}
-        </Button>
+      <div class="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-6">
+        <div class="md:col-span-8">
+          <div class="max-w-2xl space-y-4">
+            {intro.map((paragraph, index) => (
+              <Typography variant="body" class={index === 0 ? 'text-lg' : ''}>
+                {paragraph}
+              </Typography>
+            ))}
+          </div>
+          <div class="mt-8">
+            <Button href="/cv" variant="primary">
+              View CV
+            </Button>
+          </div>
+        </div>
+
+        <!-- The readout: the project card's metadata rail, reused for the facts a
+             recruiter scans first. A top rule replaces the left rail on mobile. -->
+        <aside
+          aria-label="Profile summary"
+          class="border-t border-(--border-color) pt-6 font-mono text-xs md:col-span-4 md:border-t-0 md:border-l md:pt-0 md:pl-6"
+        >
+          <dl class="space-y-4">
+            {readout.map((row) => (
+              <div>
+                <dt class="text-[10px] tracking-wider text-(--text-muted) uppercase">
+                  {row.label}
+                </dt>
+                <dd class="mt-0.5 text-(--text-primary)">{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+          <ul class="mt-6 flex flex-wrap gap-x-4 uppercase">
+            <li>
+              <a href={mailto} class={`inline-flex items-center ${linkClass}`}>
+                Email
+              </a>
+            </li>
+            <li>
+              <ExternalLink href={siteConfig.socials.github} variant="link">
+                GitHub
+              </ExternalLink>
+            </li>
+            <li>
+              <ExternalLink href={siteConfig.socials.linkedin} variant="link">
+                LinkedIn
+              </ExternalLink>
+            </li>
+          </ul>
+        </aside>
       </div>
     </header>
 
