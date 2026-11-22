@@ -96,7 +96,7 @@ export const technicalProfile = {
     side: [
       { text: 'A roguelike tower-defence game, not public yet' },
       {
-        text: 'A YouTube channel about .NET:',
+        text: 'A YouTube channel about engineering, mostly software:',
         link: { label: '@danielkindldev', href: 'https://www.youtube.com/@danielkindldev' },
       },
     ] as { text: string; link?: EvidenceLink }[],
