@@ -136,6 +136,27 @@
     display: none;
   }
 
+  /* Paper is always light: a CV printed from the dark theme must not come out
+     as white text on a black page. The tokens repeat the light :root values. */
+  @media print {
+    :root,
+    :root[data-theme='dark'] {
+      color-scheme: light;
+      --bg-primary: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-muted: #555555;
+      --border-color: #d4d4d4;
+    }
+
+    @page {
+      margin: 14mm 16mm;
+    }
+
+    a {
+      text-decoration: none;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     ::view-transition-old(root),
     ::view-transition-new(root) {

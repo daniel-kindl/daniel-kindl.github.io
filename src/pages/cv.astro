@@ -1,0 +1,160 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Container from '@components/ui/Container.astro';
+import Typography from '@components/ui/Typography.astro';
+import Button from '@components/ui/Button.astro';
+import { technicalProfile } from '../data/cv';
+import { getSortedProjects } from '@lib/content';
+import { getProjectStatusLabel } from '@lib/projectStatus';
+import { getProjectTimelineLabel } from '@lib/projectTimeline';
+import { mailto, pageTitle, siteConfig } from '@lib/siteConfig';
+import { buttonVariants } from '@lib/buttonStyles';
+
+const { name, role, location, summary, intro, employer, experience, skills, agentBuilt } =
+  technicalProfile;
+const projects = await getSortedProjects();
+
+// Printed links lose their href, so the CV spells each URL out as text.
+const displayUrl = (url: string) => url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+const siteHost = displayUrl(Astro.site?.href ?? '');
+
+const sectionClass = 'border-t border-(--border-color) pt-6 print:break-inside-auto';
+const linkClass = buttonVariants.link;
+---
+
+<Layout title={pageTitle('CV')} description={`CV of ${name}. ${summary}`}>
+  <Container class="max-w-3xl! py-12 text-sm md:py-16 print:max-w-none! print:p-0! print:text-[10pt]">
+    <div class="mb-10 flex flex-wrap items-center gap-4 print:hidden">
+      <Button type="button" variant="primary" data-print>
+        [Save as PDF]
+      </Button>
+      <a href="/about" class={linkClass}>
+        ← Back to About
+      </a>
+    </div>
+
+    <header class="mb-8">
+      <Typography variant="h1" class="mb-1">
+        {name}
+      </Typography>
+      <p class="font-mono text-xs tracking-tight text-(--text-muted) uppercase">
+        {role} · {location}
+      </p>
+      <ul class="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs text-(--text-muted)">
+        <li>
+          <a href={mailto}>{siteConfig.email}</a>
+        </li>
+        <li>
+          <a href="/">{siteHost}</a>
+        </li>
+        <li>
+          <a href={siteConfig.socials.github}>{displayUrl(siteConfig.socials.github)}</a>
+        </li>
+        <li>
+          <a href={siteConfig.socials.linkedin}>{displayUrl(siteConfig.socials.linkedin)}</a>
+        </li>
+      </ul>
+    </header>
+
+    <div class="space-y-8">
+      <section class={sectionClass} aria-labelledby="cv-profile">
+        <Typography variant="h2" id="cv-profile" class="mb-3 text-base!">
+          Profile
+        </Typography>
+        <div class="space-y-2 leading-relaxed">
+          {intro.slice(0, 2).map((paragraph) => (
+            <p>{paragraph}</p>
+          ))}
+        </div>
+      </section>
+
+      <section class={sectionClass} aria-labelledby="cv-experience">
+        <Typography variant="h2" id="cv-experience" class="mb-3 text-base!">
+          Experience
+        </Typography>
+        <p class="font-bold">
+          {employer.name}, {employer.location}
+        </p>
+        <p class="mb-4 text-(--text-muted)">{employer.context}</p>
+        <div class="space-y-5">
+          {experience.map((item) => (
+            <article class="break-inside-avoid">
+              <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+                <h3 class="font-bold">{item.role}</h3>
+                <span class="font-mono text-xs text-(--text-muted) tabular-nums">
+                  {item.period}
+                </span>
+              </div>
+              <ul class="mt-1 list-disc space-y-0.5 pl-5 leading-relaxed">
+                {item.achievements.map((achievement) => (
+                  <li>{achievement}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class={sectionClass} aria-labelledby="cv-projects">
+        <Typography variant="h2" id="cv-projects" class="mb-3 text-base!">
+          Projects
+        </Typography>
+        <div class="space-y-4">
+          {projects.map((project) => (
+            <article class="break-inside-avoid">
+              <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+                <h3 class="font-bold">
+                  <a href={`/projects/${project.id}`}>{project.data.title}</a>
+                </h3>
+                <span class="font-mono text-xs text-(--text-muted) tabular-nums">
+                  {getProjectStatusLabel(project.data.status)} ·{' '}
+                  {getProjectTimelineLabel(project.data.dates)}
+                </span>
+              </div>
+              <p class="leading-relaxed">{project.data.summary}</p>
+              <p class="mt-0.5 font-mono text-xs text-(--text-muted)">
+                {project.data.stack.join(' · ')}
+                {project.data.links?.repository && (
+                  <>
+                    {' · '}
+                    <a href={project.data.links?.repository}>
+                      {displayUrl(project.data.links?.repository)}
+                    </a>
+                  </>
+                )}
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class={`${sectionClass} break-inside-avoid`} aria-labelledby="cv-skills">
+        <Typography variant="h2" id="cv-skills" class="mb-3 text-base!">
+          Skills
+        </Typography>
+        <dl class="space-y-1">
+          {skills.map((group) => (
+            <div class="flex flex-wrap gap-x-2">
+              <dt class="font-bold">{group.label}:</dt>
+              <dd>{group.items.join(', ')}</dd>
+            </div>
+          ))}
+        </dl>
+        <p class="mt-3 text-(--text-muted)">
+          Built with AI agents, outside my core stack:{' '}
+          {agentBuilt.map((entry) => `${entry.stack} (${entry.where})`).join('; ')}.
+        </p>
+      </section>
+    </div>
+  </Container>
+</Layout>
+
+<script>
+  // astro:page-load also fires on the first load, so one listener covers both
+  // a direct visit and a client-side navigation without binding twice.
+  document.addEventListener('astro:page-load', () => {
+    document.querySelector<HTMLButtonElement>('[data-print]')?.addEventListener('click', () => {
+      window.print();
+    });
+  });
+</script>
