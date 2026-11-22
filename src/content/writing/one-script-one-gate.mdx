@@ -1,0 +1,86 @@
+---
+title: 'One Script, One Gate: Why My Local Check and CI Run the Same Command'
+summary: 'When local checks, pull-request CI and the deploy each list their own steps, they drift apart. Why this site has one verify script, and why a warning fails it.'
+date: 2026-11-22
+tags: ['CI/CD', 'Workflow', 'Tooling', 'Astro']
+draft: false
+---
+
+## The problem: three lists of steps
+
+Before October 2026, this site had three places that decided what "correct" meant.
+
+- **On my machine**, I ran the npm scripts that I chose for that change.
+- **Pull-request CI** ran `npm ci`, `npm run check` and `npm run build`.
+- **The deploy workflow** installed dependencies, built the site and published it. It did not run `npm run check`.
+
+Each list was reasonable when I wrote it. But each list changed at a different time. The written CI decision still named a `generate-assets` step after I had removed that script. A push to `master` could publish a build that had never passed lint or the tests. And none of the three lists failed on a warning.
+
+A gate that exists in three versions is not one gate. It is three opinions, and the weakest one wins.
+
+## The decision: one entry point
+
+Now there is one command: `./eng/verify.sh`. I run it before I open a pull request. Pull-request CI runs it. The deploy workflow runs it, and then publishes the `dist/` folder that the script built.
+
+The script does these steps in order:
+
+1. `npm ci`, in CI or when `node_modules` is missing
+2. Lint
+3. The format check
+4. The type check (`astro check`)
+5. The unit tests
+6. The production build
+7. Tests that read the built site in `dist/`
+
+The CI job is now three steps: check out the code, set up Node.js, run the script.
+
+```yaml
+- name: Verify
+  run: ./eng/verify.sh
+```
+
+The workflow file no longer knows what "verify" means. The script knows. If I add a check, I add it in one place, and it applies on my machine, on every pull request and before every deploy.
+
+The decision is ADR #20 in this site's decision log.
+
+## Why a warning fails the build
+
+The second half of the change was stricter: a warning is a failure.
+
+- ESLint runs with `--max-warnings 0`.
+- `astro check` runs with `--minimumSeverity hint`, so it reports hints too.
+- The script reads the output of `astro check` and of the build. If it finds a warning or a hint, it stops.
+
+```bash
+npm run build 2>&1 | tee "$log"
+if grep -Eq '\[WARN\]|\[warn\]' "$log"; then
+  echo "verify: astro build reported warnings" >&2
+  exit 1
+fi
+```
+
+A warning that does not fail anything gets read once. After that it is noise. A second warning joins it, then a third, and soon a new warning that matters is lost among the old ones. If the count must stay at zero, a new warning is always visible, because it is always the only one.
+
+On a small site, zero is a target that I can keep. Each warning must get one of two answers: fix it, or turn it off in the config with a reason. It cannot stay as background noise.
+
+## What the script does not cover
+
+"One gate" is a simplification, and I want to be clear about where it stops.
+
+- **Lighthouse is a separate workflow.** It checks the script budget, the font budget and the category scores. It is a required check on pull requests (ADR #21), but it is not in `verify.sh`. It needs a browser and a built site served over HTTP, which is more than a quick local check should need.
+- **The pull-request title check is separate too.** It reads the title from GitHub, so it cannot run locally.
+- **`npm audit` is not in any gate** (ADR #18). A new advisory in the registry should not fail an unrelated pull request. Dependabot handles updates.
+
+So the rule is narrower than "one script for everything". It is: one script for everything that decides if the code is correct, and that I can run on my own machine.
+
+## Trade-offs
+
+**Deploys are slower.** The deploy runs lint, the type check and the tests again, after the pull request already passed them. That costs some time on each push to `master`. In exchange, a red check on `master` stops the publish. I prefer the extra time.
+
+**Reading log text is brittle.** The script searches the output for strings like `[WARN]`. If a future Astro version prints warnings in a different format, the check will pass when it should fail. A machine-readable result would be better. Astro does not give one for build warnings, so a text search is what I have. The risk is a false pass, not a false failure. After a major Astro upgrade, the build output needs a check by eye.
+
+**Local and CI can still differ.** On my machine, the script skips `npm ci` when `node_modules` exists. That keeps local runs fast, but an old `node_modules` folder can hide a lockfile problem that CI will find. The script lowers the drift. It does not remove it.
+
+## The general rule
+
+The idea is not specific to Astro or GitHub Actions. If your CI file contains a list of commands, that list is a second copy of the definition of "done". Move it into a script in the repository. Make CI call the script and nothing else. Then the question "will this pass CI?" has a simple answer: run the script.
